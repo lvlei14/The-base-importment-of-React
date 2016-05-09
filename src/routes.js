@@ -1,8 +1,10 @@
 import React from 'react';
-import {Route} from 'react-router';  // IndexRoute
+import {IndexRoute, Route} from 'react-router';  // IndexRoute
 import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 import {
-    App
+    App,
+    Home,
+    DatePlan,
   } from 'containers';
 
 export default (store) => {
@@ -32,7 +34,8 @@ export default (store) => {
   return (
     <Route path="/" component={App}>
       { /* Home (main) route */ }
-
+      <IndexRoute component={Home}/>
+      <Route path="date-plan" component={DatePlan} />
       { /* Routes requiring login */ }
       <Route onEnter={requireLogin} />
     </Route>

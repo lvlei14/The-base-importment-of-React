@@ -1,0 +1,14 @@
+@import '../../theme/variables.scss';
+
+.popUp{
+  display: table;
+  .popUpContent{
+    border:1px solid $borderColor;
+    background-color: #fff;
+    border-radius: 3px;
+    border-top:6px solid $mainColor;
+    display: table-cell;
+    vertical-align: middle;
+
+  }
+}

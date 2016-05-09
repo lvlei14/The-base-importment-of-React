@@ -1,0 +1,26 @@
+@import "../../theme/variables";
+
+.tabOutside{
+  width: 100%;
+  text-align: center;
+  padding:6px 10px;
+  ul{
+    border:1px solid $mainColor;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 2px;
+    li{
+      padding:6px 0px;
+      width: 66px;
+      color: $mainColor;
+      border-left:1px solid $mainColor;
+    }
+    li:first-child{
+      border-left: 0px solid $mainColor;
+    }
+    li.curTab{
+      color: #fff;
+      background-color: $mainColor;
+    }
+  }
+}
