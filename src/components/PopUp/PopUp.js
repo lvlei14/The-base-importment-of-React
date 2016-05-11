@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { hidePopUp } from 'redux/modules/popUp';
 import { connect } from 'react-redux';
 
-const styles = require('./TabOutside.scss');
+const styles = require('./PopUp.scss');
 
 @connect(state => ({popUp: state.popUp}),{})
 export default class PopUp extends Component {

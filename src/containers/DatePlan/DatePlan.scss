@@ -3,9 +3,56 @@
 .dateTop {
   background-color: #fff;
   margin-bottom: 10px;
+  font-size: $jzfontSize;
+  position: relative;
   li.curTab {
     color: #fff !important;
     background-color: $mainColor;
+  }
+  .scheduleFilterBtn{
+    position: absolute;
+    top: 6px;
+    right: 0;
+    width: 100%;
+    h3{
+      color: $mainColor;
+      font-weight: normal;
+      text-align: right;
+      margin-right: $lrmargin;
+      font-size: $jzfontSize;
+      height: 50px;
+      line-height: 44px;
+    }
+    .scheduleFilterCon{
+      text-align: left;
+      background-color: #fff;
+      padding: $tbmargin $lrmargin;
+      border-top:1px solid $borderColor;
+      border-bottom:1px solid $borderColor;
+      padding: $tbmargin $lrmargin;
+      div{
+        padding: 4px 0;
+        i{
+          font-style: normal;
+          color: $mainColor;
+          position: absolute;
+          padding:4px 6px 4px 0;
+        }
+        p{
+          margin-left: 38px;
+          span{
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 14px;
+            margin:0 6px;
+          }
+          span.curSpan{
+            background-color: $mainColor;
+            color: #fff;
+          }
+        }
+      }
+    }
   }
   section{
     color: $jzfontColor;
@@ -33,9 +80,17 @@
           }
         }
         td{
-          padding: 10px 0;
           border-bottom: 1px solid #ececec;
           border-left: 1px solid $borderColor;
+          div{
+            padding: 10px 0;
+            border:2px solid #fff;
+          }
+        }
+        td.curTd{
+          div{
+            border:2px solid $mainColor;
+          }
         }
         td:first-child{
           border-left:1px solid #fff;
