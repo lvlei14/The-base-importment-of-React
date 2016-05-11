@@ -8,63 +8,40 @@ const schedules = [
     day: '1',
     date: '2015.01.01',
     outsidePlan: false,
-    sidePlan: true,
-    scheduleLists: [
-      {
-        type: 'check',
-        time: '14:00-16:00',
-        start: '1:00',
-        isconflict: false,
-        isoutside: false
-      }
-    ]
+    type: 'check',
+    time: '14:00-16:00',
+    start: '1:00',
+    isconflict: false
   },
   {
     id: '2',
     day: '2',
     date: '2015.01.02',
     outsidePlan: true,
-    sidePlan: false,
-    scheduleLists: [
-      {
-        type: 'check',
-        day: '2',
-        time: '14:00-16:00',
-        start: '2:00',
-        isconflict: false,
-        isoutside: false
-      },
-      {
-        type: 'metting',
-        time: '14:00-16:00',
-        start: '2:00',
-        isconflict: false,
-        isoutside: false
-      }
-    ]
+    type: 'check',
+    time: '14:00-16:00',
+    start: '1:00',
+    isconflict: false
+  },
+  {
+    id: '2',
+    day: '2',
+    date: '2015.01.02',
+    outsidePlan: false,
+    type: 'metting',
+    time: '14:00-16:00',
+    start: '1:00',
+    isconflict: false
   },
   {
     id: '3',
     day: '3',
     date: '2015.01.03',
     outsidePlan: false,
-    sidePlan: false,
-    scheduleLists: [
-      {
-        type: 'check',
-        time: '14:00-16:00',
-        start: '3:00',
-        isconflict: false,
-        isoutside: false
-      },
-      {
-        type: 'metting',
-        time: '14:00-16:00',
-        start: '3:00',
-        isconflict: false,
-        isoutside: false
-      }
-    ]
+    type: 'check',
+    time: '14:00-16:00',
+    start: '1:00',
+    isconflict: false
   }
 ];
 

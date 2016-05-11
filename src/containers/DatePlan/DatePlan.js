@@ -36,6 +36,7 @@ export default class DatePlan extends Component {
   componentDidMount() {
     //  TODO 接口地址
     //  this.props.loadschedules();
+    this.handleData(this.props.schedules);
   }
 
 
@@ -98,7 +99,6 @@ export default class DatePlan extends Component {
   }
 
   clickCalendar(id) {
-    console.log(id);
     this.setState({
       currentDayId: id
     });
@@ -131,9 +131,70 @@ export default class DatePlan extends Component {
     //  });
   }
 
+  handleData(schedules){
+    let handledSchedules = [
+      {
+        id: '',
+        date: '',
+        day: '',
+        schedulesLists: [
+          {
+            type: '',
+            time: '',
+            start: '',
+            isconflict: false,
+            isoutside: false
+          }
+        ]
+      }
+    ];
+
+    for(let key in schedules){
+      //if(handledSchedules[schedules[key].date]){
+      //  console.log('不存在');
+      //  handledSchedules.push(schedules[key].date);
+      //}
+      let obj, objSchedulesLists;
+      for(let prop in handledSchedules){
+        if(schedules[key].date === handledSchedules[prop].date){
+          objSchedulesLists = {
+            type: schedules[key].type,
+            time: schedules[key].time,
+            start: schedules[key].start,
+            isconflict: schedules[key].isconflict,
+            isoutside: schedules[key].isoutside
+          };
+          handledSchedules[prop].schedulesLists.push(
+            objSchedulesLists
+          );
+        }else{
+          obj = {
+            id : schedules[key].id,
+            date : schedules[key].date,
+            day : schedules[key].day,
+            schedulesLists: [
+              {
+                type: schedules[key].type,
+                time: schedules[key].time,
+                start: schedules[key].start,
+                isconflict: schedules[key].isconflict,
+                isoutside: schedules[key].isoutside
+              }
+            ]
+          };
+          handledSchedules.push(
+            obj
+          );
+
+        }
+      }
+    }
+    console.log(handledSchedules);
+  }
+
   render() {
     const schedules = this.props.schedules;
-    console.log('数据');
+    console.log('--数据--');
     console.log(schedules);
     const curDayScheduleItem = schedules && schedules.filter((item) => item.id === this.state.currentDayId);
     let scheduleItems;
@@ -194,7 +255,7 @@ export default class DatePlan extends Component {
           }
           {
             this.state.tabTypeState === 'list' ?
-              <div className={styles.scheduleFilterBtn}>
+              <div style={{display:'none'}} className={styles.scheduleFilterBtn}>
                 <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
                 <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
                 <section className={styles.scheduleFilterCon} style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
@@ -222,34 +283,31 @@ export default class DatePlan extends Component {
           }
         </div>
 
-        <div>
+        <CardBg>
           {
             scheduleItems && scheduleItems.map((scheduleItem)=> {
               return (
-                <CardBg>
+                <div>
                   <p className={styles.curDaytitle}>{scheduleItem.date}</p>
                   <ul className={styles.curDayContact}>
                     {
-                      scheduleItem && scheduleItem.scheduleLists && scheduleItem.scheduleLists.length ?
-                        scheduleItem.scheduleLists.map((itemTimePeriod) => {
-                          if (itemTimePeriod.type === 'check') {
-                            return this.checkContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'metting') {
-                            return this.mettingContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'opera') {
-                            return this.operaContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'duty') {
-                            return this.dutyContact(itemTimePeriod);
-                          }
-                        })
-                        : '当天没有日程安排'
+                      scheduleItem.type === 'check' ? this.checkContact(scheduleItem) : ''
+                    }
+                    {
+                      scheduleItem.type === 'metting' ? this.mettingContact(scheduleItem) : ''
+                    }
+                    {
+                      scheduleItem.type === 'opera' ? this.operaContact(scheduleItem) : ''
+                    }
+                    {
+                      scheduleItem.type === 'duty' ? this.dutyContact(scheduleItem) : ''
                     }
                   </ul>
-                </CardBg>
+                </div>
               );
             })
           }
-        </div>
+        </CardBg>
 
         <AddPlan />
       </div>
