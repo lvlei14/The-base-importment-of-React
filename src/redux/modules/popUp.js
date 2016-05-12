@@ -1,23 +1,23 @@
 const SHOW_POPUP = 'SHOW_POPUP';
 const HIDE_POPUP = 'HIDE_POPUP';
 
-const initState ={
+const initState = {
   isHide: false,
   title: '',
   popUpContent: ''
 };
 
-export function popUpReducer(state = initState, action){
-  switch (action.type){
+export function popUpReducer(state = initState, action) {
+  switch (action.type) {
     case SHOW_POPUP:
-      return{
+      return {
         ...state,
         isHide: true,
         title: action.title,
         popUpContent: action.popUpContent
       };
     case HIDE_POPUP:
-      return{
+      return {
         ...state,
         isHide: false,
         title: '',
@@ -33,7 +33,7 @@ export function popUpReducer(state = initState, action){
  * @params: isHide,title,content
  *
  */
-export function showPopUp(title,content){
+export function showPopUp(title, content) {
   return {
     type: SHOW_POPUP,
     title: title,
@@ -45,7 +45,7 @@ export function showPopUp(title,content){
  * action: hide popUp
  * @params:
  */
-export function hidePopUp(){
+export function hidePopUp() {
   return {
     type: HIDE_POPUP,
     title: '',

@@ -5,42 +5,57 @@ const LOAD_SCHEDULE_FAIL = 'LOAD_SCHEDULE_FAIL';
 const schedules = [
   {
     id: '1',
-    day: '1',
-    date: '2015.01.01',
-    outsidePlan: false,
-    type: 'check',
-    time: '14:00-16:00',
-    start: '1:00',
-    isconflict: false
-  },
-  {
-    id: '2',
-    day: '2',
-    date: '2015.01.02',
+    day: '14',
+    date: '2016-05-14',
+    sidePlan: false,
     outsidePlan: true,
     type: 'check',
-    time: '14:00-16:00',
+    time: '0:00-16:00',
+    start: '1:00',
+    isconflict: false
+  },
+  {
+    id: '1',
+    day: '14',
+    date: '2016-05-14',
+    sidePlan: false,
+    outsidePlan: true,
+    type: 'metting',
+    time: '0:00-16:00',
     start: '1:00',
     isconflict: false
   },
   {
     id: '2',
-    day: '2',
-    date: '2015.01.02',
-    outsidePlan: false,
-    type: 'metting',
+    day: '15',
+    date: '2016-05-15',
+    sidePlan: false,
+    outsidePlan: true,
+    type: 'opera',
     time: '14:00-16:00',
-    start: '1:00',
+    start: '2:00',
+    isconflict: false
+  },
+  {
+    id: '2',
+    day: '15',
+    date: '2016-05-15',
+    sidePlan: false,
+    outsidePlan: true,
+    type: 'duty',
+    time: '14:00-16:00',
+    start: '2:00',
     isconflict: false
   },
   {
     id: '3',
-    day: '3',
-    date: '2015.01.03',
-    outsidePlan: false,
+    day: '16',
+    date: '2016-05-16',
+    sidePlan: false,
+    outsidePlan: true,
     type: 'check',
     time: '14:00-16:00',
-    start: '1:00',
+    start: '3:00',
     isconflict: false
   }
 ];

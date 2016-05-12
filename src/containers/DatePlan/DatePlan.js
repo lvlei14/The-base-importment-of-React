@@ -23,12 +23,13 @@ export default class DatePlan extends Component {
     this.state = {
       tabTypeState: 'month',
       currentDayId: '2',
-      scheduleItems: this.props.schedules,
+      scheduleItems: this.handleData(this.props.schedules),
       showFilterRequires: false,
       filterRequires:
       {
-        type: '',
-        date: ''
+        firstDate: '2016-05-13',
+        secondDate: '',
+        type: 'all'
       }
     };
   }
@@ -36,7 +37,6 @@ export default class DatePlan extends Component {
   componentDidMount() {
     //  TODO 接口地址
     //  this.props.loadschedules();
-    this.handleData(this.props.schedules);
   }
 
 
@@ -94,7 +94,8 @@ export default class DatePlan extends Component {
 
   changeTabType(tabType) {
     this.setState({
-      tabTypeState: tabType
+      tabTypeState: tabType,
+      showFilterRequires: false
     });
   }
 
@@ -104,12 +105,25 @@ export default class DatePlan extends Component {
     });
   }
 
+  changeFilterFirstDate(event) {
+    this.setState(
+      {
+        filterRequires: Object.assign({}, this.state.filterRequires, { firstDate: event.target.value})
+      }
+    );
+  }
+
+  changeFilterSecondDate(event) {
+    this.setState(
+      {
+        filterRequires: Object.assign({}, this.state.filterRequires, { secondDate: event.target.value})
+      }
+    );
+  }
+
   clickFilterScheduleType(type) {
     this.setState({
-      filterRequires:
-      {
-        type: type
-      }
+      filterRequires: Object.assign({}, this.state.filterRequires, { type: type})
     });
   }
 
@@ -124,87 +138,102 @@ export default class DatePlan extends Component {
       showFilterRequires: false
     });
 
-    //  TODO 筛选下面的东西
-    //  const filterTypesResult = schedules && schedules.scheduleLists && schedules.scheduleLists.filter((item) => item.type === 'check');
-    //  this.setState({
-    //    scheduleItems: filterTypesResult
-    //  });
+    let filterTypesResult = schedules;
+
+    if (this.state.filterRequires.secondDate && this.state.filterRequires.firstDate > this.state.filterRequires.secondDate) {
+      //  TODO 弹窗提示:开始日期不能大于结束日期
+      return;
+    }
+    if (this.state.filterRequires.secondDate !== '' && this.state.filterRequires.type !== 'all') {
+      filterTypesResult = schedules && schedules.filter((item) =>
+          item.date <= this.state.filterRequires.secondDate && item.date >= this.state.filterRequires.firstDate && item.type === this.state.filterRequires.type
+      );
+    }else if (this.state.filterRequires.secondDate === '' && this.state.filterRequires.type !== 'all') {
+      filterTypesResult = schedules && schedules.filter((item) =>
+        item.type === this.state.filterRequires.type && item.date >= this.state.filterRequires.firstDate
+      );
+    }else if (this.state.filterRequires.secondDate !== '' && this.state.filterRequires.type === 'all') {
+      filterTypesResult = schedules && schedules.filter((item) =>
+        item.date <= this.state.filterRequires.secondDate && item.date >= this.state.filterRequires.firstDate
+      );
+    }else if (this.state.filterRequires.secondDate === '' && this.state.filterRequires.type === 'all') {
+      filterTypesResult = schedules && schedules.filter((item) =>
+          item.date >= this.state.filterRequires.firstDate
+        );
+    }
+    this.setState({
+      scheduleItems: this.handleData(filterTypesResult)
+    });
   }
 
-  handleData(schedules){
-    let handledSchedules = [
-      {
-        id: '',
-        date: '',
-        day: '',
+  handleData(schedules) {
+    const handledSchedules = [];
+    for (const key in schedules) {
+      const objSchedulesLists = {
+        type: schedules[key].type,
+        time: schedules[key].time,
+        start: schedules[key].start,
+        isconflict: schedules[key].isconflict,
+        sidePlan: schedules[key].sidePlan,
+        outsidePlan: schedules[key].outsidePlan
+      };
+      const obj = {
+        id: schedules[key].id,
+        date: schedules[key].date,
+        day: schedules[key].day,
         schedulesLists: [
-          {
-            type: '',
-            time: '',
-            start: '',
-            isconflict: false,
-            isoutside: false
-          }
+          objSchedulesLists
         ]
-      }
-    ];
+      };
 
-    for(let key in schedules){
-      //if(handledSchedules[schedules[key].date]){
-      //  console.log('不存在');
-      //  handledSchedules.push(schedules[key].date);
-      //}
-      let obj, objSchedulesLists;
-      for(let prop in handledSchedules){
-        if(schedules[key].date === handledSchedules[prop].date){
-          objSchedulesLists = {
-            type: schedules[key].type,
-            time: schedules[key].time,
-            start: schedules[key].start,
-            isconflict: schedules[key].isconflict,
-            isoutside: schedules[key].isoutside
-          };
-          handledSchedules[prop].schedulesLists.push(
-            objSchedulesLists
-          );
-        }else{
-          obj = {
-            id : schedules[key].id,
-            date : schedules[key].date,
-            day : schedules[key].day,
-            schedulesLists: [
-              {
-                type: schedules[key].type,
-                time: schedules[key].time,
-                start: schedules[key].start,
-                isconflict: schedules[key].isconflict,
-                isoutside: schedules[key].isoutside
-              }
-            ]
-          };
-          handledSchedules.push(
-            obj
-          );
-
+      let common;
+      for (const prop in handledSchedules) {
+        if (schedules[key].date === handledSchedules[prop].date) {
+          common = prop;
         }
       }
+      if (common) {
+        handledSchedules[common].schedulesLists.push(objSchedulesLists);
+      }else {
+        handledSchedules.push(obj);
+      }
     }
-    console.log(handledSchedules);
+    return handledSchedules;
   }
 
   render() {
     const schedules = this.props.schedules;
-    console.log('--数据--');
-    console.log(schedules);
-    const curDayScheduleItem = schedules && schedules.filter((item) => item.id === this.state.currentDayId);
+    const handledSchedules = this.handleData(this.props.schedules);
+
+    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.id === this.state.currentDayId);
     let scheduleItems;
     if (this.state.tabTypeState === 'month') {
       scheduleItems = curDayScheduleItem;
     }else if (this.state.tabTypeState === 'list') {
       scheduleItems = this.state.scheduleItems;
     }
+
     const filterScheduleTypes = [
-      'check', 'metting', 'opera', 'duty'
+      {
+        ywname: 'all',
+        zwname: '全部'
+      },
+      {
+        ywname: 'check',
+        zwname: '查房'
+      },
+      {
+        ywname: 'metting',
+        zwname: '会议'
+      },
+      {
+        ywname: 'opera',
+        zwname: '手术'
+      },
+      {
+        ywname: 'duty',
+        zwname: '值班'
+      }
     ];
 
 
@@ -232,14 +261,16 @@ export default class DatePlan extends Component {
                   </tr>
                   <tr>
                     {
-                      schedules && schedules.map((schedule) => {
+                      handledSchedules && handledSchedules.map((handledSchedule) => {
                         return (
-                          <td onClick={() => this.clickCalendar(schedule.id)} className={ this.state.currentDayId === schedule.id ? styles.curTd : ''}>
+                          <td onClick={() => this.clickCalendar(handledSchedule.id)} className={ this.state.currentDayId === handledSchedule.id ? styles.curTd : ''}>
                             <div>
-                              {schedule.day}
+                              {handledSchedule.day}
                               <p>
-                                <span className={schedule.outsidePlan ? styles.outside : ''}></span>
+                                {/* //TODO 院内院外图标展示
+                                <span className={handledSchedule.outsidePlan ? styles.outside : ''}></span>
                                 <span className={schedule.sidePlan ? styles.side : ''}></span>
+                                 */}
                               </p>
                             </div>
                           </td>
@@ -255,14 +286,20 @@ export default class DatePlan extends Component {
           }
           {
             this.state.tabTypeState === 'list' ?
-              <div style={{display:'none'}} className={styles.scheduleFilterBtn}>
+              <div className={styles.scheduleFilterBtn}>
                 <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
                 <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
                 <section className={styles.scheduleFilterCon} style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
                   <div className="clearfix">
                     <i className="left">日期</i>
                     <p className="left">
-                      <input type="date" /> 至 <input type="date" />
+                      <input type="date"
+                             value={this.state.filterRequires.firstDate}
+                             onChange={this.changeFilterFirstDate.bind(this)} />
+                      <span className={styles.dateSpan}>至</span>
+                      <input type="date"
+                             value={this.state.filterRequires.secondDate}
+                             onChange={this.changeFilterSecondDate.bind(this)} />
                     </p>
                   </div>
                   <div className="clearfix">
@@ -271,7 +308,9 @@ export default class DatePlan extends Component {
                       {
                         filterScheduleTypes && filterScheduleTypes.map((filterScheduleType) => {
                           return (
-                            <span onClick={() => this.clickFilterScheduleType(filterScheduleType)}>{ filterScheduleType}</span>
+                            <span className={this.state.filterRequires.type === filterScheduleType.ywname ? styles.curSpan : ''}
+                                  onClick={() => this.clickFilterScheduleType(filterScheduleType.ywname)}
+                            >{ filterScheduleType.zwname}</span>
                           );
                         })
                       }
@@ -283,31 +322,38 @@ export default class DatePlan extends Component {
           }
         </div>
 
-        <CardBg>
+        <div>
           {
-            scheduleItems && scheduleItems.map((scheduleItem)=> {
-              return (
-                <div>
-                  <p className={styles.curDaytitle}>{scheduleItem.date}</p>
-                  <ul className={styles.curDayContact}>
-                    {
-                      scheduleItem.type === 'check' ? this.checkContact(scheduleItem) : ''
-                    }
-                    {
-                      scheduleItem.type === 'metting' ? this.mettingContact(scheduleItem) : ''
-                    }
-                    {
-                      scheduleItem.type === 'opera' ? this.operaContact(scheduleItem) : ''
-                    }
-                    {
-                      scheduleItem.type === 'duty' ? this.dutyContact(scheduleItem) : ''
-                    }
-                  </ul>
-                </div>
-              );
-            })
+            scheduleItems.length ?
+              scheduleItems.map((scheduleItem)=> {
+                return (
+                  <CardBg>
+                    <p className={styles.curDaytitle}>{scheduleItem.date}</p>
+                    <ul className={styles.curDayContact}>
+                      {
+                        scheduleItem && scheduleItem.schedulesLists && scheduleItem.schedulesLists.length ?
+                          scheduleItem.schedulesLists.map((itemTimePeriod) => {
+                            if (itemTimePeriod.type === 'check') {
+                              return this.checkContact(itemTimePeriod);
+                            }else if (itemTimePeriod.type === 'metting') {
+                              return this.mettingContact(itemTimePeriod);
+                            }else if (itemTimePeriod.type === 'opera') {
+                              return this.operaContact(itemTimePeriod);
+                            }else if (itemTimePeriod.type === 'duty') {
+                              return this.dutyContact(itemTimePeriod);
+                            }
+                          })
+                          : '当天没有日程安排'
+                      }
+                    </ul>
+                  </CardBg>
+                );
+              })
+            : <div className="noResult">
+                <p>没有找到相关数据</p>
+              </div>
           }
-        </CardBg>
+        </div>
 
         <AddPlan />
       </div>
