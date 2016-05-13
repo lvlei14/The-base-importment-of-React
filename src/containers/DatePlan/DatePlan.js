@@ -6,16 +6,19 @@ import { connect } from 'react-redux';
 
 import { showPopUp } from '../../redux/modules/popUp';
 import { loadschedules } from '../../redux/modules/datePlan';
+import { loadtypes } from '../../redux/modules/datePlan';
 
 const styles = require('./DatePlan.scss');
 @connect(
   state => ({...state.schedules}), {
-    loadschedules
+    loadschedules,
+    loadtypes
   }
 )
 export default class DatePlan extends Component {
   static propTypes = {
-    schedules: PropTypes.array
+    schedules: PropTypes.array,
+    scheduleTypes: PropTypes.object
   };
 
   constructor(props) {
@@ -37,6 +40,8 @@ export default class DatePlan extends Component {
   componentDidMount() {
     //  TODO 接口地址
     //  this.props.loadschedules();
+    //  this.props.loadtypes();
+    this.clickCalendar(this.state.currentDayId);
   }
 
 
@@ -100,8 +105,10 @@ export default class DatePlan extends Component {
   }
 
   clickCalendar(id) {
+    const handledSchedules = this.handleData(this.props.schedules);
+    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.id === id);
     this.setState({
-      currentDayId: id
+      scheduleItems: curDayScheduleItem
     });
   }
 
@@ -139,28 +146,54 @@ export default class DatePlan extends Component {
     });
 
     let filterTypesResult = schedules;
+    const requires = this.state.filterRequires;
 
-    if (this.state.filterRequires.secondDate && this.state.filterRequires.firstDate > this.state.filterRequires.secondDate) {
+    if (requires.secondDate && requires.firstDate > requires.secondDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
       return;
     }
-    if (this.state.filterRequires.secondDate !== '' && this.state.filterRequires.type !== 'all') {
+
+    if (requires.secondDate !== '' && requires.type !== 'all') {
+      if (requires.type === 'in') {
+        filterTypesResult = schedules && schedules.filter((item) =>
+          item.date <= requires.secondDate && item.date >= requires.firstDate
+          && item.sidePlan === true
+        );
+      }else if (requires.type === 'out') {
+        filterTypesResult = schedules && schedules.filter((item) =>
+          item.date <= requires.secondDate && item.date >= requires.firstDate
+          && item.outsidePlan === true
+        );
+      }else {
+        filterTypesResult = schedules && schedules.filter((item) =>
+          item.date <= requires.secondDate && item.date >= requires.firstDate
+          && item.type === requires.type
+        );
+      }
+    }else if (requires.secondDate === '' && requires.type !== 'all') {
+      if (requires.type === 'in') {
+        filterTypesResult = schedules && schedules.filter((item) =>
+            item.date >= requires.firstDate && item.sidePlan === true
+          );
+      }else if (requires.type === 'out') {
+        filterTypesResult = schedules && schedules.filter((item) =>
+           item.date >= requires.firstDate && item.outsidePlan === true
+          );
+      }else {
+        filterTypesResult = schedules && schedules.filter((item) =>
+          item.type === requires.type && item.date >= requires.firstDate
+        );
+      }
+    }else if (requires.secondDate !== '' && requires.type === 'all') {
       filterTypesResult = schedules && schedules.filter((item) =>
-          item.date <= this.state.filterRequires.secondDate && item.date >= this.state.filterRequires.firstDate && item.type === this.state.filterRequires.type
+        item.date <= requires.secondDate && item.date >= requires.firstDate
       );
-    }else if (this.state.filterRequires.secondDate === '' && this.state.filterRequires.type !== 'all') {
+    }else if (requires.secondDate === '' && requires.type === 'all') {
       filterTypesResult = schedules && schedules.filter((item) =>
-        item.type === this.state.filterRequires.type && item.date >= this.state.filterRequires.firstDate
-      );
-    }else if (this.state.filterRequires.secondDate !== '' && this.state.filterRequires.type === 'all') {
-      filterTypesResult = schedules && schedules.filter((item) =>
-        item.date <= this.state.filterRequires.secondDate && item.date >= this.state.filterRequires.firstDate
-      );
-    }else if (this.state.filterRequires.secondDate === '' && this.state.filterRequires.type === 'all') {
-      filterTypesResult = schedules && schedules.filter((item) =>
-          item.date >= this.state.filterRequires.firstDate
+          item.date >= requires.firstDate
         );
     }
+
     this.setState({
       scheduleItems: this.handleData(filterTypesResult)
     });
@@ -168,34 +201,36 @@ export default class DatePlan extends Component {
 
   handleData(schedules) {
     const handledSchedules = [];
-    for (const key in schedules) {
-      const objSchedulesLists = {
-        type: schedules[key].type,
-        time: schedules[key].time,
-        start: schedules[key].start,
-        isconflict: schedules[key].isconflict,
-        sidePlan: schedules[key].sidePlan,
-        outsidePlan: schedules[key].outsidePlan
-      };
-      const obj = {
-        id: schedules[key].id,
-        date: schedules[key].date,
-        day: schedules[key].day,
-        schedulesLists: [
-          objSchedulesLists
-        ]
-      };
+    if (schedules) {
+      for (const key in schedules) {
+        const objSchedulesLists = {
+          type: schedules[key].type,
+          time: schedules[key].time,
+          start: schedules[key].start,
+          isconflict: schedules[key].isconflict,
+          sidePlan: schedules[key].sidePlan,
+          outsidePlan: schedules[key].outsidePlan
+        };
+        const obj = {
+          id: schedules[key].id,
+          date: schedules[key].date,
+          day: schedules[key].day,
+          schedulesLists: [
+            objSchedulesLists
+          ]
+        };
 
-      let common;
-      for (const prop in handledSchedules) {
-        if (schedules[key].date === handledSchedules[prop].date) {
-          common = prop;
+        let common;
+        for (const prop in handledSchedules) {
+          if (schedules[key].date === handledSchedules[prop].date) {
+            common = prop;
+          }
         }
-      }
-      if (common) {
-        handledSchedules[common].schedulesLists.push(objSchedulesLists);
-      }else {
-        handledSchedules.push(obj);
+        if (common) {
+          handledSchedules[common].schedulesLists.push(objSchedulesLists);
+        }else {
+          handledSchedules.push(obj);
+        }
       }
     }
     return handledSchedules;
@@ -204,38 +239,9 @@ export default class DatePlan extends Component {
   render() {
     const schedules = this.props.schedules;
     const handledSchedules = this.handleData(this.props.schedules);
+    const filterScheduleTypes = this.props.scheduleTypes;
 
-    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.id === this.state.currentDayId);
-    let scheduleItems;
-    if (this.state.tabTypeState === 'month') {
-      scheduleItems = curDayScheduleItem;
-    }else if (this.state.tabTypeState === 'list') {
-      scheduleItems = this.state.scheduleItems;
-    }
-
-    const filterScheduleTypes = [
-      {
-        ywname: 'all',
-        zwname: '全部'
-      },
-      {
-        ywname: 'check',
-        zwname: '查房'
-      },
-      {
-        ywname: 'metting',
-        zwname: '会议'
-      },
-      {
-        ywname: 'opera',
-        zwname: '手术'
-      },
-      {
-        ywname: 'duty',
-        zwname: '值班'
-      }
-    ];
-
+    let scheduleItems = this.state.scheduleItems;
 
     return (
       <div>
@@ -277,49 +283,59 @@ export default class DatePlan extends Component {
                         );
                       })
                     }
-
                   </tr>
                   </tbody>
                 </table>
+
               </section>
               : ''
           }
-          {
-            this.state.tabTypeState === 'list' ?
-              <div className={styles.scheduleFilterBtn}>
-                <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
-                <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
-                <section className={styles.scheduleFilterCon} style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
-                  <div className="clearfix">
-                    <i className="left">日期</i>
-                    <p className="left">
-                      <input type="date"
-                             value={this.state.filterRequires.firstDate}
-                             onChange={this.changeFilterFirstDate.bind(this)} />
-                      <span className={styles.dateSpan}>至</span>
-                      <input type="date"
-                             value={this.state.filterRequires.secondDate}
-                             onChange={this.changeFilterSecondDate.bind(this)} />
-                    </p>
-                  </div>
-                  <div className="clearfix">
-                    <i className="left">类型</i>
-                    <p className="left">
-                      {
-                        filterScheduleTypes && filterScheduleTypes.map((filterScheduleType) => {
-                          return (
-                            <span className={this.state.filterRequires.type === filterScheduleType.ywname ? styles.curSpan : ''}
-                                  onClick={() => this.clickFilterScheduleType(filterScheduleType.ywname)}
-                            >{ filterScheduleType.zwname}</span>
-                          );
-                        })
-                      }
-                    </p>
-                  </div>
-                </section>
+
+          <div className={styles.scheduleFilterBtn}>
+            <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
+            <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
+            <section className={styles.scheduleFilterCon} style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
+              <div className="clearfix">
+                <i className="left">日期</i>
+                <p className="left">
+                  <input type="date"
+                         value={this.state.filterRequires.firstDate}
+                         onChange={this.changeFilterFirstDate.bind(this)} />
+                  <span className={styles.dateSpan}>至</span>
+                  <input type="date"
+                         value={this.state.filterRequires.secondDate}
+                         onChange={this.changeFilterSecondDate.bind(this)} />
+                </p>
               </div>
-              : ''
-          }
+              <div className="clearfix">
+                <i className="left">类型</i>
+                <p className="left">
+                  <span className={this.state.filterRequires.type === 'all' ? styles.curSpan : ''}
+                        onClick={() => this.clickFilterScheduleType('all')}>全部</span>
+                  {
+                    ['院内', '院外'].map((time) => {
+                      const key = time === '院内' ? 'in' : 'out';
+                      return (
+                        <p>
+                          <span className={this.state.filterRequires.type === key ? styles.curSpan : ''}
+                                onClick={() => this.clickFilterScheduleType(key)}>{time}</span>
+                          {
+                            filterScheduleTypes[key] && filterScheduleTypes[key].map((filterScheduleType) => {
+                              return (
+                                <span className={this.state.filterRequires.type === filterScheduleType.ywname ? styles.curSpan : ''}
+                                      onClick={() => this.clickFilterScheduleType(filterScheduleType.ywname)}
+                                >{ filterScheduleType.zwname}</span>
+                              );
+                            })
+                          }
+                        </p>
+                      );
+                    })
+                  }
+                </p>
+              </div>
+            </section>
+          </div>
         </div>
 
         <div>
