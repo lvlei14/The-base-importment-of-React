@@ -1,9 +1,11 @@
 @import "../../theme/variables";
 
 .tabOutside{
-  width: 100%;
+  display: inline-block;
   text-align: center;
   padding:6px 10px;
+  position: relative;
+  z-index: 10000;
   ul{
     border:1px solid $mainColor;
     border-radius: 4px;
