@@ -40,7 +40,8 @@ export default class DatePlan extends Component {
   }
 
 
-  curDayContactList(curDayContactComponent, curDayContact) {
+  // curDayContactList(curDayContactComponent, curDayContact) {
+  curDayContactList(curDayContactComponent) {
     return (
       <li>{curDayContactComponent}</li>
     );
@@ -169,6 +170,7 @@ export default class DatePlan extends Component {
   handleData(schedules) {
     const handledSchedules = [];
     for (const key in schedules) {
+      if (!schedules.hasOwnProperty(key)) continue;  // TODO 去除error信息
       const objSchedulesLists = {
         type: schedules[key].type,
         time: schedules[key].time,
@@ -194,7 +196,7 @@ export default class DatePlan extends Component {
       }
       if (common) {
         handledSchedules[common].schedulesLists.push(objSchedulesLists);
-      }else {
+      } else {
         handledSchedules.push(obj);
       }
     }

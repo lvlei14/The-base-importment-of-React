@@ -5,6 +5,7 @@ import {
     App,
     Home,
     DatePlan,
+    LoginOrRegister
   } from 'containers';
 
 export default (store) => {
@@ -32,12 +33,16 @@ export default (store) => {
   // <Route path="chat" component={Chat}/>
   // <Route path="loginSuccess" component={LoginSuccess}/>
   return (
-    <Route path="/" component={App}>
-      { /* Home (main) route */ }
-      <IndexRoute component={Home}/>
-      <Route path="date-plan" component={DatePlan} />
-      { /* Routes requiring login */ }
-      <Route onEnter={requireLogin} />
+    <Route>
+      <Route path="login-or-register" component={LoginOrRegister} />
+      <Route path="/" component={App}>
+        { /* Home (main) route */ }
+        <IndexRoute component={Home}/>
+        <Route path="date-plan" component={DatePlan} />
+
+        { /* Routes requiring login */ }
+        <Route onEnter={requireLogin} />
+      </Route>
     </Route>
   );
 };
