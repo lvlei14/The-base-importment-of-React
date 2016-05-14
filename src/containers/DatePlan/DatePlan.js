@@ -145,13 +145,13 @@ export default class DatePlan extends Component {
   }
 
   hideFilterReq(schedules) {
-    this.setState({
-      showFilterRequires: false,
-      isClickFilter: true
-    });
-
     let filterTypesResult = schedules;
     const requires = this.state.filterRequires;
+    //  TODO 如果什么都没有改变,就不设置有没有点击筛选
+    this.setState({
+      showFilterRequires: false,
+      isClickFilter: true,
+    });
 
     if (requires.secondDate && requires.firstDate > requires.secondDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
@@ -245,8 +245,7 @@ export default class DatePlan extends Component {
     const schedules = this.props.schedules;
     const handledSchedules = this.handleData(this.props.schedules);
     const filterScheduleTypes = this.props.scheduleTypes;
-
-    let scheduleItems = this.state.scheduleItems;
+    let scheduleItems;
 
     if (!this.state.isClickFilter) {
       if (this.state.tabTypeState === 'month') {
@@ -311,9 +310,10 @@ export default class DatePlan extends Component {
             <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
             <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
             <section className={styles.scheduleFilterCon} style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
+              <div className={styles.modolBackDrop}></div>
               <div className="clearfix">
                 <i className="left">日期</i>
-                <p className="left">
+                <section className="left">
                   <input type="date"
                          value={this.state.filterRequires.firstDate}
                          onChange={this.changeFilterFirstDate.bind(this)} />
@@ -321,20 +321,35 @@ export default class DatePlan extends Component {
                   <input type="date"
                          value={this.state.filterRequires.secondDate}
                          onChange={this.changeFilterSecondDate.bind(this)} />
-                </p>
+                </section>
               </div>
               <div className="clearfix">
                 <i className="left">类型</i>
-                <p className="left">
-                  <span className={this.state.filterRequires.type === 'all' ? styles.curSpan : ''}
-                        onClick={() => this.clickFilterScheduleType('all')}>全部</span>
+                <section className="left">
+                  <header>
+                    {
+                      ['全部', '院内', '院外'].map((title) => {
+                        let key;
+                        if (title === '全部') {
+                          key = 'all';
+                        } else if (title === '院内') {
+                          key = 'in';
+                        } else {
+                          key = 'out';
+                        }
+                        return (
+                            <span className={this.state.filterRequires.type === key ? styles.curSpan : ''}
+                                onClick={() => this.clickFilterScheduleType(key)}>{title}</span>
+                        );
+                      })
+                    }
+                  </header>
+
                   {
                     ['院内', '院外'].map((time) => {
                       const key = time === '院内' ? 'in' : 'out';
                       return (
                         <p>
-                          <span className={this.state.filterRequires.type === key ? styles.curSpan : ''}
-                                onClick={() => this.clickFilterScheduleType(key)}>{time}</span>
                           {
                             filterScheduleTypes[key] && filterScheduleTypes[key].map((filterScheduleType) => {
                               return (
@@ -348,7 +363,7 @@ export default class DatePlan extends Component {
                       );
                     })
                   }
-                </p>
+                </section>
               </div>
             </section>
           </div>
