@@ -1,0 +1,45 @@
+.container {
+  background-color: #ffffff;
+  font-size: 16px;
+
+  .bgContainer {
+    position: relative;
+
+    p {
+      position: absolute;
+      left: 3px;
+      top: 80px;
+      text-align: center;
+      right: 3px;
+      color: #ffffff;
+      font-size: 40px;
+      z-index: 100;
+    }
+
+    .bgImg {
+      width: 100%;
+      height: 220px;
+    }
+
+    .bottomBorder {
+      border-bottom: 3px solid #51A7F9;
+    }
+
+    ul {
+      width: 100%;
+      height: 40px;
+      position: absolute;
+      bottom: 0px;
+
+      li {
+        z-index: 100;
+        color: #ffffff;
+        width: 50%;
+        height: 100%;
+        line-height: 40px;
+        text-align: center;
+        display: inline-block;
+      }
+    }
+  }
+}
