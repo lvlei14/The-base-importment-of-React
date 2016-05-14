@@ -26,7 +26,10 @@ export default class DatePlan extends Component {
     this.state = {
       tabTypeState: 'month',
       currentDayId: '2',
+      clickDayItems: [],
+      isClickFilter: false,
       scheduleItems: this.handleData(this.props.schedules),
+      filterItems: [],
       showFilterRequires: false,
       filterRequires:
       {
@@ -100,7 +103,7 @@ export default class DatePlan extends Component {
   changeTabType(tabType) {
     this.setState({
       tabTypeState: tabType,
-      showFilterRequires: false
+      isClickFilter: false
     });
   }
 
@@ -108,7 +111,8 @@ export default class DatePlan extends Component {
     const handledSchedules = this.handleData(this.props.schedules);
     const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.id === id);
     this.setState({
-      scheduleItems: curDayScheduleItem
+      currentDayId: id,
+      clickDayItems: curDayScheduleItem
     });
   }
 
@@ -142,7 +146,8 @@ export default class DatePlan extends Component {
 
   hideFilterReq(schedules) {
     this.setState({
-      showFilterRequires: false
+      showFilterRequires: false,
+      isClickFilter: true
     });
 
     let filterTypesResult = schedules;
@@ -195,7 +200,7 @@ export default class DatePlan extends Component {
     }
 
     this.setState({
-      scheduleItems: this.handleData(filterTypesResult)
+      filterItems: this.handleData(filterTypesResult)
     });
   }
 
@@ -243,6 +248,17 @@ export default class DatePlan extends Component {
 
     let scheduleItems = this.state.scheduleItems;
 
+    if (!this.state.isClickFilter) {
+      if (this.state.tabTypeState === 'month') {
+        scheduleItems = this.state.clickDayItems;
+      }
+      if (this.state.tabTypeState === 'list') {
+        scheduleItems = this.state.scheduleItems;
+      }
+    }else {
+      scheduleItems = this.state.filterItems;
+    }
+
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
@@ -252,7 +268,7 @@ export default class DatePlan extends Component {
             <li className={this.state.tabTypeState === 'list' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('list')}>列表</li>
           </TabOutside>
           {
-            this.state.tabTypeState === 'month' ?
+            this.state.tabTypeState === 'month' && this.state.isClickFilter === false ?
               <section>
                 <table>
                   <tbody>
@@ -269,7 +285,7 @@ export default class DatePlan extends Component {
                     {
                       handledSchedules && handledSchedules.map((handledSchedule) => {
                         return (
-                          <td onClick={() => this.clickCalendar(handledSchedule.id)} className={ this.state.currentDayId === handledSchedule.id ? styles.curTd : ''}>
+                          <td onClick={() => this.clickCalendar(handledSchedule.id)} className={this.state.currentDayId === handledSchedule.id ? styles.curTd : ''}>
                             <div>
                               {handledSchedule.day}
                               <p>
