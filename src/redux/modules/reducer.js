@@ -10,6 +10,7 @@ import info from './info';
 import widgets from './widgets';
 import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
+import { addDatePlanReducer } from './addDatePlan';
 
 export default combineReducers({
   routing: routerReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
   info,
   widgets,
   popUp: popUpReducer,
-  schedules: datePlanSchedulesReducer
+  schedules: datePlanSchedulesReducer,
+  addDatePlan: addDatePlanReducer,
 });

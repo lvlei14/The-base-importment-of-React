@@ -2,24 +2,17 @@
  * Override Bootstrap styles that you can't modify via variables here.
  *
  */
-@import "variables.scss";
-.navbar-brand {
-  position: relative;
-  padding-left: 50px;
+@import "variables";
+html{
+  font-size: 100px;
 }
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: #33e0ff;
-  background-color: transparent;
-}
-
 
 body{
-  font-family: "黑体","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "黑体",SimHei,"Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: .14rem;
   background-color: #f2f2f2;
 }
+
 *{
   margin:0;
   padding:0;
@@ -30,6 +23,9 @@ ul,li{
 }
 p,h3{
   margin: 0px;
+}
+span,i{
+  display: inline-block;
 }
 
 .left{
@@ -48,6 +44,27 @@ p,h3{
 }
 .clearfix{*zoom:1;}
 
+
+//radius cardBG
+.cardBgRadius{
+  background-color: #fff;
+  border:1px solid $borderColor;
+  border-radius: 6px;
+}
+
+//button
+.mainBtn{
+  background-color: $mainColor;
+  color: #fff;
+  font-size: $jzfontSize;
+  height: .4rem;
+  line-height: .4rem;
+  border-radius: 30px;
+  margin:$tbmargin 0;
+  border: 0px solid $mainColor;
+  width: 100%;
+  padding:0;
+}
 
 //return not result
 .noResult{
