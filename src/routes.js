@@ -5,7 +5,8 @@ import {
     App,
     Home,
     DatePlan,
-    LoginOrRegister
+    LoginOrRegister,
+    AddDatePlan,
   } from 'containers';
 
 export default (store) => {
@@ -39,7 +40,7 @@ export default (store) => {
         { /* Home (main) route */ }
         <IndexRoute component={Home}/>
         <Route path="date-plan" component={DatePlan} />
-
+        <Route path="add-date-plan" component={AddDatePlan} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

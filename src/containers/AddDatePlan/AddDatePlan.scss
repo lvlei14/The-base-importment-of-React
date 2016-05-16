@@ -1,0 +1,57 @@
+@import '../../theme/variables.scss';
+.addDatePlan{
+  padding: 0 $lrmargin;
+  header.headTitle{
+    color: $mainColor;
+    font-size: $jzfontSize;
+    margin-bottom: .06rem;
+    margin-top: $tbmargin;
+  }
+  ul{
+    padding:4px 14px;
+    li{
+      position: relative;
+      height: .3rem;
+      line-height: .3rem;
+      margin:.1rem 0;
+      .leftPlaceholder{
+        font-style: normal;
+        width: .6rem;
+        text-align: right;
+        position: absolute;
+        top:0;
+        left:0;
+      }
+      .mainIcon{
+        color: #f00;
+        position: absolute;
+        top:0;
+        left:.64rem;
+        font-size: $jzfontSize;
+        line-height: .35rem;
+      }
+      div{
+        margin-left:.8rem;
+        input,select{
+          width: 100%;
+          height: .3rem;
+          line-height: .3rem;
+          border-radius: 2px;
+          border: 1px solid $borderColor;
+        }
+      }
+      .scheduleType{
+        select{
+          width: 48%;
+        }
+        select:first-child{
+          margin-right: 4%;
+        }
+      }
+    }
+  }
+}
+textarea{
+  width: 100%;
+  min-height: 1rem;
+}
