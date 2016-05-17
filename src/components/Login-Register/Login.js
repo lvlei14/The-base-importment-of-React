@@ -6,7 +6,6 @@ const usernameBtn = require('../../images/login-register/login_user@3x.png');
 const passwordBtn = require('../../images/login-register/login_key@3x.png');
 
 
-
 export default class Login extends Component {
   static propTypes = {
     login: PropTypes.func
