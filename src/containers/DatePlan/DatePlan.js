@@ -12,7 +12,7 @@ const styles = require('./DatePlan.scss');
 @connect(
   state => ({...state.schedules}), {
     loadschedules,
-    loadtypes
+    loadtypes,
   }
 )
 export default class DatePlan extends Component {
@@ -425,10 +425,8 @@ class AddPlan extends Component {
   }
 
   addPlan() {
-    //  TODO 弹窗
-    //  this.props.showPopUp('添加日程',
-    //  'div内容'
-    //  );
+    //  TODO pushState
+    // this.props.pushState(null, `/app-date-plan`);
   }
 
   render() {

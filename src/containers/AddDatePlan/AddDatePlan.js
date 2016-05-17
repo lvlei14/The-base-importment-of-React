@@ -98,7 +98,6 @@ export default class AddDatePlan extends Component {
     const operaInfor = this.props.opera;
 
     const isout = this.state.isout;
-
     return (
       <div>
         <HeadNaviBar>添加日程</HeadNaviBar>
@@ -116,19 +115,26 @@ export default class AddDatePlan extends Component {
                 <label className={ styles.leftPlaceholder}>日程类型</label>
                 <span className={ styles.mainIcon}>*</span>
                 <div className={styles.scheduleType}>
-                  <select onChange={this.selectIsout.bind(this)} value={this.state.isout}>
-                    <option value="in">院内</option>
-                    <option value="out">院外</option>
-                  </select>
-                  <select onChange={this.selectType.bind(this)} value={this.state.scheduleType}>
-                    {
-                      scheduleTypes[isout].map((type) => {
-                        return (
-                          <option value={type.ywname}>{type.zwname}</option>
-                        );
-                      })
-                    }
-                  </select>
+                  <div className="select">
+                    <select onChange={this.selectIsout.bind(this)} value={this.state.isout}>
+                      <option value="in">院内</option>
+                      <option value="out">院外</option>
+                    </select>
+                    <p className="caret"></p>
+                  </div>
+                  <div className="select">
+                    <select onChange={this.selectType.bind(this)} value={this.state.scheduleType}>
+                      <span></span>
+                      {
+                        scheduleTypes[isout].map((type) => {
+                          return (
+                            <option key={type.ywname} value={type.ywname}>{type.zwname}</option>
+                          );
+                        })
+                      }
+                    </select>
+                    <p className="caret"></p>
+                  </div>
                 </div>
               </li>
               <li>
@@ -289,7 +295,7 @@ export class OperaType extends Component {
             <select onChange={this.changeOperaAddress.bind(this)} value={this.state.address}>
               {
                 operaInfor && operaInfor.address && operaInfor.address.map((address) => {
-                  return (<option value={address}>{address}</option>);
+                  return (<option key={address} value={address}>{address}</option>);
                 })
               }
             </select>
@@ -301,7 +307,7 @@ export class OperaType extends Component {
             <select onChange={this.changeOperaDiagno.bind(this)} value={this.state.diagno}>
               {
                 operaInfor && operaInfor.diagnos && operaInfor.diagnos.map((diagno) => {
-                  return (<option value={diagno}>{diagno}</option>);
+                  return (<option key={diagno} value={diagno}>{diagno}</option>);
                 })
               }
             </select>
@@ -313,7 +319,7 @@ export class OperaType extends Component {
             <select onChange={this.changeOperaName.bind(this)} value={this.state.operaName}>
               {
                 operaInfor && operaInfor.operaNames && operaInfor.operaNames.map((operaName) => {
-                  return (<option value={operaName}>{operaName}</option>);
+                  return (<option key={operaName} value={operaName}>{operaName}</option>);
                 })
               }
             </select>
@@ -388,7 +394,7 @@ export class MettingType extends Component {
             <select onChange={this.changeMettingName.bind(this)} value={this.state.types}>
               {
                 mettingInfor && mettingInfor.types && mettingInfor.types.map((type) => {
-                  return (<option value={type}>{type}</option>);
+                  return (<option key={type} value={type}>{type}</option>);
                 })
               }
             </select>
@@ -400,7 +406,7 @@ export class MettingType extends Component {
             <select onChange={this.changeMettingAddress.bind(this)} value={this.state.address}>
               {
                 mettingInfor && mettingInfor.address && mettingInfor.address.map((address) => {
-                  return (<option value={address}>{address}</option>);
+                  return (<option key={address} value={address}>{address}</option>);
                 })
               }
             </select>
