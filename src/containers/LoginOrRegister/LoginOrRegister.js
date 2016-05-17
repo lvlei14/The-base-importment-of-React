@@ -18,7 +18,11 @@ export default class LoginOrRegister extends Component {
     register: PropTypes.func,
     selectTab: PropTypes.func,
     getMsgCode: PropTypes.func,
-    selectedTabName: PropTypes.number
+    newUserId: PropTypes.string,
+    msg: PropTypes.string,
+    errMsg: PropTypes.string,
+    selectedTabName: PropTypes.number,
+    defaultLoginUser: PropTypes.string
   };
 
   constructor(props) {
@@ -46,10 +50,18 @@ export default class LoginOrRegister extends Component {
           </ul>
         </div>
         <div style={{display: selectTabKey === 1 ? 'block' : 'none'}}>
-          <Login login={this.props.login}/>
+          <Login login={this.props.login}
+                 defaultLoginUser={this.props.defaultLoginUser}
+          />
         </div>
         <div style={{display: selectTabKey === 2 ? 'block' : 'none'}}>
-          <Register register={this.props.register} getMsgCode={this.props.getMsgCode}/>
+          <Register register={this.props.register}
+                    getMsgCode={this.props.getMsgCode}
+                    registerStatus={this.props.newUserId}
+                    msg={this.props.msg}
+                    errMsg={this.props.errMsg}
+                    goLoginPage={() => this.props.selectTab(1)}
+          />
         </div>
       </div>
     );

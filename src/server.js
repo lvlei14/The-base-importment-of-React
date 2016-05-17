@@ -20,6 +20,8 @@ import {Provider} from 'react-redux';
 import getRoutes from './routes';
 
 const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
+console.log('代理API地址: ' + targetUrl);
+
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);

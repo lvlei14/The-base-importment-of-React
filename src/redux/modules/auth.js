@@ -18,21 +18,24 @@ const SELECT_TAB = 'SELECT_TAB';
 
 
 const initialState = {
+  defaultLoginUser: '',
   loading: false,
   user: null,
-  registerInfo: {},
+  newUserId: '',       // judge register result
   msgCode: '',         // register msg code
   selectedTabName: 1,  // default login tab
-  msg: ''
+  msg: '',
+  errMsg: ''
 };
 
 export default function reducer(state = initialState, action = {}) {
+  state.msg = '';
+  state.errMsg = '';
   switch (action.type) {
     case LOGIN:
       return {
         ...state,
-        loading: true,
-        msg: ''
+        loading: true
       };
     case LOGIN_SUCCESS:
       return {
@@ -86,19 +89,26 @@ export default function reducer(state = initialState, action = {}) {
     case REGISTER:
       return {
         ...state,
-        loading: true
+        newUserId: '',
+        loading: true,
+        defaultLoginUser: ''
       };
     case REGISTER_SUCCESS:
+      console.log(action);
       return {
         ...state,
         loading: false,
-        msg: action.msg
+        newUserId: action.result && action.result._id,
+        defaultLoginUser: action.result.mobile,
+        msg: action.result && action.result.success_msg
       };
     case REGISTER_FAIL:
+      console.log(action);
       return {
         ...state,
+        newUserId: '',
         loading: false,
-        msg: action.msg
+        errMsg: action.error && action.error.error_msg
       };
     case SELECT_TAB:
       return {
@@ -117,9 +127,12 @@ export function isLoaded(globalState) {
 
 
 export function register(options) {
+  options.reg_from = 'wechat';
+  console.log('=====click 注册=====:');
+  console.log(options);
   return {
     types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAIL],
-    promise: (client) => client.post('/register', {
+    promise: (client) => client.post('/user', {
       data: options
     })
   };

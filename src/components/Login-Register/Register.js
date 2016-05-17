@@ -12,14 +12,18 @@ const hidenPasswordIcon = require('../../images/login-register/login_cannot@3x.p
 export default class Register extends Component {
   static propTypes = {
     register: PropTypes.func,
-    getMsgCode: PropTypes.func
+    getMsgCode: PropTypes.func,
+    registerStatus: PropTypes.string,
+    msg: PropTypes.string,
+    errMsg: PropTypes.string,
+    goLoginPage: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     const TIMELIMIT = 10;
     this.state = {
-      phoneNumber: '',
+      mobile: '',
       password: '',
       idCardNo: '',
       msgCode: '',
@@ -31,19 +35,32 @@ export default class Register extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    // register success
+    if (!this.props.registerStatus && nextProps.registerStatus) {
+      alert(nextProps.msg);
+      this.props.goLoginPage();
+      this.clearInput();
+    }
+    // error
+    if (!this.props.errMsg && nextProps.errMsg) {
+      alert(nextProps.errMsg);
+    }
+  }
+
   inputPhoneNumber(event) {
     this.setState({
-      phoneNumber: event.target.value
+      mobile: event.target.value
     });
   }
 
-  inputMsgCode() {
+  inputMsgCode(event) {
     this.setState({
       msgCode: event.target.value
     });
   }
 
-  inputIdCardNo() {
+  inputIdCardNo(event) {
     this.setState({
       idCardNo: event.target.value
     });
@@ -55,8 +72,21 @@ export default class Register extends Component {
     });
   }
 
-  registerHandler() {
+  clearInput() {
+    this.setState({
+      mobile: '',
+      password: '',
+      idCardNo: '',
+      msgCode: '',
+      showPassword: false
+    });
+  }
 
+  registerHandler() {
+    // TODO 验证手机号码格式, 身份证号码格式
+    const {idCardNo, msgCode, mobile, password} = this.state;
+    const options = {card: {id: idCardNo, type: 'sfz'}, msgCode, mobile, password};
+    this.props.register(options);
   }
 
   timeCount() {
@@ -98,7 +128,7 @@ export default class Register extends Component {
       <div className={styles.loginContainer}>
         <div className={styles.inputContainer}>
           <img src={usernameIcon} className={styles.imgLeft} alt="手机号码"/>
-          <input type="text" onChange={this.inputPhoneNumber.bind(this)} value={this.state.username} placeholder="请输入手机号码"/>
+          <input type="text" onChange={this.inputPhoneNumber.bind(this)} value={this.state.mobile} placeholder="请输入手机号码"/>
           <span className={styles.msgCodeIcon}
                 onClick={this.sendMsgCode.bind(this)}
                 style={{backgroundColor: this.state.msgCodeBtnBgColor, color: this.state.msgCodeBtnFontColor}}>

@@ -8,7 +8,8 @@ const passwordBtn = require('../../images/login-register/login_key@3x.png');
 
 export default class Login extends Component {
   static propTypes = {
-    login: PropTypes.func
+    login: PropTypes.func,
+    defaultLoginUser: PropTypes.string
   };
 
   constructor(props) {
@@ -17,6 +18,14 @@ export default class Login extends Component {
       username: '',
       password: ''
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.defaultLoginUser && nextProps.defaultLoginUser) {
+      this.setState({
+        username: nextProps.defaultLoginUser
+      });
+    }
   }
 
   inputUsername(event) {
