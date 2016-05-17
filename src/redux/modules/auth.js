@@ -16,7 +16,6 @@ const GET_MSG_CODE_FAIL = 'GET_MSG_CODE_FAIL';
 
 const SELECT_TAB = 'SELECT_TAB';
 
-
 const initialState = {
   defaultLoginUser: '',
   loading: false,
@@ -40,6 +39,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_SUCCESS:
       console.log('====登录结果====');
       console.log(action);
+      localStorage.setItem('token', action.result.token);
       return {
         ...state,
         loading: false,
@@ -181,5 +181,16 @@ export function selectTab(tabName) {
   return {
     type: SELECT_TAB,
     selectedTabName: tabName
+  };
+}
+
+
+const LOAD_PW = 'LOAD_PW';
+const LOAD_PW_SUCCESS = 'LOAD_PW_SUCCESS';
+const LOAD_PW_FAIL = 'LOAD_PW_FAIL';
+export function getPassword(id) {
+  return {
+    types: [LOAD_PW, LOAD_PW_SUCCESS, LOAD_PW_FAIL],
+    promise: (client) => client.get(`/user/${id}/password`)
   };
 }

@@ -23,6 +23,8 @@ export default class ApiClient {
           request.query(params);
         }
 
+        request.set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+
         if (__SERVER__ && req.get('cookie')) {
           request.set('cookie', req.get('cookie'));
         }
