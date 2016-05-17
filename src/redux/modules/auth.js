@@ -10,6 +10,10 @@ const REGISTER = 'REGISTER';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAIL = 'REGISTER_FAIL';
 
+const GET_MSG_CODE = 'GET_MSG_CODE';
+const GET_MSG_CODE_SUCCESS = 'GET_MSG_CODE_SUCCESS';
+const GET_MSG_CODE_FAIL = 'GET_MSG_CODE_FAIL';
+
 const SELECT_TAB = 'SELECT_TAB';
 
 
@@ -17,6 +21,7 @@ const initialState = {
   loading: false,
   user: null,
   registerInfo: {},
+  msgCode: '',         // register msg code
   selectedTabName: 1,  // default login tab
   msg: ''
 };
@@ -59,6 +64,25 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false
       };
+    case GET_MSG_CODE:
+      return {
+        ...state,
+        loading: true,
+        msgCode: ''
+      };
+    case GET_MSG_CODE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        msgCode: action.result,
+        msg: action.msg
+      };
+    case GET_MSG_CODE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        msgCode: ''
+      };
     case REGISTER:
       return {
         ...state,
@@ -92,6 +116,16 @@ export function isLoaded(globalState) {
 }
 
 
+export function register(options) {
+  return {
+    types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAIL],
+    promise: (client) => client.post('/register', {
+      data: options
+    })
+  };
+}
+
+
 export function login(name, password) {
   return {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
@@ -99,6 +133,18 @@ export function login(name, password) {
       data: {
         name: name,
         password: password
+      }
+    })
+  };
+}
+
+
+export function getMsgCode(phone) {
+  return {
+    types: [GET_MSG_CODE, GET_MSG_CODE_SUCCESS, GET_MSG_CODE_FAIL],
+    promise: (client) => client.post('/msg-code/register', {
+      data: {
+        phone: phone
       }
     })
   };
@@ -114,7 +160,6 @@ export function logout() {
 
 
 export function selectTab(tabName) {
-  console.log(tabName);
   return {
     type: SELECT_TAB,
     selectedTabName: tabName

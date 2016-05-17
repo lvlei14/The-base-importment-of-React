@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
-import CardBg from '../../components/CardBg/Card';
 import { connect } from 'react-redux';
 
 import { loadtypes } from '../../redux/modules/datePlan';
@@ -10,7 +9,7 @@ import { loadOperaInformation } from '../../redux/modules/addDatePlan';
 
 const styles = require('./AddDatePlan.scss');
 @connect(
-  state => ({...state.schedules,...state.addDatePlan}), {
+  state => ({...state.schedules, ...state.addDatePlan}), {
     loadtypes,
     addDatePlan,
     loadMettingInformation,
@@ -47,36 +46,34 @@ export default class AddDatePlan extends Component {
     //  this.props.loadtypes();
   }
 
-  selectIsout(event){
+  selectIsout(event) {
     this.setState({
       isout: event.target.value
-    })
+    });
   }
 
-  selectType(event){
+  selectType(event) {
     this.setState({
       scheduleType: event.target.value
-    })
+    });
   }
 
-  clickAddBtn(){
-    const options = {
-
-    };
+  clickAddBtn() {
+    // const options = {};
     //  TODO 提交添加信息
     //  this.props.addDatePlan(options);
   }
 
-  inputOperaName(event){
+  inputOperaName(event) {
     this.setState({
-      operaInfor: Object.assign({}, this.state.operaInfor, { name: event.target.value})
-    })
+      operaInfor: Object.assign({}, this.state.operaInfor, {name: event.target.value})
+    });
   }
 
-  changeOperaSex(event){
+  changeOperaSex(event) {
     this.setState({
-      operaInfor: Object.assign({}, this.state.operaInfor, { sex: event.target.value})
-    })
+      operaInfor: Object.assign({}, this.state.operaInfor, {sex: event.target.value})
+    });
   }
 
   render() {
@@ -95,7 +92,7 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>标题</label>
                 <div>
-                  <input type="text" />
+                  <input type="text"/>
                 </div>
               </li>
               <li>
@@ -109,9 +106,9 @@ export default class AddDatePlan extends Component {
                   <select onChange={this.selectType.bind(this)} value={this.state.scheduleType}>
                     {
                       scheduleTypes[isout].map((type) => {
-                        return(
+                        return (
                           <option value={type.ywname}>{type.zwname}</option>
-                        )
+                        );
                       })
                     }
                   </select>
@@ -120,25 +117,25 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>开始时间</label>
                 <div>
-                  <input type="date" />
+                  <input type="date"/>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>结束时间</label>
                 <div>
-                  <input type="date" />
+                  <input type="date"/>
                 </div>
               </li>
               <li style={{display: this.state.scheduleType === 'opera' ? 'none' : 'block'}}>
                 <label className={ styles.leftPlaceholder}>重复</label>
                 <div>
-                  <input type="date" />
+                  <input type="date"/>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>提醒</label>
                 <div>
-                  <input type="date" />
+                  <input type="date"/>
                 </div>
               </li>
             </ul>
@@ -150,7 +147,7 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>患者姓名</label>
                 <div>
-                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaInfor.name} />
+                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaInfor.name}/>
                 </div>
               </li>
               <li>
@@ -168,7 +165,7 @@ export default class AddDatePlan extends Component {
                   <select>
                     {
                       operaInfor && operaInfor.address && operaInfor.address.map((address) => {
-                        return <option value={address}>{address}</option>
+                        return (<option value={address}>{address}</option>);
                       })
                     }
                   </select>
@@ -180,7 +177,7 @@ export default class AddDatePlan extends Component {
                   <select>
                     {
                       operaInfor && operaInfor.diagnos && operaInfor.diagnos.map((diagno) => {
-                        return <option value={diagno}>{diagno}</option>
+                        return (<option value={diagno}>{diagno}</option>);
                       })
                     }
                   </select>
@@ -192,7 +189,7 @@ export default class AddDatePlan extends Component {
                   <select>
                     {
                       operaInfor && operaInfor.operaNames && operaInfor.operaNames.map((operaName) => {
-                        return <option value={operaName}>{operaName}</option>
+                        return (<option value={operaName}>{operaName}</option>);
                       })
                     }
                   </select>
@@ -210,13 +207,13 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>床号</label>
                 <div>
-                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName} />
+                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName}/>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>接台信息</label>
                 <div>
-                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName} />
+                  <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName}/>
                 </div>
               </li>
             </ul>
@@ -231,7 +228,7 @@ export default class AddDatePlan extends Component {
                   <select>
                     {
                       mettingInfor && mettingInfor.types && mettingInfor.types.map((type) => {
-                        return  <option value={type}>{type}</option>
+                        return (<option value={type}>{type}</option>);
                       })
                     }
                   </select>
@@ -241,18 +238,18 @@ export default class AddDatePlan extends Component {
                 <label className={ styles.leftPlaceholder}>会议地点</label>
                 <div>
                   <select>
-                  {
-                    mettingInfor && mettingInfor.address && mettingInfor.address.map((address) => {
-                      return  <option value={address}>{address}</option>
-                    })
-                  }
+                    {
+                      mettingInfor && mettingInfor.address && mettingInfor.address.map((address) => {
+                        return (<option value={address}>{address}</option>);
+                      })
+                    }
                   </select>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>参会人员</label>
                 <div>
-                  <input type="text" />
+                  <input type="text"/>
                 </div>
               </li>
             </ul>
@@ -264,13 +261,13 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>地点</label>
                 <div>
-                  <input type="text" />
+                  <input type="text"/>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>参与人员</label>
                 <div>
-                  <input type="text" />
+                  <input type="text"/>
                 </div>
               </li>
             </ul>
@@ -287,8 +284,8 @@ export default class AddDatePlan extends Component {
   }
 }
 
-//TODO 复合组件
-class OperaType extends Component{
+// TODO 复合组件
+export class OperaType extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -296,22 +293,22 @@ class OperaType extends Component{
     };
   }
 
-  inputOperaName(event){
+  inputOperaName(event) {
     this.setState({
       operaName: event.target.value
-    })
-    console.log('修改');
+    });
+    console.log('修 改');
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <header className={styles.headTitle}>手术信息</header>
         <ul className="cardBgRadius">
           <li>
             <label className={ styles.leftPlaceholder}>患者姓名</label>
             <div>
-              <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName} />
+              <input type="text" onChange={this.inputOperaName.bind(this)} value={this.state.operaName}/>
             </div>
           </li>
           <li>
@@ -326,25 +323,25 @@ class OperaType extends Component{
           <li>
             <label className={ styles.leftPlaceholder}>手术室</label>
             <div>
-              <input type="date" />
+              <input type="date"/>
             </div>
           </li>
           <li>
             <label className={ styles.leftPlaceholder}>诊断</label>
             <div>
-              <input type="date" />
+              <input type="date"/>
             </div>
           </li>
           <li>
             <label className={ styles.leftPlaceholder}>重复</label>
             <div>
-              <input type="date" />
+              <input type="date"/>
             </div>
           </li>
           <li>
             <label className={ styles.leftPlaceholder}>提醒</label>
             <div>
-              <input type="date" />
+              <input type="date"/>
             </div>
           </li>
         </ul>

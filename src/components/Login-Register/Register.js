@@ -11,7 +11,8 @@ const hidenPasswordIcon = require('../../images/login-register/login_cannot@3x.p
 
 export default class Register extends Component {
   static propTypes = {
-    register: PropTypes.func.required
+    register: PropTypes.func,
+    getMsgCode: PropTypes.func
   };
 
   constructor(props) {

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 // import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { Login, Register } from '../../components';
-import { login, register, selectTab } from '../../redux/modules/auth';
+import { login, register, selectTab, getMsgCode } from '../../redux/modules/auth';
 
 
 const styles = require('./LoginOrRegister.scss');
@@ -10,14 +10,15 @@ const bgPic = require('../../images/login-register/bg.jpg');
 
 @connect(
   state => ({...state.auth}),
-  {login, register, selectTab}
+  { login, register, selectTab, getMsgCode }
 )
 export default class LoginOrRegister extends Component {
   static propTypes = {
-    login: PropTypes.func.required,
-    register: PropTypes.func.required,
-    selectTab: PropTypes.func.required,
-    selectedTabName: PropTypes.number.required
+    login: PropTypes.func,
+    register: PropTypes.func,
+    selectTab: PropTypes.func,
+    getMsgCode: PropTypes.func,
+    selectedTabName: PropTypes.number
   };
 
   constructor(props) {
@@ -48,7 +49,7 @@ export default class LoginOrRegister extends Component {
           <Login login={this.props.login}/>
         </div>
         <div style={{display: selectTabKey === 2 ? 'block' : 'none'}}>
-          <Register register={this.props.register}/>
+          <Register register={this.props.register} getMsgCode={this.props.getMsgCode}/>
         </div>
       </div>
     );
