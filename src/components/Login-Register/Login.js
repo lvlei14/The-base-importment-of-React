@@ -9,7 +9,11 @@ const passwordBtn = require('../../images/login-register/login_key@3x.png');
 export default class Login extends Component {
   static propTypes = {
     login: PropTypes.func,
-    defaultLoginUser: PropTypes.string
+    defaultLoginUser: PropTypes.string,
+    msg: PropTypes.string,
+    user: PropTypes.obj,
+    errMsg: PropTypes.string,
+    goMainPage: PropTypes.func
   };
 
   constructor(props) {
@@ -25,6 +29,10 @@ export default class Login extends Component {
       this.setState({
         username: nextProps.defaultLoginUser
       });
+    }
+    if (!this.props.user && nextProps.user) {
+      alert(nextProps.msg);
+      this.props.goMainPage();
     }
   }
 
@@ -48,6 +56,7 @@ export default class Login extends Component {
     }
     this.props.login(username, password);
   }
+
   render() {
     return (
       <div className={styles.loginContainer}>

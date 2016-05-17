@@ -38,17 +38,22 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOGIN_SUCCESS:
+      console.log('====登录结果====');
+      console.log(action);
       return {
         ...state,
         loading: false,
-        user: action.result,
-        msg: action.msg
+        user: action.result && action.result.user,
+        msg: action.result && action.result.success_msg
       };
     case LOGIN_FAIL:
+      console.log('====登录异常====');
+      console.log(action);
       return {
         ...state,
         loading: false,
-        user: null
+        user: null,
+        errMsg: action.error && action.error.error_msg
       };
     case LOGOUT:
       return {
@@ -142,9 +147,9 @@ export function register(options) {
 export function login(name, password) {
   return {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-    promise: (client) => client.post('/login', {
+    promise: (client) => client.post('/auth/local', {
       data: {
-        name: name,
+        loginId: name,
         password: password
       }
     })

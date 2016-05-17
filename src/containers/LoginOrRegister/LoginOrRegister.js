@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 // import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Login, Register } from '../../components';
 import { login, register, selectTab, getMsgCode } from '../../redux/modules/auth';
 
@@ -10,7 +11,7 @@ const bgPic = require('../../images/login-register/bg.jpg');
 
 @connect(
   state => ({...state.auth}),
-  { login, register, selectTab, getMsgCode }
+  { login, register, selectTab, getMsgCode, pushState: push }
 )
 export default class LoginOrRegister extends Component {
   static propTypes = {
@@ -19,8 +20,10 @@ export default class LoginOrRegister extends Component {
     selectTab: PropTypes.func,
     getMsgCode: PropTypes.func,
     newUserId: PropTypes.string,
+    user: PropTypes.obj,
     msg: PropTypes.string,
     errMsg: PropTypes.string,
+    pushState: PropTypes.func,
     selectedTabName: PropTypes.number,
     defaultLoginUser: PropTypes.string
   };
@@ -30,6 +33,10 @@ export default class LoginOrRegister extends Component {
     this.state = {
       height: 500
     };
+  }
+
+  goMainPage() {
+    this.props.pushState('/');
   }
 
   render() {
@@ -52,6 +59,10 @@ export default class LoginOrRegister extends Component {
         <div style={{display: selectTabKey === 1 ? 'block' : 'none'}}>
           <Login login={this.props.login}
                  defaultLoginUser={this.props.defaultLoginUser}
+                 msg={this.props.msg}
+                 errMsg={this.props.errMsg}
+                 user={this.props.user}
+                 goMainPage={this.goMainPage.bind(this)}
           />
         </div>
         <div style={{display: selectTabKey === 2 ? 'block' : 'none'}}>
