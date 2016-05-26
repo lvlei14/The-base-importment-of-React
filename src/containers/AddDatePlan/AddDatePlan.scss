@@ -32,19 +32,23 @@
       }
       div{
         margin-left:.8rem;
-        input,select{
+        div{
+          position:relative;
+          select{
+
+          }
+        }
+        input,div{
           width: 100%;
-          height: .3rem;
-          line-height: .3rem;
-          border-radius: 2px;
-          border: 1px solid $borderColor;
         }
       }
       .scheduleType{
-        select{
+        div{
+          display: inline-block;
           width: 48%;
+          margin-left:0;
         }
-        select:first-child{
+        div:first-child{
           margin-right: 4%;
         }
       }
