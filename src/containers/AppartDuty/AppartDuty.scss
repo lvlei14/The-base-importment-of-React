@@ -1,0 +1,100 @@
+@import '../../theme/variables.scss';
+.duty{
+  .selectMonth{
+    position: absolute;
+    top: 0;
+    right: $lrmargin;
+    select{
+      background: transparent;
+      border: 0px solid #fff;
+    }
+    p{
+      color: #fff !important;
+      margin-top: .1rem;
+      margin-left: .04rem;
+    }
+  }
+
+  .dutyTop {
+    background-color: #fff;
+    margin-bottom: 10px;
+    color: $jzfontColor;
+    font-size: $jzfontSize;
+    text-align: center;
+    table{
+      width: 100%;
+      tr{
+        width: 14.28%;
+        th,td{
+          text-align: center;
+        }
+        th{
+          padding:.08rem 0 .1rem;
+          background-color: #fff;
+          font-weight: normal;
+          color: $jzfontColor;
+        }
+        th:first-child{
+          border-left: 1px solid #fff;
+        }
+        td{
+          border-bottom: 1px solid #ececec;
+          border-left: 1px solid $borderColor;
+          div{
+            position: relative;
+            .dateDay{
+              margin-bottom: .06rem;
+              padding-top: .12rem;
+            }
+            .dateAppart{
+              font-size: .12rem;
+              color: $text-color;
+              margin-bottom: .2rem;
+              i{  
+                display: inline-block;
+                border-radius: 50%;
+                width: .16rem;
+                height: .16rem;
+                margin-right: .02rem;
+              }
+              i.levelFir{
+                background: #CD680E;
+              }
+              i.levelSec{
+                background: #F5A623;
+              }
+              i.levelThr{
+                background: #4A90E2;
+              }
+              i.levelFour{
+                background: #81CFE0;
+              }
+            }
+            .dateSelf{
+            position: absolute;
+              top: 0;
+              left: .04rem;
+              width: .12rem;
+              height: .24rem;
+              background: url('../../images/sprite.png');
+              background-size: 2rem;
+              background-position: 0 -.3rem;
+            }
+          }
+        }
+        td.curTd{
+          div{
+            border:2px solid $mainColor;
+          }
+        }
+        td:first-child{
+          border-left:1px solid #fff;
+        }
+      }
+    }
+  }
+  footer{
+    padding: 0 $lrmargin;
+    text-align: center;
+  }
+}  

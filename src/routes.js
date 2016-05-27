@@ -7,6 +7,9 @@ import {
     DatePlan,
     LoginOrRegister,
     AddDatePlan,
+    Duty,
+    ChangeDuty,
+    AppartDuty,
   } from 'containers';
 
 export default (store) => {
@@ -41,6 +44,9 @@ export default (store) => {
         <IndexRoute component={Home}/>
         <Route path="date-plan" component={DatePlan} />
         <Route path="add-date-plan" component={AddDatePlan} />
+        <Route path="duty" component={Duty} />
+        <Route path="change-duty" component={ChangeDuty} />
+        <Route path="appart-duty" component={AppartDuty} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

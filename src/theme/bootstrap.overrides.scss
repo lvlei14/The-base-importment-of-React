@@ -9,7 +9,7 @@ html{
 
 body{
   font-family: "黑体",SimHei,"Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: .14rem;
+  font-size: .15rem;
   background-color: #f2f2f2;
 }
 
@@ -97,5 +97,11 @@ input, select{
 .topCardBg{
   background-color: #fff;
   border-bottom:1px solid #ececec;
+}
+
+//tip
+.tip{
+  color: $xsfontColor;
+  font-size: $xsfontSize;
 }
 
