@@ -12,8 +12,9 @@ import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
 import { addDatePlanReducer } from './addDatePlan';
 import { dutyReducer } from './duty';
-import { changeDutyReducer } from './changeDuty';
 import { appartDutyReducer } from './appartDuty';
+import { changeDutyReducer } from './changeDuty';
+import { changeDutyRecordsReducer } from './changeDutyRecord';
 
 export default combineReducers({
   routing: routerReducer,
@@ -31,6 +32,7 @@ export default combineReducers({
   schedules: datePlanSchedulesReducer,
   addDatePlan: addDatePlanReducer,
   dutys: dutyReducer,
-  changeDutys: changeDutyReducer,
   appartDutys: appartDutyReducer,
+  changeDutys: changeDutyReducer,
+  changeDutyRecords: changeDutyRecordsReducer,
 });

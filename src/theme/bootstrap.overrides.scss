@@ -65,7 +65,9 @@ span,i{
   width: 100%;
   padding:0;
 }
-
+.mainBtn:active{
+  opacity: 0.5;
+}
 
 //input
 input, select{
@@ -105,3 +107,20 @@ input, select{
   font-size: $xsfontSize;
 }
 
+
+//BACKGROUND
+
+//body background #fff
+.bodyBgWhite{
+  position: fixed;
+  top: 0;
+  right:0;
+  bottom: 0;
+  left: 0;
+  background: #fff;
+}
+//为了让要显示的内容不被白色背景遮住
+.bodyBgWhiteZindex{
+  position: relative;
+  z-index: 10;
+}

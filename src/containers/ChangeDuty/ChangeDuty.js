@@ -1,24 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { loadChangeDutys } from '../../redux/modules/changeDuty';
-const styles = require('./ChangeDuty.scss');
+import { sendChangeDutyRequest } from '../../redux/modules/changeDuty';
+
+const styles = require('../Duty/Duty.scss');
 @connect(
   state => ({...state.changeDutys}), {
-    loadChangeDutys
+    loadChangeDutys,
+    sendChangeDutyRequest,
+    pushState: push,
   }
 )
 export default class ChangeDuty extends Component {
   static propTypes = {
+    pushState: PropTypes.func,
     loadChangeDutys: PropTypes.func,
     changeDutys: PropTypes.array,
+    sendChangeDutyRequest: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      monthState: '3'
+      monthState: '3',
+      dateItemId: '',
+
     };
   }
 
@@ -36,35 +45,58 @@ export default class ChangeDuty extends Component {
   loadLevel(level) {
     if (level === '1') {
       return (
-        <i className={styles.levelFir}>1</i>
+        <i className={styles.levelFir}></i>
       );
     } else if (level === '2') {
       return (
-        <i className={styles.levelSec}>2</i>
+        <i className={styles.levelSec}></i>
       );
     }else if (level === '3') {
       return (
-        <i className={styles.levelThr}>3</i>
+        <i className={styles.levelThr}></i>
+      );
+    }else if (level === '4') {
+      return (
+        <i className={styles.levelFour}></i>
       );
     }
+  }
+
+  clickDateItem(id) {
+    this.setState({
+      dateItemId: id
+    });
+  }
+
+  clickChangeDuty() {
+    alert('TODO 完善交换接口地址');
+    // TODO 点击交换，给对方把信息发过去.
+    // this.props.sendChangeDutyRequest();
+  }
+
+  goChangeDutyRecord() {
+    this.props.pushState('/change-duty-record');
   }
 
   render() {
     const changeDutys = this.props.changeDutys;
     const monthChangeDutys = changeDutys && changeDutys.filter((item) => item.month === this.state.monthState);
-    console.log(monthChangeDutys);
     return (
       <div className={styles.duty}>
-        <HeadNaviBar>
-          换班申请
-          <div className={'select ' + styles.selectMonth}>
+        <HeadNaviBar>换班申请</HeadNaviBar>
+        <div className={'select clearfix ' + styles.selectMonth}>
+          <article className={'clearfix left ' + styles.changeDutyRecord} onClick={this.goChangeDutyRecord.bind(this)}>
+            <i className="left"></i>
+            <span className="left">日志</span>
+          </article>
+          <div className="left">
             <select value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
               <option value="3">3月</option>
               <option value="4">4月</option>
             </select>
-            <p className="caret"></p>
+            <p></p>
           </div>
-        </HeadNaviBar>
+        </div>
         <section className={styles.dutyTop}>
           <table>
             <tbody>
@@ -82,15 +114,13 @@ export default class ChangeDuty extends Component {
                 monthChangeDutys && monthChangeDutys.map((monthChangeDuty) => {
                   return (
                     <td key={monthChangeDuty.id}>
-                      <div>
+                      <div className={this.state.dateItemId === monthChangeDuty.id ? styles.divCur : ''} onClick={() => this.clickDateItem(monthChangeDuty.id)}>
                         <section className={styles.dateDay}>{monthChangeDuty.day}</section>
                         <article className={styles.dateAppart}>
-                          {/*
-                            TODO 在return写if语句，用来判断是哪个级别
                           {
                             this.loadLevel(monthChangeDuty.level)
-                          }*/}
-                          {monthChangeDuty.doctor}
+                          }
+                          <span className="left">{monthChangeDuty.doctor}</span>
                         </article>
                         <i className={styles.dateSelf}></i>
                       </div>
@@ -103,7 +133,7 @@ export default class ChangeDuty extends Component {
           </table>
         </section>
         <footer>
-          <button className="mainBtn">交换</button>
+          <button className="mainBtn" onClick={this.clickChangeDuty.bind(this)}>交换</button>
           <p className="tip">功能提示：点击想要交换的值班日期，可以申请换班哦~~</p>
         </footer>
       </div>

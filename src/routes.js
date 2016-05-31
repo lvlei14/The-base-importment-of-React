@@ -8,8 +8,9 @@ import {
     LoginOrRegister,
     AddDatePlan,
     Duty,
-    ChangeDuty,
     AppartDuty,
+    ChangeDuty,
+    ChangeDutyRecord,
   } from 'containers';
 
 export default (store) => {
@@ -45,8 +46,9 @@ export default (store) => {
         <Route path="date-plan" component={DatePlan} />
         <Route path="add-date-plan" component={AddDatePlan} />
         <Route path="duty" component={Duty} />
-        <Route path="change-duty" component={ChangeDuty} />
         <Route path="appart-duty" component={AppartDuty} />
+        <Route path="change-duty" component={ChangeDuty} />
+        <Route path="change-duty-record" component={ChangeDutyRecord} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

@@ -52,14 +52,14 @@ export default class Duty extends Component {
       <div className={styles.duty}>
         <HeadNaviBar>
           我的值班
-          <div className={'select ' + styles.selectMonth}>
-            <select value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
-              <option value="3">3月</option>
-              <option value="4">4月</option>
-            </select>
-            <p className="caret"></p>
-          </div>
         </HeadNaviBar>
+        <div className={'select clearfix ' + styles.selectMonth}>
+          <select className="left" value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
+            <option value="3">3月</option>
+            <option value="4">4月</option>
+          </select>
+          <p className="right"></p>
+        </div>
         <section className={styles.dutyTop}>
           <table>
             <tbody>

@@ -1,0 +1,53 @@
+@import '../../theme/variables.scss';
+
+.selectMonth{
+  position: absolute;
+  top: .08rem;
+  right: $lrmargin;
+  color: #fff;
+  select{
+    background: transparent;
+    border: 0px solid #fff;
+  }
+  p{
+    width: 0; 
+    border-left: .06rem solid transparent; border-top: .1rem solid #fff;
+    border-right: .06rem solid transparent;
+    position: absolute;
+    top: .11rem;
+    right: 0;
+  }
+}
+
+.dutyRecords{  
+  section{
+    header{
+      background: #f2f2f2;
+      padding: .03rem $lrmargin;
+      color: $xsfontColor;
+    }
+    ul{
+      padding: 0 $lrmargin;
+      border-top: 1px solid $borderColor;
+      border-bottom: 1px solid $borderColor;
+      li{
+        border-top: 1px solid $borderColor;
+        padding: .07rem 0 .14rem;
+        article{
+          font-size: $xsfontSize;
+          color: $xsfontColor;
+          margin-bottom: .07rem;
+        }
+        .spanSuccess{
+          color: $mainColor;
+        }
+        .spanFail{
+          color: #D31E1E;
+        }
+      }
+      li:first-child{
+        border-top: 1px solid #fff;
+      }
+    }
+  }
+}  

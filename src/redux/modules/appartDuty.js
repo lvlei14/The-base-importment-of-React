@@ -17,7 +17,7 @@ const appartDutys = [
     month: '3',
     doctor: '李柳',
     isSelf: false,
-    level: '4',
+    level: '3',
   },
   {
     id: '3',
@@ -25,7 +25,7 @@ const appartDutys = [
     month: '4',
     doctor: '刘平',
     isSelf: false,
-    level: '4',
+    level: '1',
   }
 ];
 
