@@ -69,12 +69,12 @@ export default class AppartDuty extends Component {
         <HeadNaviBar>
           XX科室值班表
         </HeadNaviBar>
-        <div className={'select clearfix ' + styles.selectMonth}>
+        <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <select className="left" value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
             <option value="3">3月</option>
             <option value="4">4月</option>
           </select>
-          <p className="right"></p>
+          <p className="right sanjiao-bt"></p>
         </div>
         <section className={styles.dutyTop}>
           <table>

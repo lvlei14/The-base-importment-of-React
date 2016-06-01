@@ -7,3 +7,5 @@ export Duty from './Duty/Duty';
 export AppartDuty from './AppartDuty/AppartDuty';
 export ChangeDuty from './ChangeDuty/ChangeDuty';
 export ChangeDutyRecord from './ChangeDutyRecord/ChangeDutyRecord';
+export Opera from './Opera/Opera';
+export OperaPatInfor from './OperaPatInfor/OperaPatInfor';

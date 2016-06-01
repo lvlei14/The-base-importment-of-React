@@ -1,0 +1,72 @@
+@import '../../theme/variables.scss';
+
+.opera{
+  .operaHeader{
+    height: .45rem;
+    line-height: .45rem;
+    font-size: $jzjzfontSize;
+    padding: 0 $lrmargin;
+    div{
+      p{
+        border-top: .1rem solid #797979;
+        margin-top: .18rem;
+        margin-left: .04rem;
+      }
+    }
+    article{
+      font-size: $jzfontSize;
+      i{
+        width: .19rem;
+        height: .21rem;
+        background: url('../../images/sprite.png');
+        background-size: 2rem;
+        background-position: 0 -4rem;
+        margin-top: .1rem;
+        margin-right: .06rem;
+      }
+    }
+  }
+  section{
+    border-top: 1px solid $borderColor;
+    margin: $tbmargin 0;
+    header{
+      font-size: $jzjzfontSize;
+      color: $mainColor;
+      height: .45rem;
+      line-height: .45rem;
+      padding: 0 $lrmargin;
+      border-bottom: 1px solid $borderColor;
+      p{
+        border-top: .1rem solid $mainColor;
+        margin-top: .18rem;
+        margin-right: .04rem;
+      }
+    }
+    ul{
+      padding: 0 $lrmargin;
+      li{
+        color: $jzfontColor;
+        padding: $tbmargin 0;
+        border-top: 1px solid $borderColor;
+        i{
+          width: 4%;
+          color: $xsfontColor;
+          font-style: normal;
+        }
+        P{
+          width: 80%;
+          height: .2rem;
+          overflow: hidden;
+          
+        }
+        article{
+          width: 16%;
+          text-align: center;
+        }
+      }
+      li:first-child{
+        border-top: 1px solid #fff;
+      }
+    }
+  }
+}

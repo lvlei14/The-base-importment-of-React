@@ -84,7 +84,7 @@ export default class ChangeDuty extends Component {
     return (
       <div className={styles.duty}>
         <HeadNaviBar>换班申请</HeadNaviBar>
-        <div className={'select clearfix ' + styles.selectMonth}>
+        <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <article className={'clearfix left ' + styles.changeDutyRecord} onClick={this.goChangeDutyRecord.bind(this)}>
             <i className="left"></i>
             <span className="left">日志</span>
@@ -94,7 +94,7 @@ export default class ChangeDuty extends Component {
               <option value="3">3月</option>
               <option value="4">4月</option>
             </select>
-            <p></p>
+            <p className="sanjiao-bt"></p>
           </div>
         </div>
         <section className={styles.dutyTop}>

@@ -5,26 +5,26 @@
     top: .08rem;
     right: $lrmargin;
     color: #fff;
+    font-size: $jzjzfontSize;
     select{
       background: transparent;
       border: 0px solid #fff;
+      margin-top: .02rem;
     }
     p{
-      width: 0; 
-      border-left: .06rem solid transparent; border-top: .1rem solid #fff;
-      border-right: .06rem solid transparent;
       position: absolute;
-      top: .11rem;
+      top: .12rem;
       right: 0;
     }
+    
     .changeDutyRecord{
       margin-right: .1rem;
-      margin-top: .05rem;
+      margin-top: .054rem;
       i{
         width: .16rem;
         height: .2rem;
         background: url('../../images/sprite.png');
-        background-position: 0 -.98rem;
+        background-position: 0 -.96rem;
         background-size: 1.6rem;
         margin-right: .02rem;
       }
@@ -46,6 +46,7 @@
           text-align: center;
         }
         th{
+          font-size: $jzjzfontSize;
           padding:.08rem 0 .1rem;
           background-color: #fff;
           font-weight: normal;

@@ -64,7 +64,7 @@ export default class ChangeDutyRecord extends Component {
             <option value="4">4月</option>
             <option value="5">5月</option>
           </select>
-          <p></p>
+          <p className="sanjiao-bt"></p>
         </div>
 
         <div>

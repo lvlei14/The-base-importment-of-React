@@ -1,22 +1,21 @@
 @import '../../theme/variables.scss';
 
 .selectMonth{
-  position: absolute;
-  top: .08rem;
-  right: $lrmargin;
-  color: #fff;
-  select{
-    background: transparent;
-    border: 0px solid #fff;
-  }
-  p{
-    width: 0; 
-    border-left: .06rem solid transparent; border-top: .1rem solid #fff;
-    border-right: .06rem solid transparent;
     position: absolute;
-    top: .11rem;
-    right: 0;
-  }
+    top: .08rem;
+    right: $lrmargin;
+    color: #fff;
+    font-size: $jzjzfontSize;
+    select{
+      background: transparent;
+      border: 0px solid #fff;
+      margin-top: .02rem;
+    }
+    p{
+      position: absolute;
+      top: .12rem;
+      right: 0;
+    }
 }
 
 .dutyRecords{  

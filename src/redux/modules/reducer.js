@@ -15,6 +15,7 @@ import { dutyReducer } from './duty';
 import { appartDutyReducer } from './appartDuty';
 import { changeDutyReducer } from './changeDuty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
+import { operaReducer } from './opera';
 
 export default combineReducers({
   routing: routerReducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   appartDutys: appartDutyReducer,
   changeDutys: changeDutyReducer,
   changeDutyRecords: changeDutyRecordsReducer,
+  operas: operaReducer,
 });
