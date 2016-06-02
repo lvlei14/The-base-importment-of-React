@@ -3,8 +3,15 @@
  *
  */
 @import "variables";
+
 html{
   font-size: 100px;
+}
+
+@media(max-width: 370px){
+  html{
+    font-size: 90px;
+  }
 }
 
 body{
@@ -12,6 +19,7 @@ body{
   font-size: .14rem;
   background-color: #f2f2f2;
 }
+
 
 *{
   margin:0;
@@ -21,13 +29,9 @@ ul,li{
   list-style: none;
   margin-bottom: 0px;
 }
-p,h3{
-  margin: 0px;
-}
 span,i{
   display: inline-block;
 }
-
 .left{
   float: left;
 }
@@ -45,12 +49,34 @@ span,i{
 .clearfix{*zoom:1;}
 
 
-//radius cardBG
-.cardBgRadius{
-  background-color: #fff;
-  border:1px solid $borderColor;
-  border-radius: 6px;
+//cover bootstrap
+p,h3,dl{
+  margin: 0px;
 }
+dt{
+  font-weight: normal;
+}
+
+
+//sanjiao
+.sanjiao-top{
+   width: 0; border-left: .08rem solid transparent; border-bottom: .08rem solid #fff;
+     border-right: .08rem solid transparent;
+}
+.sanjiao-bt{
+  width: 0; 
+  border-left: .06rem solid transparent; border-top: .1rem solid #fff;
+  border-right: .06rem solid transparent;
+}
+.sanjiao-left{
+   width: 0; border-bottom: .08rem solid transparent; border-top: .08rem solid transparent;
+     border-right: .08rem solid #fff;
+}
+.sanjiao-right{
+   width: 0; border-bottom: .08rem solid transparent; border-top: .08rem solid transparent;
+     border-left: .08rem solid #fff;
+}
+
 
 //button
 .mainBtn{
@@ -68,6 +94,7 @@ span,i{
 .mainBtn:active{
   opacity: 0.5;
 }
+
 
 //input
 input, select{
@@ -87,6 +114,7 @@ input, select{
   }
 }
 
+
 //return not result
 .noResult{
   background-color: #ffffff;
@@ -95,11 +123,6 @@ input, select{
   border-bottom: 1px solid #d8d8d8;
 }
 
-//top card bg
-.topCardBg{
-  background-color: #fff;
-  border-bottom:1px solid #d8d8d8;
-}
 
 //tip
 .tip{
@@ -125,22 +148,17 @@ input, select{
   z-index: 10;
 }
 
+//radius cardBG
+.cardBgRadius{
+  background-color: #fff;
+  border:1px solid $borderColor;
+  border-radius: 6px;
+}
 
-//sanjiao
-.sanjiao-top{
-   width: 0; border-left: .08rem solid transparent; border-bottom: .08rem solid #fff;
-     border-right: .08rem solid transparent;
+//top cardBg 
+.topCardBg{
+  background-color: #fff;
+  border-bottom:1px solid #d8d8d8;
 }
-.sanjiao-bt{
-  width: 0; 
-  border-left: .06rem solid transparent; border-top: .1rem solid #fff;
-  border-right: .06rem solid transparent;
-}
-.sanjiao-left{
-   width: 0; border-bottom: .08rem solid transparent; border-top: .08rem solid transparent;
-     border-right: .08rem solid #fff;
-}
-.sanjiao-right{
-   width: 0; border-bottom: .08rem solid transparent; border-top: .08rem solid transparent;
-     border-left: .08rem solid #fff;
-}
+
+

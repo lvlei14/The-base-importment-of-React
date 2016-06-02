@@ -1,71 +1,66 @@
 @import '../../theme/variables.scss';
 
-.opera{
-  .operaHeader{
-    height: .45rem;
-    line-height: .45rem;
-    font-size: $jzjzfontSize;
-    padding: 0 $lrmargin;
-    div{
-      p{
-        border-top: .1rem solid #797979;
-        margin-top: .18rem;
-        margin-left: .04rem;
+.addPatient{
+  font-size: $jzjzfontSize;
+  color: #fff;
+  position: fixed;
+  top: .1rem;
+  right: $lrmargin;
+}
+
+.patInforSection{
+  .patInforTab{
+    font-size: $jzfontSize;
+    margin-bottom: $tbmargin;
+    li{
+      width: 33.33%;
+      text-align: center;
+      span{
+        height: .4rem;
+        line-height: .4rem;
+        border-bottom: .04rem solid #fff;
+        padding: 0 $lrmargin;
       }
-    }
-    article{
-      font-size: $jzfontSize;
-      i{
-        width: .19rem;
-        height: .21rem;
-        background: url('../../images/sprite.png');
-        background-size: 2rem;
-        background-position: 0 -4rem;
-        margin-top: .1rem;
-        margin-right: .06rem;
+      span.liCur{
+        border-bottom: .04rem solid $mainColor;
+        color: $mainColor;
       }
     }
   }
-  section{
-    border-top: 1px solid $borderColor;
-    margin: $tbmargin 0;
-    header{
-      font-size: $jzjzfontSize;
-      color: $mainColor;
-      height: .45rem;
-      line-height: .45rem;
-      padding: 0 $lrmargin;
+  .patInforTabCon{
+    .patItemTitle{
       border-bottom: 1px solid $borderColor;
-      p{
-        border-top: .1rem solid $mainColor;
-        margin-top: .18rem;
-        margin-right: .04rem;
+      border-left: .05rem solid $mainColor;
+      font-size: $jzfontSize;
+      color: $mainColor;
+      padding: 0 .07rem 0 .1rem;
+      dt{
+        height: .31rem;
+        line-height: .31rem;
+      }
+      dd{
+        background: $mainColor;
+        border-radius: .1rem;
+        color: #fff;
+        font-size: $xsfontSize;
+        padding: .03rem .08rem;
+        margin-top: .042rem;
+        i{
+          background: url(../../images/sprite.png);
+          width: .1rem;
+          height: .14rem;
+          background-size: 2rem;
+          background-position: 0 -4.3rem;
+          margin-right: .04rem;
+          margin-top: .016rem;
+        }
       }
     }
     ul{
-      padding: 0 $lrmargin;
+      padding: .03rem .3rem;
       li{
+        margin: $tbmargin 0;
         color: $jzfontColor;
-        padding: $tbmargin 0;
-        border-top: 1px solid $borderColor;
-        i{
-          width: 4%;
-          color: $xsfontColor;
-          font-style: normal;
-        }
-        P{
-          width: 80%;
-          height: .2rem;
-          overflow: hidden;
-          
-        }
-        article{
-          width: 16%;
-          text-align: center;
-        }
-      }
-      li:first-child{
-        border-top: 1px solid #fff;
       }
     }
   }

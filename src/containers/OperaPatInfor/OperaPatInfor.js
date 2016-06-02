@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
+import CardBg from '../../components/CardBg/Card';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -39,43 +40,33 @@ export default class OperaPatInfor extends Component {
     return (
       <div>
         <HeadNaviBar>病患信息</HeadNaviBar>
-        <div className={styles.opera}>
-          <header className={'clearfix topCardBg ' + styles.operaHeader}>
-            <div className="left clearfix">
-              <span className="left">2016-05-04</span>
-              <p className="left sanjiao-bt"></p>
-            </div>
-            <article className="right clearfix" onClick={this.goOperaPatient.bind(this)}>
-              <i className="left"></i>
-              <span className="left">病患信息</span>
-            </article>
-          </header>
-          <section className="topCardBg">
-            <header className="clearfix">
-              <p className="left sanjiao-bt"></p>
-              <span className="left">12术间</span>
-              <article className="clearfix right">
-                + 添加手术
-              </article>
-            </header>
-            <ul>
-              <li className="clearfix">
-                <i className="left">1.</i>
-                <p className="left">
-                  王大师（男）27 主动脉辫修补术
-                </p>
-                <article className="right">李医生</article>
-              </li>
-              <li className="clearfix">
-                <i className="left">1.</i>
-                <p className="left">
-                  王大师（男）27 主动脉辫修补术
-                </p>
-                <article className="right">李医生</article>
-              </li>
-            </ul>
-          </section>
+        <div className={'bodyBgWhiteZindex ' + styles.addPatient}>
+          添加患者
         </div>
+        <section className={styles.patInforSection}>
+          <ul className={'clearfix topCardBg ' + styles.patInforTab}>
+            <li className="left"><span>未安排</span></li>
+            <li className="left"><span>床位</span></li>
+            <li className="left"><span className={styles.liCur}>手术</span></li>
+          </ul>
+          <div className={styles.patInforTabCon}>
+            <CardBg>
+              <dl className={'clearfix ' + styles.patItemTitle}>
+                <dt className="left">张萌萌 （女，21） F-511</dt>
+                <dd className="right clearfix">
+                  <i className="left"></i>
+                  <span className="left">已手术</span>
+                </dd>
+              </dl>
+              <ul>
+                <li>手术名称：MIDCAB</li>
+                <li>手术名称：MIDCAB</li>
+                <li>手术名称：MIDCAB</li>
+                <li>手术名称：MIDCAB</li>
+              </ul>
+            </CardBg>
+          </div>
+        </section>
       </div>
     );
   }
