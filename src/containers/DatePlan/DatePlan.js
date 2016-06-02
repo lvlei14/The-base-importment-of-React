@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import DayPicker, { DateUtils } from 'react-day-picker';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import CardBg from '../../components/CardBg/Card';
 import TabOutside from '../../components/TabOutside/TabOutside';
@@ -9,12 +10,14 @@ import { loadschedules } from '../../redux/modules/datePlan';
 import { loadtypes } from '../../redux/modules/datePlan';
 
 const styles = require('./DatePlan.scss');
+
 @connect(
   state => ({...state.schedules}), {
     loadschedules,
     loadtypes,
   }
 )
+
 export default class DatePlan extends Component {
   static propTypes = {
     schedules: PropTypes.array,
@@ -24,9 +27,10 @@ export default class DatePlan extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedDay: '2016/6/2',
       tabTypeState: 'month',
-      currentDayId: '2',
-      clickDayItems: [],
+      selectedDayItems: [],
+      monthItems: this.filterSelectedMonthItems('2016', '6'),
       isClickFilter: false,
       scheduleItems: this.handleData(this.props.schedules),
       filterItems: [],
@@ -44,7 +48,7 @@ export default class DatePlan extends Component {
     //  TODO 接口地址
     //  this.props.loadschedules();
     //  this.props.loadtypes();
-    this.clickCalendar(this.state.currentDayId);
+    this.clickCalendar(this.state.selectedDay);
   }
 
 
@@ -108,12 +112,30 @@ export default class DatePlan extends Component {
     });
   }
 
-  clickCalendar(id) {
+  clickHandleDay(event, day, { disabled, selected }) {
+    if (disabled) {
+      return;
+    }
     const handledSchedules = this.handleData(this.props.schedules);
-    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.id === id);
+    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.date === day);
     this.setState({
-      currentDayId: id,
-      clickDayItems: curDayScheduleItem
+      selectedDay: selected ? null : day,
+      selectedDayItems: curDayScheduleItem
+    });
+  }
+
+  filterSelectedMonthItems(year, month) {
+    const handledSchedules = this.handleData(this.props.schedules);
+    const selectMonthItems = handledSchedules && handledSchedules.filter((item) => item.year === year && item.month === month);
+    return selectMonthItems;
+  }
+
+  clickCalendar(day) {
+    const handledSchedules = this.handleData(this.props.schedules);
+    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.day === day);
+    this.setState({
+      selectedDay: day,
+      selectedDayItems: curDayScheduleItem
     });
   }
 
@@ -222,6 +244,8 @@ export default class DatePlan extends Component {
         id: schedules[key].id,
         date: schedules[key].date,
         day: schedules[key].day,
+        month: schedules[key].month,
+        year: schedules[key].year,
         schedulesLists: [
           objSchedulesLists
         ]
@@ -242,6 +266,32 @@ export default class DatePlan extends Component {
     return handledSchedules;
   }
 
+  renderDay(day) {
+    const dayItems = this.state.monthItems;
+    console.log(dayItems);
+    const date = day.getDate().toString();
+    return (
+      <div>
+        {date}
+        <div>
+          {
+            dayItems && dayItems.map((dayItem) => {
+              if (dayItem.day === date && dayItem.schedulesLists ) {
+                return 
+                  dayItem.schedulesLists.map((list, iKey) => {
+                    // console.log('等于后的数据');
+                    // console.log(list);
+                    return (
+                      <div>等于</div>
+                    );
+                  });
+              }
+            })
+          }
+        </div>
+      </div>
+    );
+  }
   render() {
     const schedules = this.props.schedules;
     const handledSchedules = this.handleData(this.props.schedules);
@@ -250,7 +300,7 @@ export default class DatePlan extends Component {
 
     if (!this.state.isClickFilter) {
       if (this.state.tabTypeState === 'month') {
-        scheduleItems = this.state.clickDayItems;
+        scheduleItems = this.state.selectedDayItems;
       }
       if (this.state.tabTypeState === 'list') {
         scheduleItems = this.state.scheduleItems;
@@ -259,16 +309,26 @@ export default class DatePlan extends Component {
       scheduleItems = this.state.filterItems;
     }
 
+    const selectedDay = this.state.selectedDay;
+    console.log(selectedDay);
+
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
-        <div className={styles.dateTop}>
+        <div className={styles.dateTop + ' datePlan'}>
           <TabOutside>
             <li className={this.state.tabTypeState === 'month' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('month')}>月</li>
             <li className={this.state.tabTypeState === 'list' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('list')}>列表</li>
           </TabOutside>
           {
             this.state.tabTypeState === 'month' && this.state.isClickFilter === false ?
+              <DayPicker
+                  disabledDays={DateUtils.isPastDay}
+                  enableOutsideDays
+                  onDayClick={this.clickHandleDay.bind(this)}
+                  renderDay={this.renderDay.bind(this)} />
+            : ''
+          }
               <section>
                 <table>
                   <tbody>
@@ -304,9 +364,6 @@ export default class DatePlan extends Component {
                 </table>
 
               </section>
-              : ''
-          }
-
           <div className={styles.scheduleFilterBtn}>
             <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
             <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
