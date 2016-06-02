@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import DayPicker from 'react-day-picker';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
+
 
 import { connect } from 'react-redux';
 import { getPassword } from '../../redux/modules/auth';
@@ -28,7 +30,9 @@ export default class Home extends Component {
       <div>
         <HeadNaviBar>首页</HeadNaviBar>
         <div className={ styles.home}>
-          首页
+          <DayPicker
+            enableOutsideDays
+            onDayClick={(event, day) => alert(day)} />
         </div>
       </div>
     );
