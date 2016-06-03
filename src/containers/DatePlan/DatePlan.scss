@@ -6,66 +6,72 @@
   font-size: $jzfontSize;
   position: relative;
   text-align: center;
-  li.curTab {
-    color: #fff !important;
-    background-color: $mainColor;
-  }
-  .scheduleFilterBtn{
-    position: fixed;
-    top: 54px;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    h3{
-      color: $mainColor;
-      font-weight: normal;
-      text-align: right;
-      margin-right: $lrmargin;
-      font-size: $jzfontSize;
-      height: 50px;
-      line-height: 44px;
+  .dateTitle{
+    position: relative;
+    li.curTab {
+      color: #fff !important;
+      background-color: $mainColor;
     }
-    .scheduleFilterCon{
-      text-align: left;
-      background-color: #fff;
-      padding: $tbmargin $lrmargin;
-      border-top:1px solid $borderColor;
-      border-bottom:1px solid $borderColor;
-      padding: $tbmargin $lrmargin;
-      div{
-        padding: 4px 0;
-        i{
-          font-style: normal;
-          color: $mainColor;
-          position: absolute;
-          padding:4px 6px 4px 0;
-        }
-        section{
-          margin-left: 38px;
-          text-align: left;
-          width: 100%;
-          header span{
+    .scheduleFilterBtn{
+      position: absolute;
+      top: 0;
+      right: $lrmargin;
+      h3{
+        color: $mainColor;
+        font-weight: normal;
+        text-align: right;
+        margin-right: $lrmargin;
+        font-size: $jzfontSize;
+        height: 50px;
+        line-height: 44px;
+      }
+      .scheduleFilterCon{
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        background-color: #fff;
+        padding: $tbmargin $lrmargin;
+        border-top:1px solid $borderColor;
+        border-bottom:1px solid $borderColor;
+        padding: $tbmargin $lrmargin;
+        position: relative;
+        z-index: 1000;
+        div{
+          padding: 4px 0;
+          i{
+            font-style: normal;
             color: $mainColor;
+            position: absolute;
+            padding:4px 6px 4px 0;
           }
-          span{
-            display: inline-block;
-            padding: 2px 0px;
-            border-radius: 14px;
-            margin:0 6px;
-            width: 26.3%;
-            text-align: center;
-          }
-          span.dateSpan{
-            padding:2px 6px;
-          }
-          span.curSpan{
-            background-color: $mainColor;
-            color: #fff;
+          section{
+            margin-left: 38px;
+            text-align: left;
+            width: 100%;
+            header span{
+              color: $mainColor;
+            }
+            span{
+              display: inline-block;
+              padding: 2px 0px;
+              border-radius: 14px;
+              margin:0 6px;
+              width: 26.3%;
+              text-align: center;
+            }
+            span.dateSpan{
+              padding:2px 6px;
+            }
+            span.curSpan{
+              background-color: $mainColor;
+              color: #fff;
+            }
           }
         }
       }
     }
   }
+  
   section{
     color: $jzfontColor;
     font-size: $jzfontSize;
@@ -76,20 +82,7 @@
         width: 14.28%;
         th,td{
           text-align: center;
-          p span{
-            margin:6px 3px 0;
-            width: 8px;
-            height: 8px;
-            display: inline-block;
-            background: #fff;
-            border-radius: 50%;
-          }
-          p span.outside{
-            background: #41c299;
-          }
-          p span.side{
-            background: #ffc463;
-          }
+          
         }
         td{
           border-bottom: 1px solid #ececec;
@@ -229,3 +222,20 @@
   right: 0px;
 }
 
+
+.dayItemOut{
+  height: 26px;
+  span.outside, span.side{
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: transparent;
+    border-radius: 50%;
+  }
+  span.outside{
+    background: #41c299;
+  }
+  span.side{
+    background: #ffc463;
+  }
+}

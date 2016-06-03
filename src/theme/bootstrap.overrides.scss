@@ -172,7 +172,7 @@ input, select{
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
-  z-index: 1000;
+  z-index: 100;
   padding:0;
   user-select: none;
   color: $jzfontColor;
@@ -226,13 +226,18 @@ input, select{
 
   .DayPicker-WeekdaysRow {
     display: table-row;
+    height: .4rem;
+    line-height:.4rem;
+    font-size: $jzfontSize;
+    color: $jzfontColor;
   }
 
   .DayPicker-Weekday {
     display: table-cell;
-    font-size: .875em;
-    text-align: center;
-    color: #8b9898;
+    text-align: center;    
+    abbr{
+      border-bottom: 1px solid transparent;
+    }
   }
 
   .DayPicker-Body {
@@ -245,6 +250,7 @@ input, select{
 
   .DayPicker-Day {
     display: table-cell;
+    width: 14.28%;
     border: 1px solid $borderColor;
     text-align: center;
     cursor: pointer;
@@ -285,8 +291,16 @@ input, select{
 }
 
 //other page style
-.datePlan .DayPicker-Day{
-  height: .42rem;
-  padding-top: .08rem;
+.datePlan{
+  .DayPicker-WeekdaysRow{
+    background: $mainColor;
+    color: #fff;
+    .DayPicker-Weekday{
+      border: 1px solid #d8d8d8;
+    }
+  }
+  .DayPicker-Day{
+    padding-top: .08rem;
+  }
 }
 
