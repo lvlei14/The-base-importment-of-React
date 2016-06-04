@@ -7,6 +7,12 @@ import {
     DatePlan,
     LoginOrRegister,
     AddDatePlan,
+    Duty,
+    AppartDuty,
+    ChangeDuty,
+    ChangeDutyRecord,
+    Opera,
+    OperaPatInfor,
   } from 'containers';
 
 export default (store) => {
@@ -41,6 +47,12 @@ export default (store) => {
         <IndexRoute component={Home}/>
         <Route path="date-plan" component={DatePlan} />
         <Route path="add-date-plan" component={AddDatePlan} />
+        <Route path="duty" component={Duty} />
+        <Route path="appart-duty" component={AppartDuty} />
+        <Route path="change-duty" component={ChangeDuty} />
+        <Route path="change-duty-record" component={ChangeDutyRecord} />
+        <Route path="opera" component={Opera} />
+        <Route path="opera-patient" component={OperaPatInfor} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

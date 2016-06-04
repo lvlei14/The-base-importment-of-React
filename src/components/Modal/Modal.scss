@@ -1,0 +1,59 @@
+@import '../../theme/variables';
+
+.modalFa{
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+.modal{
+	display: table-cell;
+	vertical-align: middle;
+	padding-bottom: 40%;
+	.modalBg{
+	  background: rgba(80,80,80,.3);
+	}
+	.modalSection{
+	  background: #fff;
+	  border-radius: .06rem;
+	  width: 84%;
+	  margin: 0 auto;
+	  .modalTitle{
+	  	background: $mainColor;
+	  	color: #fff;
+	  	border-radius: .06rem 0.06rem 0 0;
+	  	padding: 0 $lrmargin;
+	  	h3{	
+		  	height: .44rem;
+		  	line-height: .44rem;
+	  		font-size: $jzfontSize;
+	  		font-weight: normal;
+	  	}
+	  	span{
+	  		font-size: .2rem;
+	  		margin-top: .06rem;
+	  	}
+	  }
+	  .modalSectionSection{
+	  	padding: .24rem $lrmargin;
+	  }
+	  .modalButton{
+	  	border-top: 1px solid $borderColor;
+	  	height: .45rem;
+	  	line-height: .45rem;
+	  	button{
+	  		width: 50%;
+	  		border: 0px solid #fff;
+	  		background: #fff;
+	  		border-radius: 0 0 0 0.06rem;
+	  	}
+	  	.modalConfirm{
+	  		background: $mainColor;
+	  		color: #fff;
+	  		border-radius: 0 0 0.06rem 0;
+	  	}
+	  }
+	}
+}
+

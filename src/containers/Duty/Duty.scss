@@ -1,0 +1,136 @@
+@import '../../theme/variables.scss';
+.duty{
+  .selectMonth{
+    position: absolute;
+    top: .08rem;
+    right: $lrmargin;
+    color: #fff;
+    font-size: $jzjzfontSize;
+    select{
+      background: transparent;
+      border: 0px solid #fff;
+      margin-top: .02rem;
+    }
+    p{
+      position: absolute;
+      top: .12rem;
+      right: 0;
+    }
+    
+    .changeDutyRecord{
+      margin-right: .1rem;
+      margin-top: .054rem;
+      i{
+        width: .16rem;
+        height: .2rem;
+        background: url('../../images/sprite.png');
+        background-position: 0 -.96rem;
+        background-size: 1.6rem;
+        margin-right: .02rem;
+      }
+    }
+  }
+
+
+  .dutyTop {
+    background-color: #fff;
+    margin-bottom: 10px;
+    color: $jzfontColor;
+    font-size: $jzfontSize;
+    text-align: center;
+    table{
+      width: 100%;
+      tr{
+        width: 14.28%;
+        th,td{
+          text-align: center;
+        }
+        th{
+          font-size: $jzjzfontSize;
+          padding:.08rem 0 .1rem;
+          background-color: #fff;
+          font-weight: normal;
+          color: $jzfontColor;
+        }
+        th:first-child{
+          border-left: 1px solid #fff;
+        }
+        td{
+          border-bottom: 1px solid #ececec;
+          border-left: 1px solid $borderColor;
+          width: 14.28%;
+          div{
+            position: relative;
+            height: .72rem;
+            border: 2px solid #fff;
+            .dateDay{
+              margin-bottom: .06rem;
+              padding-top: .12rem;
+            }
+            .dateAppart{
+              font-size: .12rem;
+              color: $text-color;
+              margin-bottom: .2rem;
+              i{
+                float: left;
+                width: .12rem;
+                height: .14rem;
+                color: #fff;
+                background: url('../../images/sprite.png');
+                background-size: 2.4rem;
+              }
+              i.levelFir{
+                background-position: 0 -0px;
+              }
+              i.levelSec{
+                background-position: 0 -96px;
+              }
+              i.levelThr{
+                background-position: 0 -113px;
+              }
+              i.levelFour{
+                background-position: 0 -130px;
+              }
+            }
+            .dateSelf{
+              position: absolute;
+              top: 0;
+              left: 0rem;
+              width: .12rem;
+              height: .24rem;
+              background: url('../../images/sprite.png');
+              background-size: 2rem;
+              background-position: 0 -.3rem;
+            }
+          }
+          div.divCur{
+            border: 2px solid $mainColor;
+          }
+        }
+        td.curTd{
+          div{
+            border:2px solid $mainColor;
+          }
+        }
+        td:first-child{
+          border-left:1px solid #fff;
+        }
+      }
+    }
+  }
+  footer{
+    padding: 0 $lrmargin;
+    text-align: center;
+  }
+}  
+
+.appartDuty .dutyTop table tr td div{
+  height: 1.12rem;
+}
+
+@media(max-width: 370px) {
+  .duty .dutyTop table tr td div .dateSelf{
+    background-size: 1.6rem;
+    background-position: 0 -.26rem;
+  }
+}
