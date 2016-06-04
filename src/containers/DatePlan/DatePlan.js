@@ -266,12 +266,15 @@ export default class DatePlan extends Component {
     }
     const selectedDay = this.state.selectedDay;
     console.log(selectedDay);
+    const dateTost = new Date(selectedDay).toString();
+    console.log('--转换后的格式--');
+    console.log(dateTost);
 
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
         <div className={styles.dateTop + ' datePlan'}>
-          <div className={styles.dateTitle}>
+          <div className={styles.dateTitle + ' topCardBg'}>
             <TabOutside>
               <li className={this.state.tabTypeState === 'month' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('month')}>月</li>
               <li className={this.state.tabTypeState === 'list' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('list')}>列表</li>
@@ -288,19 +291,21 @@ export default class DatePlan extends Component {
                 filterScheduleTypes = {this.props.scheduleTypes} />
             </div>
           </div>
-          {
-            this.state.tabTypeState === 'month' && this.state.isClickFilter === false ?
-              <DayPicker
-                  disabledDays={DateUtils.isPastDay}
-                  enableOutsideDays
-                  onDayClick={this.clickHandleDay.bind(this)}
-                  renderDay={this.renderDay.bind(this)} />
-            : ''
-          }
+          <div className={styles.datePlanPicker}>
+            {
+              this.state.tabTypeState === 'month' && this.state.isClickFilter === false ?
+                <DayPicker
+                    disabledDays={DateUtils.isPastDay}
+                    enableOutsideDays
+                    onDayClick={this.clickHandleDay.bind(this)}
+                    renderDay={this.renderDay.bind(this)} />
+              : ''
+            }
+          </div>
+          <div className={styles.scheduleItem}>
+            <ScdItems scheduleItems = {scheduleItems} />
+          </div>
         </div>
-
-        <ScdItems scheduleItems = {scheduleItems} />
-
         <AddPlan />
       </div>
     );

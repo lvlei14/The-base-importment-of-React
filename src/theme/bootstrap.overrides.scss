@@ -24,7 +24,6 @@ body{
 *{
   margin:0;
   padding:0;
-  outline: none !important;
 }
 ul,li{
   list-style: none;
@@ -301,6 +300,13 @@ input, select{
   }
   .DayPicker-Day{
     padding-top: .08rem;
+    
+  }
+  .DayPicker-Day:focus{
+    outline: 2px solid $mainColor !important;
+  }
+  .DayPicker-NavBar, .DayPicker-Caption{
+    display: none;
   }
 }
 
