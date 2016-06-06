@@ -9,3 +9,8 @@ export ChangeDuty from './ChangeDuty/ChangeDuty';
 export ChangeDutyRecord from './ChangeDutyRecord/ChangeDutyRecord';
 export Opera from './Opera/Opera';
 export OperaPatInfor from './OperaPatInfor/OperaPatInfor';
+export AddPatient from './AddPatient/AddPatient';
+export ModifyPatient from './ModifyPatient/ModifyPatient';
+export PatientInfor from './PatientInfor/PatientInfor';
+export AddSurgery from './AddSurgery/AddSurgery';
+export ModifySurgery from './ModifySurgery/ModifySurgery';

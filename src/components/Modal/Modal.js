@@ -4,7 +4,7 @@ const styles = require('./Modal.scss');
 
 export default class Modal extends Component {
   static propTypes = {
-    children: PropTypes.string,
+    children: PropTypes.array,
     showModal: PropTypes.boolean,
     title: PropTypes.string,
     clickConfirm: PropTypes.func,

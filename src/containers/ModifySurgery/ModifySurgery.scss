@@ -1,0 +1,56 @@
+@import '../../theme/variables.scss';
+.addSurgery{
+  .notPlanCon{
+    padding-top: $tbmargin;
+    div{
+      height: .4rem;
+      line-height: .4rem;
+      color: $jzfontColor;
+      padding: 0 $lrmargin;
+      input[type="radio"]{
+        width: auto;
+        margin-top: .03rem;
+      }
+    }
+  }
+  .addSurgeryFooter{
+    margin: 0 .2rem;
+  }
+  .addPatientLi{
+    position: relative;
+    height: .3rem;
+    line-height: .3rem;
+    margin:.1rem .06rem 0 0;
+    .leftPlaceholder{
+      font-style: normal;
+      width: .6rem;
+      text-align: right;
+      position: absolute;
+      top:0;
+      left:0;
+    }
+    div{
+      margin-left:.8rem;
+      div{
+        position:relative;
+      }
+      input,div{
+        width: 100%;
+      }
+    }
+    section.jietaiInfor{
+      margin-left: .8rem;
+      article{
+        display: inline-block;
+        width: 32%;
+      }
+    }
+  }
+  .addPatientLiFirst{
+    margin-top: 0rem;
+  }
+  .addSurgeryMark{
+    height: auto;
+    margin-bottom: 0;
+  }
+}

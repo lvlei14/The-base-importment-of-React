@@ -266,9 +266,6 @@ export default class DatePlan extends Component {
     }
     const selectedDay = this.state.selectedDay;
     console.log(selectedDay);
-    const dateTost = new Date(selectedDay).toString();
-    console.log('--转换后的格式--');
-    console.log(dateTost);
 
     return (
       <div>
@@ -313,7 +310,7 @@ export default class DatePlan extends Component {
 }
 
 /**
-  * component: ScdItems
+  * component: every day schedule item
   */
 class ScdItems extends Component {
   static propTypes = {

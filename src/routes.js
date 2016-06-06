@@ -13,6 +13,11 @@ import {
     ChangeDutyRecord,
     Opera,
     OperaPatInfor,
+    AddPatient,
+    ModifyPatient,
+    PatientInfor,
+    AddSurgery,
+    ModifySurgery,
   } from 'containers';
 
 export default (store) => {
@@ -53,6 +58,11 @@ export default (store) => {
         <Route path="change-duty-record" component={ChangeDutyRecord} />
         <Route path="opera" component={Opera} />
         <Route path="opera-patient" component={OperaPatInfor} />
+        <Route path="add-patient" component={AddPatient} />
+        <Route path="modify-patient" component={ModifyPatient} />
+        <Route path="patient" component={PatientInfor} />
+        <Route path="add-surgery" component={AddSurgery} />
+        <Route path="modify-surgery" component={ModifySurgery} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

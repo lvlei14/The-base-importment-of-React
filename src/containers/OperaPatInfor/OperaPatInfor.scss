@@ -13,13 +13,13 @@
     font-size: $jzfontSize;
     margin-bottom: $tbmargin;
     li{
-      width: 33.33%;
+      width: 50%;
       text-align: center;
       span{
         height: .4rem;
         line-height: .4rem;
         border-bottom: .04rem solid #fff;
-        padding: 0 $lrmargin;
+        padding: 0 .2rem;
       }
       span.liCur{
         border-bottom: .04rem solid $mainColor;
@@ -64,4 +64,22 @@
       }
     }
   }
+  .notPlanCon{
+    div{
+      height: .4rem;
+      line-height: .4rem;
+      color: $jzfontColor;
+      padding: 0 $lrmargin;
+      p{
+        transform: rotate(180deg);
+        color: $xsfontColor;
+        margin-top: .08rem;
+        font-size: .2rem;
+      }
+    }
+  }
+}
+
+.patientName{
+  color: $mainColor;
 }

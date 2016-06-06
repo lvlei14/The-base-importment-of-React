@@ -16,6 +16,13 @@ import { appartDutyReducer } from './appartDuty';
 import { changeDutyReducer } from './changeDuty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
 import { operaReducer } from './opera';
+import { operaPatientListReducer } from './operaInfor';
+import { addPatientInforReducer } from './addPatient';
+import { patientInforReducer } from './modifyPatient';
+import { addSurgeryInforReducer } from './addSurgery';
+import { loadSurgeryInforReducer } from './surgeryInfor';
+import { accountReducer } from './account';
+import { userSurgeryInforReducer } from './modifySurgery';
 
 export default combineReducers({
   routing: routerReducer,
@@ -37,4 +44,11 @@ export default combineReducers({
   changeDutys: changeDutyReducer,
   changeDutyRecords: changeDutyRecordsReducer,
   operas: operaReducer,
+  planedOpePatiens: operaPatientListReducer,
+  addPatientInforReducer,
+  patientInfor: patientInforReducer,
+  addSurgeryInforReducer,
+  surgeryInfor: loadSurgeryInforReducer,
+  account: accountReducer,
+  patientSurgeryInfor: userSurgeryInforReducer,
 });

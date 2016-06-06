@@ -62,7 +62,7 @@ export default class Home extends Component {
               title= {'弹窗titile'}
               clickConfirm = {this.clickConfirm.bind(this)}
             >
-              弹窗内容
+              弹窗<span>内容</span>
             </Modal>
           </div>
           <DayPicker
