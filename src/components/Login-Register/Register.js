@@ -1,31 +1,44 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { showDiaglog } from '../../redux/modules/diaglog';
+import { Diaglog } from '../../components';
 
 const styles = require('./Login-Register.scss');
 const usernameIcon = require('../../images/login-register/login_user@3x.png');
 const msgCodeIcon = require('../../images/login-register/login_num@3x.png');
 const passwordIcon = require('../../images/login-register/login_key@3x.png');
-const idCardIcon = require('../../images/login-register/login_shenfenzheng@3x.png');
 const showPasswordIcon = require('../../images/login-register/login_can@3x.png');
 const hidenPasswordIcon = require('../../images/login-register/login_cannot@3x.png');
 
-
+@connect(
+  state => ({
+    text: state.diaglog.text || '',
+    redirectUrl: state.diaglog.redirectUrl
+  }),
+  {
+    showDiaglog,
+  }
+)
 export default class Register extends Component {
   static propTypes = {
     register: PropTypes.func,
     getMsgCode: PropTypes.func,
     registerStatus: PropTypes.string,
     msg: PropTypes.string,
+    msgCode: PropTypes.string,
     errMsg: PropTypes.string,
-    goLoginPage: PropTypes.func
+    goLoginPage: PropTypes.func,
+    showDiaglog: PropTypes.func,
+    text: PropTypes.string,
+    redirectUrl: PropTypes.string
   };
 
   constructor(props) {
     super(props);
-    const TIMELIMIT = 10;
+    const TIMELIMIT = 60;
     this.state = {
       mobile: '',
       password: '',
-      idCardNo: '',
       msgCode: '',
       showPassword: false,
       TIMELIMIT: TIMELIMIT,
@@ -38,13 +51,16 @@ export default class Register extends Component {
   componentWillReceiveProps(nextProps) {
     // register success
     if (!this.props.registerStatus && nextProps.registerStatus) {
-      alert(nextProps.msg);
+      this.props.showDiaglog(nextProps.msg);
       this.props.goLoginPage();
       this.clearInput();
     }
+    if (!this.props.msgCode && nextProps.msgCode) {
+      this.timeCount();
+    }
     // error
     if (!this.props.errMsg && nextProps.errMsg) {
-      alert(nextProps.errMsg);
+      this.props.showDiaglog(nextProps.errMsg);
     }
   }
 
@@ -60,12 +76,6 @@ export default class Register extends Component {
     });
   }
 
-  inputIdCardNo(event) {
-    this.setState({
-      idCardNo: event.target.value
-    });
-  }
-
   inputPassword(event) {
     this.setState({
       password: event.target.value
@@ -76,7 +86,6 @@ export default class Register extends Component {
     this.setState({
       mobile: '',
       password: '',
-      idCardNo: '',
       msgCode: '',
       showPassword: false
     });
@@ -84,8 +93,12 @@ export default class Register extends Component {
 
   registerHandler() {
     // TODO 验证手机号码格式, 身份证号码格式
-    const {idCardNo, msgCode, mobile, password} = this.state;
-    const options = {card: {id: idCardNo, type: 'sfz'}, msgCode, mobile, password};
+    const {msgCode, mobile, password} = this.state;
+    if (!msgCode || !mobile || !password) {
+      this.props.showDiaglog('输入内容不能为空');
+      return;
+    }
+    const options = {msgCode, mobile, password};
     this.props.register(options);
   }
 
@@ -107,7 +120,9 @@ export default class Register extends Component {
 
   sendMsgCode() {
     if (this.state.timeLeft !== this.state.TIMELIMIT) return;
-    this.timeCount();
+    const mobile = this.state.mobile;
+    if (!mobile) return;
+    this.props.getMsgCode(mobile);
   }
 
   showPassword() {
@@ -125,37 +140,42 @@ export default class Register extends Component {
   render() {
     const isInTimeCount = this.state.timeLeft !== this.state.TIMELIMIT;
     return (
-      <div className={styles.loginContainer}>
-        <div className={styles.inputContainer}>
-          <img src={usernameIcon} className={styles.imgLeft} alt="手机号码"/>
-          <input type="text" onChange={this.inputPhoneNumber.bind(this)} value={this.state.mobile} placeholder="请输入手机号码"/>
-          <span className={styles.msgCodeIcon}
-                onClick={this.sendMsgCode.bind(this)}
-                style={{backgroundColor: this.state.msgCodeBtnBgColor, color: this.state.msgCodeBtnFontColor}}>
-            {isInTimeCount ? '  ' + this.state.timeLeft + ' s   ' : '获取验证码'}
-          </span>
+      <div className={styles.loginContainerFa}>
+        <div className={styles.loginContainer}>
+          <div className={styles.blank}></div>
+          <div className={styles.inputContainer}>
+            <img src={usernameIcon} className={styles.imgLeft} alt="手机号码"/>
+            <input type="text" onChange={this.inputPhoneNumber.bind(this)} value={this.state.mobile} placeholder="请输入手机号码"/>
+            <span className={styles.msgCodeIcon}
+                  onClick={this.sendMsgCode.bind(this)}
+                  style={{backgroundColor: this.state.msgCodeBtnBgColor, color: this.state.msgCodeBtnFontColor}}>
+              {isInTimeCount ? '  ' + this.state.timeLeft + ' s   ' : '获取验证码'}
+            </span>
+          </div>
+          <div className={styles.inputContainer}>
+            <img src={msgCodeIcon} className={styles.imgLeft} alt="验证码"/>
+            <input type="text" onChange={this.inputMsgCode.bind(this)} value={this.state.msgCode} placeholder="请输入验证码"/>
+          </div>
+          <div className={styles.inputContainer}>
+            <img src={passwordIcon} className={styles.imgLeft} alt="密码"/>
+            <input type={this.state.showPassword ? 'text' : 'password'} onChange={this.inputPassword.bind(this)} value={this.state.password} placeholder="请输入密码"/>
+            {
+              this.state.showPassword ?
+                <img src={showPasswordIcon} alt="显示密码" className={styles.showPassword} onClick={this.hidenPassword.bind(this)}/>
+                :
+                <img src={hidenPasswordIcon} alt="隐藏密码" className={styles.hidenPassword} onClick={this.showPassword.bind(this)}/>
+            }
+          </div>
+          <div className={styles.registerBtnContainer}>
+            <button className="mainBtn" type="button" onClick={this.registerHandler.bind(this)}>注册</button>
+          </div>
         </div>
-        <div className={styles.inputContainer}>
-          <img src={msgCodeIcon} className={styles.imgLeft} alt="验证码"/>
-          <input type="text" onChange={this.inputMsgCode.bind(this)} value={this.state.msgCode} placeholder="请输入验证码"/>
-        </div>
-        <div className={styles.inputContainer}>
-          <img src={passwordIcon} className={styles.imgLeft} alt="密码"/>
-          <input type={this.state.showPassword ? 'text' : 'password'} onChange={this.inputPassword.bind(this)} value={this.state.password} placeholder="请输入密码"/>
-          {
-            this.state.showPassword ?
-              <img src={showPasswordIcon} alt="显示密码" className={styles.showPassword} onClick={this.hidenPassword.bind(this)}/>
-              :
-              <img src={hidenPasswordIcon} alt="隐藏密码" className={styles.hidenPassword} onClick={this.showPassword.bind(this)}/>
-          }
-        </div>
-        <div className={styles.inputContainer}>
-          <img src={idCardIcon} className={styles.imgLeft} alt="身份证"/>
-          <input type="text" onChange={this.inputIdCardNo.bind(this)} value={this.state.idCardNo} placeholder="请输入身份证"/>
-        </div>
-        <div className={styles.registerBtnContainer}>
-          <button type="button" onClick={this.registerHandler.bind(this)}>注册</button>
-        </div>
+        {/* 提示信息 */}
+        {
+          this.props.text ?
+            <Diaglog text={this.props.text} redirectUrl={this.props.redirectUrl}/>
+            : ''
+        }
       </div>
     );
   }

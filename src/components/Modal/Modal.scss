@@ -21,23 +21,26 @@
 	  width: 84%;
 	  margin: 0 auto;
 	  .modalTitle{
-	  	background: $mainColor;
-	  	color: #fff;
 	  	border-radius: .06rem 0.06rem 0 0;
 	  	padding: 0 $lrmargin;
+	  	position: relative;
+	  	text-align: center;
 	  	h3{	
 		  	height: .44rem;
 		  	line-height: .44rem;
-	  		font-size: $jzfontSize;
+	  		font-size: $jzjzfontSize;
 	  		font-weight: normal;
+	  		color: $jzfontColor;
 	  	}
 	  	span{
+	  		position: absolute;
 	  		font-size: .2rem;
-	  		margin-top: .06rem;
+	  		top: .06rem;
+	  		right: $lrmargin;
 	  	}
 	  }
 	  .modalSectionSection{
-	  	padding: .24rem $lrmargin;
+	  	padding: $tbmargin $lrmargin;
 	  }
 	  .modalButton{
 	  	border-top: 1px solid $borderColor;

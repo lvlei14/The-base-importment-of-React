@@ -190,6 +190,7 @@ input, select{
     position: absolute;
     left: 0;
     right: 0;
+    top: .15rem;
     padding: 0 .5rem;
   }
 
@@ -216,6 +217,7 @@ input, select{
   .DayPicker-Caption {
     display: table-caption;
     height: .4rem;
+    line-height: .4rem;
     text-align: center;
   }
 
@@ -300,13 +302,10 @@ input, select{
   }
   .DayPicker-Day{
     padding-top: .08rem;
-    
+    position: relative;
   }
   .DayPicker-Day:focus{
     outline: 2px solid $mainColor !important;
-  }
-  .DayPicker-NavBar, .DayPicker-Caption{
-    display: none;
   }
 }
 

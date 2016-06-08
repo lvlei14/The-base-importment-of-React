@@ -2,101 +2,49 @@ const LOAD_SCHEDULE = 'LOAD_SCHEDULE';
 const LOAD_SCHEDULE_SUCCESS = 'LOAD_SCHEDULE_SUCCESS';
 const LOAD_SCHEDULE_FAIL = 'LOAD_SCHEDULE_FAIL';
 
+const LOAD_DAYPICKER_MONTH = 'LOAD_DAYPICKER_MONTH';
+const LOAD_DAYPICKER_MONTH_SUCCESS = 'LOAD_DAYPICKER_MONTH_SUCCESS';
+const LOAD_DAYPICKER_MONTH_FAIL = 'LOAD_DAYPICKER_MONTH_FAIL';
+
 const LOAD_TYPE = 'LOAD_TYPE';
 const LOAD_TYPE_SUCCESS = 'LOAD_TYPE_SUCCESS';
 const LOAD_TYPE_FAIL = 'LOAD_TYPE_FAIL';
 
+const FILTER_SCHEDULE = 'FILTER_SCHEDULE';
+const FILTER_SCHEDULE_SUCCESS = 'FILTER_SCHEDULE_SUCCESS';
+const FILTER_SCHEDULE_FAIL = 'FILTER_SCHEDULE_FAIL';
 
-const schedules = [
-  {
-    id: '1',
-    day: '14',
-    date: '2016/6/14',
-    year: '2016',
-    month: '6',
-    sidePlan: false,
-    type: 'check',
-    time: '0:00-16:00',
-    start: '1:00',
-    isconflict: false
-  },
-  {
-    id: '2',
-    day: '14',
-    date: '2016/6/14',
-    year: '2016',
-    month: '6',
-    sidePlan: true,
-    type: 'metting',
-    time: '0:00-16:00',
-    start: '1:00',
-    isconflict: false
-  },
-  {
-    id: '3',
-    day: '15',
-    date: '2016/6/15',
-    year: '2016',
-    month: '6',
-    sidePlan: false,
-    type: 'opera',
-    time: '14:00-16:00',
-    start: '2:00',
-    isconflict: false
-  },
-  {
-    id: '4',
-    day: '15',
-    date: '2016/6/15',
-    year: '2016',
-    month: '6',
-    sidePlan: false,
-    type: 'duty',
-    time: '14:00-16:00',
-    start: '2:00',
-    isconflict: false
-  },
-  {
-    id: '5',
-    day: '16',
-    date: '2016/7/16',
-    year: '2016',
-    month: '7',
-    sidePlan: false,
-    type: 'check',
-    time: '14:00-16:00',
-    start: '3:00',
-    isconflict: false
-  }
-];
+const LOAD_TEMPLATE = 'LOAD_TEMPLATE';
+const LOAD_TEMPLATE_SUCCESS = 'LOAD_TEMPLATE_SUCCESS';
+const LOAD_TEMPLATE_FAIL = 'LOAD_TEMPLATE_FAIL';
 
 const scheduleTypes = {
   in: [
     {
-      ywname: 'check',
-      zwname: '查房'
+      name: '查房',
+      id: '111'
     },
     {
-      ywname: 'metting',
-      zwname: '会议'
+      name: '值班',
+      id: '112'
     },
     {
-      ywname: 'opera',
-      zwname: '手术'
+      name: '会议',
+      id: '113'
+    },
+    {
+      name: '手术',
+      id: '114'
     }
   ],
   out: [
     {
-      ywname: 'holidy',
-      zwname: '休假'
+      name: '院外1',
+      id: '211'
     },
     {
-      ywname: 'leadmenzhen',
-      zwname: '门诊指导'
-    },
-    {
-      ywname: 'leadjizhen',
-      zwname: '急诊指导'
+      name: '院外2',
+      id: '212'
     }
   ]
 };
@@ -104,8 +52,11 @@ const scheduleTypes = {
 const initState = {
   loading: false,
   tip: null,
-  schedules: schedules || [],
-  scheduleTypes: scheduleTypes || {}
+  schedules: [],
+  scheduleTypes: scheduleTypes || {},
+  schedulesMonth: {},
+  filterSchedules: [],
+  templates: [],
 };
 
 
@@ -119,6 +70,8 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_SUCCESS:
+      console.log('action访问接口');
+      console.log(action.result.result);
       return {
         ...state,
         loading: false,
@@ -127,6 +80,28 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        tip: action.tip
+      };
+
+
+    case LOAD_DAYPICKER_MONTH:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case LOAD_DAYPICKER_MONTH_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        schedulesMonth: action.result,
+        tip: action.tip
+      };
+
+    case LOAD_DAYPICKER_MONTH_FAIL:
       return {
         ...state,
         loading: false,
@@ -156,6 +131,50 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
 
+    case FILTER_SCHEDULE:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case FILTER_SCHEDULE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        filterSchedules: action.result,
+        tip: action.tip
+      };
+
+    case FILTER_SCHEDULE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        tip: action.tip
+      };
+
+    case LOAD_TEMPLATE:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case LOAD_TEMPLATE_SUCCESS:
+      console.log('action取模板信息');
+      console.log(action.result);
+      return {
+        ...state,
+        loading: false,
+        templates: action.result,
+        tip: action.tip
+      };
+
+    case LOAD_TEMPLATE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        tip: action.tip
+      };
+
     default:
       return state;
   }
@@ -170,7 +189,20 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
 export function loadschedules() {
   return {
     types: [LOAD_SCHEDULE, LOAD_SCHEDULE_SUCCESS, LOAD_SCHEDULE_FAIL],
-    promise: (client) => client.get('')
+    promise: (client) => client.get('/schedule/aa')
+  };
+}
+
+
+/**
+ * action: load day picker by month,year
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function loadschedulesMonth() {
+  return {
+    types: [LOAD_DAYPICKER_MONTH, LOAD_DAYPICKER_MONTH_SUCCESS, LOAD_DAYPICKER_MONTH_FAIL],
+    promise: (client) => client.get('/schedule/aa/calendar')
   };
 }
 
@@ -184,5 +216,30 @@ export function loadtypes() {
   return {
     types: [LOAD_TYPE, LOAD_TYPE_SUCCESS, LOAD_TYPE_FAIL],
     promise: (client) => client.get('')
+  };
+}
+
+
+/**
+ * action: fitler result by stateTime,endTime,科室id,typeId
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function filterSchedule() {
+  return {
+    types: [FILTER_SCHEDULE, FILTER_SCHEDULE_SUCCESS, FILTER_SCHEDULE_FAIL],
+    promise: (client) => client.get('')
+  };
+}
+
+/**
+ * action: load template
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function loadTemplates() {
+  return {
+    types: [LOAD_TEMPLATE, LOAD_TEMPLATE_SUCCESS, LOAD_TEMPLATE_FAIL],
+    promise: (client) => client.get('/template/')
   };
 }

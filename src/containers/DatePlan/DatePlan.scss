@@ -14,7 +14,8 @@
     .scheduleFilterBtn{
       position: absolute;
       top: 0;
-      right: $lrmargin;
+      right: 0;
+      left: 0;
       h3{
         color: $mainColor;
         font-weight: normal;
@@ -64,6 +65,16 @@
             span.curSpan{
               background-color: $mainColor;
               color: #fff;
+            }
+          }
+          .selectDateFilter{
+            width: auto;
+            p{
+              width: 12%;
+              line-height: .4rem;
+            }
+            div{
+              width: 44%;
             }
           }
         }
@@ -194,4 +205,39 @@
   span.side{
     background: #ffc463;
   }
+  i{
+    position: absolute;
+    top: .03rem;
+    right: .03rem;
+    display: inline-block;
+    width: .14rem;
+    height: .14rem;
+    text-align: center;
+    background-color: #d8d8d8;
+    color: #fff;
+    border-radius: 50%;
+    font-style: normal;
+    font-size: .12rem;
+  }
+}
+
+
+.templateBtn{
+  width: .56rem;
+  text-align: center;
+  display: inline-block;
+  margin-left: .2rem;
+  dt{
+    img{
+      width: .56rem;
+    }
+  }
+  dd{
+    line-height: .3rem;
+    font-size: $jzfontSize;
+    color: $jzfontColor;
+  }
+}
+.templateBtn:first-child{
+  margin-left: 0;
 }

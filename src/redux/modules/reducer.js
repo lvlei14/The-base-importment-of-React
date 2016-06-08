@@ -8,6 +8,7 @@ import counter from './counter';
 import {reducer as form} from 'redux-form';
 import info from './info';
 import widgets from './widgets';
+import { diaglogReducer } from './diaglog';
 import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
 import { addDatePlanReducer } from './addDatePlan';
@@ -23,6 +24,7 @@ import { addSurgeryInforReducer } from './addSurgery';
 import { loadSurgeryInforReducer } from './surgeryInfor';
 import { accountReducer } from './account';
 import { userSurgeryInforReducer } from './modifySurgery';
+import { datePlanDetailReducer } from './datePlanDetail';
 
 export default combineReducers({
   routing: routerReducer,
@@ -36,6 +38,7 @@ export default combineReducers({
   }),
   info,
   widgets,
+  diaglog: diaglogReducer,
   popUp: popUpReducer,
   schedules: datePlanSchedulesReducer,
   addDatePlan: addDatePlanReducer,
@@ -51,4 +54,5 @@ export default combineReducers({
   surgeryInfor: loadSurgeryInforReducer,
   account: accountReducer,
   patientSurgeryInfor: userSurgeryInforReducer,
+  datePlanDetail: datePlanDetailReducer,
 });

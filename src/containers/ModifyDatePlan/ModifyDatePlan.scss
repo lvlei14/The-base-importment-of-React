@@ -1,6 +1,6 @@
 @import '../../theme/variables.scss';
 .addDatePlan{
-  padding: $lrmargin;
+  padding: 0 $lrmargin;
   header.headTitle{
     color: $mainColor;
     font-size: $jzfontSize;
@@ -43,12 +43,6 @@
         }
       }
       .scheduleType{
-        .selectNoCur{
-          border: 1px solid $borderColor;
-          border-radius: 2px;
-          height: .28rem;
-          line-height: .28rem;
-        }
         div{
           display: inline-block;
           width: 48%;

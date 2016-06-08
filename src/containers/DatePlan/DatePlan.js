@@ -1,77 +1,114 @@
 import React, { Component, PropTypes } from 'react';
-import DayPicker, { DateUtils } from 'react-day-picker';
+import DayPicker, {DateUtils} from 'react-day-picker';
+// import moment from 'moment';
+require('moment/locale/zh-cn');
+import LocaleUtils from 'react-day-picker/moment';
+
+import { Modal } from '../../components';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import CardBg from '../../components/CardBg/Card';
 import TabOutside from '../../components/TabOutside/TabOutside';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { showPopUp } from '../../redux/modules/popUp';
+import { loadschedulesMonth } from '../../redux/modules/datePlan';
 import { loadschedules } from '../../redux/modules/datePlan';
 import { loadtypes } from '../../redux/modules/datePlan';
+import { filterSchedule } from '../../redux/modules/datePlan';
+import { loadTemplates } from '../../redux/modules/datePlan';
 
 const styles = require('./DatePlan.scss');
+const chafang = require('../../images/chafang.png');
+const shoushu = require('../../images/shoushu.png');
+const huiyi = require('../../images/huiyi.png');
+const zidingyi = require('../../images/zidingyi.png');
+
 
 @connect(
   state => ({...state.schedules}), {
     loadschedules,
     loadtypes,
+    loadschedulesMonth,
+    filterSchedule,
   }
 )
-
 export default class DatePlan extends Component {
   static propTypes = {
     schedules: PropTypes.array,
-    scheduleTypes: PropTypes.object
+    schedulesMonth: PropTypes.object,
+    scheduleTypes: PropTypes.object,
+    filterSchedules: PropTypes.array,
+    filterSchedule: PropTypes.func,
+    loadschedules: PropTypes.func,
+    loadtypes: PropTypes.func,
+    loadschedulesMonth: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      selectedDay: '2016/6/2',
+      selectedDate: this.getNowFormatDate(),
       tabTypeState: 'month',
       selectedDayItems: [],
-      monthItems: this.filterSelectedMonthItems('2016', '6'),
       isClickFilter: false,
-      scheduleItems: this.handleData(this.props.schedules),
+      scheduleItems: this.props.schedules,
       filterItems: [],
       showFilterRequires: false,
       filterRequires:
       {
-        firstDate: '2016-05-13',
+        firstDate: this.getNowFormatDate(),
         secondDate: '',
-        type: 'all'
+        typeId: 'all'
       }
     };
   }
 
   componentDidMount() {
     //  TODO 接口地址
-    //  this.props.loadschedules();
+    this.props.loadschedules();
     //  this.props.loadtypes();
+    this.props.loadschedulesMonth();
+    this.clickHandleDay(this.state.selectedDate);
+  }
+
+  getNowFormatDate() {
+    const date = new Date();
+    const seperator1 = '-';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
   }
 
   changeTabType(tabType) {
+    if (tabType === 'month') {
+      this.clickHandleDay(this.getNowFormatDate());
+      this.setState({
+        selectedDate: this.getNowFormatDate()
+      });
+    }
     this.setState({
       tabTypeState: tabType,
-      isClickFilter: false
+      isClickFilter: false,
     });
   }
 
-  clickHandleDay(event, day, { disabled, selected }) {
-    if (disabled) {
-      return;
-    }
-    const handledSchedules = this.handleData(this.props.schedules);
-    const curDayScheduleItem = handledSchedules && handledSchedules.filter((item) => item.date === day);
+  clickHandleDay(day) {
+    const date = new Date(day);
+    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const schedules = this.props.schedules;
+    const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
-      selectedDay: selected ? null : day,
-      selectedDayItems: curDayScheduleItem
+      selectedDate: datetow,
+      selectedDayItems: selectedDaySchedule
     });
   }
 
   filterSelectedMonthItems(year, month) {
-    const handledSchedules = this.handleData(this.props.schedules);
-    const selectMonthItems = handledSchedules && handledSchedules.filter((item) => item.year === year && item.month === month);
+    const schedules = this.props.schedules;
+    const selectMonthItems = schedules && schedules.filter((item) => item.year === year && item.month === month);
     return selectMonthItems;
   }
 
@@ -103,8 +140,7 @@ export default class DatePlan extends Component {
     });
   }
 
-  hideFilterReq(schedules) {
-    let filterTypesResult = schedules;
+  hideFilterReq() {
     const requires = this.state.filterRequires;
     //  TODO 如果什么都没有改变,就不设置有没有点击筛选
     this.setState({
@@ -114,144 +150,100 @@ export default class DatePlan extends Component {
 
     if (requires.secondDate && requires.firstDate > requires.secondDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
+      alert('开始日期不能大于结束日期');
       return;
     }
 
-    if (requires.secondDate !== '' && requires.type !== 'all') {
-      if (requires.type === 'in') {
-        filterTypesResult = schedules && schedules.filter((item) =>
-          item.date <= requires.secondDate && item.date >= requires.firstDate
-          && item.sidePlan === true
-        );
-      }else if (requires.type === 'out') {
-        filterTypesResult = schedules && schedules.filter((item) =>
-          item.date <= requires.secondDate && item.date >= requires.firstDate
-          && item.outsidePlan === true
-        );
-      }else {
-        filterTypesResult = schedules && schedules.filter((item) =>
-          item.date <= requires.secondDate && item.date >= requires.firstDate
-          && item.type === requires.type
-        );
-      }
-    }else if (requires.secondDate === '' && requires.type !== 'all') {
-      if (requires.type === 'in') {
-        filterTypesResult = schedules && schedules.filter((item) =>
-            item.date >= requires.firstDate && item.sidePlan === true
-          );
-      }else if (requires.type === 'out') {
-        filterTypesResult = schedules && schedules.filter((item) =>
-           item.date >= requires.firstDate && item.outsidePlan === true
-          );
-      }else {
-        filterTypesResult = schedules && schedules.filter((item) =>
-          item.type === requires.type && item.date >= requires.firstDate
-        );
-      }
-    }else if (requires.secondDate !== '' && requires.type === 'all') {
-      filterTypesResult = schedules && schedules.filter((item) =>
-        item.date <= requires.secondDate && item.date >= requires.firstDate
-      );
-    }else if (requires.secondDate === '' && requires.type === 'all') {
-      filterTypesResult = schedules && schedules.filter((item) =>
-          item.date >= requires.firstDate
-        );
-    }
+    this.props.filterSchedule(this.state.filterRequires);
 
     this.setState({
-      filterItems: this.handleData(filterTypesResult)
+      filterItems: this.props.filterSchedules
     });
   }
 
-  handleData(schedules) {
-    const handledSchedules = [];
-
-    for (const key in schedules) {
-      if (!schedules.hasOwnProperty(key)) continue;  // TODO 去除error信息
-      const objSchedulesLists = {
-        type: schedules[key].type,
-        time: schedules[key].time,
-        start: schedules[key].start,
-        isconflict: schedules[key].isconflict,
-        sidePlan: schedules[key].sidePlan,
-        outsidePlan: schedules[key].outsidePlan
-      };
-      const obj = {
-        id: schedules[key].id,
-        date: schedules[key].date,
-        day: schedules[key].day,
-        month: schedules[key].month,
-        year: schedules[key].year,
-        schedulesLists: [
-          objSchedulesLists
-        ]
-      };
-
-      let common;
-      for (const prop in handledSchedules) {
-        if (schedules[key].date === handledSchedules[prop].date) {
-          common = prop;
-        }
-      }
-      if (common) {
-        handledSchedules[common].schedulesLists.push(objSchedulesLists);
-      } else {
-        handledSchedules.push(obj);
-      }
+  showSingleDayItem(scheduleDay) {
+    const outsideNum = scheduleDay && scheduleDay.filter((item) => item.locale.value === '院外') || [];
+    const sideNum = scheduleDay && scheduleDay.filter((item) => item.locale.value === '院内') || [];
+    const conflictNum = scheduleDay && scheduleDay.filter((item) => item.conflict) || [];
+    if (outsideNum.length > 0 && sideNum.length > 0) {
+      return (
+        <p>
+          <span className={styles.outside}></span>
+          &nbsp;&nbsp;
+          <span className={styles.side}></span>
+          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+        </p>
+      );
     }
-    return handledSchedules;
+    if (outsideNum.length > 0 && sideNum.length === 0) {
+      return (
+        <p>
+          <span className={styles.outside}></span>
+          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+        </p>
+      );
+    }
+    if (sideNum.length > 0 && outsideNum.length === 0) {
+      return (
+        <p>
+          <span className={styles.side}></span>
+          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+        </p>
+      );
+    }
   }
 
-  showSingleDayItem(dayItem, date) {
-    if (dayItem.day === date) {
-      const outsideNum = dayItem.schedulesLists && dayItem.schedulesLists.filter((item) => !item.sidePlan);
-      const sideNum = dayItem.schedulesLists && dayItem.schedulesLists.filter((item) => item.sidePlan);
-      if (outsideNum.length > 0 && sideNum.length > 0) {
-        return (
-          <p>
-            <span className={styles.outside}></span>
-            &nbsp;&nbsp;
-            <span className={styles.side}></span>
-          </p>
-        );
-      }
-      if (outsideNum.length > 0 && sideNum.length === 0) {
-        return (
-          <p>
-            <span className={styles.outside}></span>
-          </p>
-        );
-      }
-      if (sideNum.length > 0 && outsideNum.length === 0) {
-        return (
-          <p>
-            <span className={styles.side}></span>
-          </p>
-        );
-      }
+  navbar({ previousMonth, onPreviousClick, onNextClick, className}) {
+    // const months = localeUtils.getMonths();
+    let currentYear = (new Date()).getFullYear();
+    // const prev = months[previousMonth.getMonth()];
+    // const next = months[nextMonth.getMonth()];
+    let prevMonth = previousMonth.getMonth();
+    if (prevMonth === 11) {
+      prevMonth = -1;
     }
+    const curMonth = prevMonth + 2;
+    // console.log(prevMonth);
+    // console.log('----');
+    // console.log(curMonth);
+    if (curMonth === 1) {
+      // console.log('1月份了');
+      currentYear = currentYear + 1;
+    }
+    if (curMonth === 12) {
+      // console.log('12月份了');
+      currentYear = currentYear - 1;
+    }
+    // console.log(currentYear);
+    return (
+      <div className={className} style={{ fontSize: '.75em' }}>
+        <span style={{ float: 'left', cursor: 'pointer' }} onClick={() => onPreviousClick()}>
+          《
+        </span>
+        <span style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
+          》
+        </span>
+      </div>
+    );
   }
 
   renderDay(day) {
-    const dayItems = this.state.monthItems;
     const date = day.getDate().toString();
+    const dayItems = this.props.schedulesMonth;
     return (
       <div>
         {date}
         <div className={styles.dayItemOut}>
-          {
-            dayItems && dayItems.map((dayItem) => {
-              return (
-                this.showSingleDayItem(dayItem, date)
-              );
-            })
-          }
+          {this.showSingleDayItem(dayItems[date])}
         </div>
       </div>
     );
   }
+
   render() {
-    const schedules = this.props.schedules;
+    const {schedules, scheduleTypes} = this.props;
+    // console.log(this.props);
+
     let scheduleItems;
 
     if (!this.state.isClickFilter) {
@@ -259,13 +251,13 @@ export default class DatePlan extends Component {
         scheduleItems = this.state.selectedDayItems;
       }
       if (this.state.tabTypeState === 'list') {
-        scheduleItems = this.state.scheduleItems;
+        scheduleItems = this.props.schedules.result;
       }
     }else {
       scheduleItems = this.state.filterItems;
     }
-    const selectedDay = this.state.selectedDay;
-    console.log(selectedDay);
+    console.log('上面的接口');
+    console.log(scheduleItems);
 
     return (
       <div>
@@ -285,17 +277,20 @@ export default class DatePlan extends Component {
                 changeFilterFirstDate = {this.changeFilterFirstDate.bind(this)}
                 changeFilterSecondDate = {this.changeFilterSecondDate.bind(this)}
                 clickFilterScheduleType = {this.clickFilterScheduleType.bind(this)}
-                filterScheduleTypes = {this.props.scheduleTypes} />
+                scheduleTypes = { scheduleTypes} />
             </div>
           </div>
           <div className={styles.datePlanPicker}>
             {
-              this.state.tabTypeState === 'month' && this.state.isClickFilter === false ?
+              this.state.tabTypeState === 'month' ?
                 <DayPicker
                     disabledDays={DateUtils.isPastDay}
                     enableOutsideDays
-                    onDayClick={this.clickHandleDay.bind(this)}
-                    renderDay={this.renderDay.bind(this)} />
+                    onDayClick={(event, day) => this.clickHandleDay(day)}
+                    renderDay={this.renderDay.bind(this)}
+                    navbarComponent={this.navbar.bind(this)}
+                    localeUtils={LocaleUtils}
+                    locale="zh-cn" />
               : ''
             }
           </div>
@@ -330,12 +325,14 @@ class ScdItems extends Component {
   checkContact(curDayContact) {
     return this.curDayContactList(
       <div className={styles.checkPlan}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.start}</span>
+        <span className={styles.timeStart + ' left'}>{curDayContact.startTime}</span>
         <i className="left">查</i>
         <span className="left">查房</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.time}</span>
-        <span className={styles.outside + ' left'}>院外</span>
-        <span className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+        <span className={styles.timeRange + ' left'}>{curDayContact.startTime} － {curDayContact.endTime}</span>
+        <span style={{display: curDayContact.locale === 'out' ? 'boock' : 'none'}}
+          className={styles.outside + ' left'}>院外</span>
+        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
       </div>
       , curDayContact);
   }
@@ -343,10 +340,12 @@ class ScdItems extends Component {
   mettingContact(curDayContact) {
     return this.curDayContactList(
       <div className={styles.metting}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.start}</span>
+        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
         <i className="left">会</i>
         <span className="left">会议</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.time}</span>
+        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
       </div>
       , curDayContact);
   }
@@ -354,10 +353,12 @@ class ScdItems extends Component {
   operaContact(curDayContact) {
     return this.curDayContactList(
       <div className={styles.opera}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.start}</span>
+        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
         <i className="left">术</i>
         <span className="left">手术</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.time}</span>
+        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
       </div>
       , curDayContact);
   }
@@ -365,47 +366,66 @@ class ScdItems extends Component {
   dutyContact(curDayContact) {
     return this.curDayContactList(
       <div className={styles.duty}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.start}</span>
+        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
         <i className="left">值</i>
         <span className="left">值班</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.time}</span>
+        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+      </div>
+      , curDayContact);
+  }
+
+  otherContact(curDayContact) {
+    return this.curDayContactList(
+      <div className={styles.duty}>
+        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
+        <i className="left">其</i>
+        <span className="left">其它</span>
+        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+        <span style={{display: curDayContact.locale.value === '院外' ? 'boock' : 'none'}}
+          className={styles.outside + ' left'}>院外</span>
+        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
       </div>
       , curDayContact);
   }
 
   render() {
-    const scheduleItems = this.props.scheduleItems;
+    const scheduleItems = this.props.scheduleItems || [];
+    console.log('----');
+    console.log(this.props.scheduleItems);
     return (
       <div>
         {
           scheduleItems.length ?
             scheduleItems.map((scheduleItem)=> {
               return (
-                <CardBg key={scheduleItem.date}>
-                  <p className={styles.curDaytitle}>{scheduleItem.date}</p>
+                <CardBg key={scheduleItem.date.value}>
+                  <p className={styles.curDaytitle}>{scheduleItem.date.value}</p>
                   <ul className={styles.curDayContact}>
                     {
-                      scheduleItem && scheduleItem.schedulesLists && scheduleItem.schedulesLists.length ?
-                        scheduleItem.schedulesLists.map((itemTimePeriod) => {
-                          if (itemTimePeriod.type === 'check') {
-                            return this.checkContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'metting') {
-                            return this.mettingContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'opera') {
-                            return this.operaContact(itemTimePeriod);
-                          }else if (itemTimePeriod.type === 'duty') {
-                            return this.dutyContact(itemTimePeriod);
-                          }
-                        })
-                        : '当天没有日程安排'
+                      scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
+                        if (itemTimePeriod.type.value === '查房') {
+                          const idnelg = this.checkContact(itemTimePeriod);
+                          console.log(idnelg);
+                          return this.checkContact(itemTimePeriod);
+                        }else if (itemTimePeriod.type.value === '会议') {
+                          return this.mettingContact(itemTimePeriod);
+                        }else if (itemTimePeriod.type.value === '手术') {
+                          return this.operaContact(itemTimePeriod);
+                        }else if (itemTimePeriod.type.value === '值班') {
+                          return this.dutyContact(itemTimePeriod);
+                        }else {
+                          return this.otherContact(itemTimePeriod);
+                        }
+                      })
                     }
                   </ul>
                 </CardBg>
               );
             })
-          : <div className="noResult">
-              <p>没有找到相关数据</p>
-            </div>
+          : <p className="noResult">没有日程安排</p>
         }
       </div>
     );
@@ -414,7 +434,7 @@ class ScdItems extends Component {
 
 
 /**
-  * component: scheduleFilterItem
+  * component: filter scheduleee
   */
 class FilterScheduleItem extends Component {
 
@@ -424,18 +444,18 @@ class FilterScheduleItem extends Component {
     changeFilterFirstDate: PropTypes.func,
     changeFilterSecondDate: PropTypes.func,
     clickFilterScheduleType: PropTypes.func,
-    filterScheduleTypes: PropTypes.object,
+    scheduleTypes: PropTypes.object,
   };
 
   componentDidMount() {
   }
 
-  changeFilterFirstDate() {
-    this.props.changeFilterFirstDate();
+  changeFilterFirstDate(event) {
+    this.props.changeFilterFirstDate(event);
   }
 
-  changeFilterSecondDate() {
-    this.props.changeFilterSecondDate();
+  changeFilterSecondDate(event) {
+    this.props.changeFilterSecondDate(event);
   }
 
   clickFilterScheduleType(key) {
@@ -443,20 +463,24 @@ class FilterScheduleItem extends Component {
   }
 
   render() {
-    const filterScheduleTypes = this.props.filterScheduleTypes;
+    const scheduleTypes = this.props.scheduleTypes;
     return (
       <section className={styles.scheduleFilterCon} style={{display: this.props.showFilterRequires ? 'block' : 'none'}}>
         <div className={styles.modolBackDrop}></div>
         <div className="clearfix">
           <i className="left">日期</i>
-          <section className="left">
-            <input type="date"
+          <section className={'left clearfix ' + styles.selectDateFilter}>
+            <div className="left">
+              <input type="date"
                    value={this.props.filterRequires.firstDate}
                    onChange={this.changeFilterFirstDate.bind(this)} />
-            <span className={styles.dateSpan}>至</span>
-            <input type="date"
+            </div>
+            <p className={styles.dateSpan + ' left'}>至</p>
+            <div className="right">
+              <input type="date"
                    value={this.props.filterRequires.secondDate}
                    onChange={this.changeFilterSecondDate.bind(this)} />
+            </div>
           </section>
         </div>
         <div className="clearfix">
@@ -487,11 +511,11 @@ class FilterScheduleItem extends Component {
                 return (
                   <p>
                     {
-                      filterScheduleTypes[key] && filterScheduleTypes[key].map((filterScheduleType) => {
+                      scheduleTypes[key] && scheduleTypes[key].map((scheduleType) => {
                         return (
-                          <span className={this.props.filterRequires.type === filterScheduleType.ywname ? styles.curSpan : ''}
-                                onClick={() => this.clickFilterScheduleType(filterScheduleType.ywname)}
-                          >{ filterScheduleType.zwname}</span>
+                          <span className={this.props.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
+                                onClick={() => this.clickFilterScheduleType(scheduleType.id)}
+                          >{ scheduleType.name}</span>
                         );
                       })
                     }
@@ -510,25 +534,89 @@ class FilterScheduleItem extends Component {
  * component: add paln btn
  */
 @connect(
-  state => ({...state.popUp}),
+  state => ({templates: state.schedules.templates}),
   {
+    pushState: push,
     showPopUp,
+    loadTemplates,
   }
 )
 class AddPlan extends Component {
+
+  static propTypes = {
+    loadTemplates: PropTypes.func,
+    templates: PropTypes.object,
+    pushState: PropTypes.func,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+      hideModalFooter: true,
+    };
+  }
 
   componentDidMount() {
 
   }
 
   addPlan() {
-    //  TODO pushState
-    // this.props.pushState(null, `/app-date-plan`);
+    this.props.loadTemplates();
+    this.setState({
+      showModal: true,
+    });
+  }
+
+  goTemplatePage(templateId) {
+    this.props.pushState('/add-date-plan/' + templateId);
   }
 
   render() {
+    const templates = this.props.templates.result;
     return (
-      <a className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</a>
+      <div>
+        <a className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</a>
+        <Modal
+            showModal = {this.state.showModal}
+            title = {'添加手术'}
+            hideModalFooter = {this.state.hideModalFooter}
+          >
+          {
+            templates && templates.map((template) => {
+              if (template.name === '查房') {
+                return (
+                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                    <dt><img src={chafang} /></dt>
+                    <dd>{template.name}</dd>
+                  </dl>
+                );
+              } else if (template.name === '会议') {
+                return (
+                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                    <dt><img src={huiyi} /></dt>
+                    <dd>{template.name}</dd>
+                  </dl>
+                );
+              } else if (template.name === '手术') {
+                return (
+                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                    <dt><img src={shoushu} /></dt>
+                    <dd>{template.name}</dd>
+                  </dl>
+                );
+              } else {
+                return (
+                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                    <dt><img src={zidingyi} /></dt>
+                    <dd>{template.name}</dd>
+                  </dl>
+                );
+              }
+            })
+          }
+        </Modal>
+      </div>
     );
   }
 }

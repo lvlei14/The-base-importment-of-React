@@ -58,14 +58,16 @@
       line-height: .45rem;
       padding: 0 $lrmargin;
       border-left: 5px solid $mainColor;
-      p{
+      p.curP{
         border-top: .1rem solid $mainColor;
+        border-left: .08rem solid transparent;
         margin-top: .18rem;
         margin-right: .04rem;
       }
-      p.curP{
+      p{
         border-left: .1rem solid $mainColor;
         border-top: .08rem solid transparent;
+        margin-top: .14rem;
       }
     }
     ul{

@@ -1,114 +1,63 @@
-const ADD_DATE_PLAN = 'ADD_DATE_PLAN';
-const ADD_DATE_PLAN_SUCCESS = 'ADD_DATE_PLAN_SUCCESS';
-const ADD_DATE_PLAN_FAIL = 'ADD_DATE_PLAN_FAIL';
+const LOAD_TEMPLATE_ITEM = 'LOAD_TEMPLATE_ITEM';
+const LOAD_TEMPLATE_ITEM_SUCCESS = 'LOAD_TEMPLATE_ITEM_SUCCESS';
+const LOAD_TEMPLATE_ITEM_FAIL = 'LOAD_TEMPLATE_ITEM_FAIL';
 
-const LOAD_METTING = 'LOAD_METTING';
-const LOAD_METTING_SUCCESS = 'LOAD_METTING_SUCCESS';
-const LOAD_METTING_FAIL = 'LOAD_METTING_FAIL';
-
-const LOAD_OPERA = 'LOAD_OPERA';
-const LOAD_OPERA_SUCCESS = 'LOAD_OPERA_SUCCESS';
-const LOAD_OPERA_FAIL = 'LOAD_OPERA_FAIL';
-
-const metting = {
-  types: [
-    '放假安排',
-    '值班安排'
-  ],
-  address: [
-    '会议室1',
-    '会议室2',
-    '会议室3'
-  ]
-};
-
-const opera = {
-  address: [
-    '手术室1',
-    '手术室2',
-    '手术室3'
-  ],
-  diagnos: [
-    '生产',
-    '肿瘤'
-  ],
-  operaNames: [
-    'OPCAB',
-    '生产'
-  ]
-};
+const ADD_DATEPLAN = 'ADD_DATEPLAN';
+const ADD_DATEPLAN_SUCCESS = 'ADD_DATEPLAN_SUCCESS';
+const ADD_DATEPLAN_FAIL = 'ADD_DATEPLAN_FAIL';
 
 const initState = {
   error: null,
   tip: null,
-  metting: metting || {},
-  opera: opera || {},
+  msg: null,
+  template: [],
 };
 
 export function addDatePlanReducer(state = initState, action = {}) {
   switch (action.type) {
-    case ADD_DATE_PLAN:
+    case LOAD_TEMPLATE_ITEM:
       return {
         ...state,
-        error: null,
-        tip: null
+        loading: true
       };
-    case ADD_DATE_PLAN_SUCCESS:
-      console.log(action);
+
+    case LOAD_TEMPLATE_ITEM_SUCCESS:
       return {
         ...state,
+        loading: false,
+        template: action.result.result,
+        tip: action.tip
+      };
+
+    case LOAD_TEMPLATE_ITEM_FAIL:
+      return {
+        ...state,
+        loading: false,
+        tip: action.tip
+      };
+
+
+    case ADD_DATEPLAN:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case ADD_DATEPLAN_SUCCESS:
+      console.log('--请求返回结果');
+      console.log(action.result);
+      return {
+        ...state,
+        loading: false,
+        msg: action.result.success_msg,
         tip: action.tip,
-        error: null
-      };
-    case ADD_DATE_PLAN_FAIL:
-      return {
-        ...state,
-        error: action.result,
-        tip: null
       };
 
-
-    case LOAD_METTING:
+    case ADD_DATEPLAN_FAIL:
       return {
         ...state,
-        error: null,
-        tip: null
-      };
-    case LOAD_METTING_SUCCESS:
-      console.log(action);
-      return {
-        ...state,
-        tip: action.tip,
-        metting: action.result,
-        error: null
-      };
-    case LOAD_METTING_FAIL:
-      return {
-        ...state,
-        error: action.result,
-        tip: null
-      };
-
-
-    case LOAD_OPERA:
-      return {
-        ...state,
-        error: null,
-        tip: null
-      };
-    case LOAD_OPERA_SUCCESS:
-      console.log(action);
-      return {
-        ...state,
-        tip: action.tip,
-        opera: action.result,
-        error: null
-      };
-    case LOAD_OPERA_FAIL:
-      return {
-        ...state,
-        error: action.result,
-        tip: null
+        loading: false,
+        tip: action.tip
       };
 
     default:
@@ -118,37 +67,27 @@ export function addDatePlanReducer(state = initState, action = {}) {
 
 
 /**
- * action: add datePlan
- * @param options
+ * action: load template item by templateId
+ * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function addDatePlan(options) {
+export function loadTemplateItem(id) {
   return {
-    types: [ADD_DATE_PLAN, ADD_DATE_PLAN_SUCCESS, ADD_DATE_PLAN_FAIL],
-    promise: (client) => client.post('', {
-      data: options
+    types: [LOAD_TEMPLATE_ITEM, LOAD_TEMPLATE_ITEM_SUCCESS, LOAD_TEMPLATE_ITEM_FAIL],
+    promise: (client) => client.get('/template/' + id)
+  };
+}
+
+/**
+ * action: add datePlan
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function addDatePlan(tempObject) {
+  return {
+    types: [ADD_DATEPLAN, ADD_DATEPLAN_SUCCESS, ADD_DATEPLAN_FAIL],
+    promise: (client) => client.post('/schedule/', {
+      data: tempObject
     })
-  };
-}
-
-/**
- * action: loading metting information
- *
- */
-export function loadMettingInformation() {
-  return {
-    types: [LOAD_METTING, LOAD_METTING_SUCCESS, LOAD_METTING_FAIL],
-    promise: (client) => client.post('')
-  };
-}
-
-/**
- * action: loading opera information
- *
- */
-export function loadOperaInformation() {
-  return {
-    types: [LOAD_OPERA, LOAD_OPERA_SUCCESS, LOAD_OPERA_FAIL],
-    promise: (client) => client.post('')
   };
 }

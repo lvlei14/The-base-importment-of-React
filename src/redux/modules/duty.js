@@ -2,34 +2,38 @@ const LOAD_DUTY = 'LOAD_DUTY';
 const LOAD_DUTY_SUCCESS = 'LOAD_DUTY_SUCCESS';
 const LOAD_DUTY_FAIL = 'LOAD_DUTY_FAIL';
 
-const dutys = [
-  {
-    id: '1',
-    day: '14',
-    month: '3',
-    appartment: '妇产科',
-    isSelf: false,
-  },
-  {
-    id: '2',
-    day: '15',
-    month: '3',
-    appartment: '妇产科',
-    isSelf: false,
-  },
-  {
-    id: '3',
-    day: '16',
-    month: '4',
-    appartment: '妇产科',
-    isSelf: false,
-  }
-];
+const dutys = {
+  3: [
+    {
+      name: '关于值班的会议',
+      type: {
+        name: '会议',
+        id: '113'
+      },
+      locale: 'in',  // 院内院外
+      date: '2016-7-3',
+      startTime: '08:00',
+      endTime: '12:00',
+      conflict: false  // 是否有冲突
+    },
+    {
+      name: '查房2',
+      type: {
+        name: '查房',
+        id: '111'
+      },
+      locale: 'in',  // 院内院外
+      date: '2016-7-3',
+      startTime: '09:00',
+      endTime: '11:00',
+      conflict: true  // 是否有冲突
+    }]
+};
 
 const initState = {
   loading: false,
   tip: null,
-  dutys: dutys || [],
+  dutys: dutys || {},
 };
 
 

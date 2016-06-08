@@ -4,17 +4,23 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { push } from 'react-router-redux';
 import config from '../../config';
+import { Diaglog } from '../../components';
 
 const styles = require('./App.scss');
 
 @connect(
-  state => ({...state}),
+  state => ({
+    text: state.diaglog.text || '',
+    redirectUrl: state.diaglog.redirectUrl
+  }),
   {pushState: push})
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     user: PropTypes.object,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
+    text: PropTypes.string,
+    redirectUrl: PropTypes.string
   };
 
   static contextTypes = {
@@ -59,6 +65,12 @@ export default class App extends Component {
           {this.props.children}
         </div>
 
+        {/* 提示信息 */}
+        {
+          this.props.text ?
+            <Diaglog text={this.props.text} redirectUrl={this.props.redirectUrl}/>
+            : ''
+        }
         <div className={styles.footer}>
           <ul className={styles.bottomBar}>
             <li className={styles.naviBtn}>

@@ -23,7 +23,7 @@ export default class Opera extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectDate: '',
+      selectDay: this.getNowFormatDate(),
       showDayPicker: false,
     };
   }
@@ -31,6 +31,16 @@ export default class Opera extends Component {
   componentDidMount() {
     // TODO 完善接口地址
     // this.props.loadOperas();
+  }
+
+  getNowFormatDate() {
+    const date = new Date();
+    const seperator1 = '-';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
   }
 
   goOperaPatient() {
@@ -53,24 +63,33 @@ export default class Opera extends Component {
   goAddSurgery() {
     this.props.pushState('/add-surgery');
   }
+  clickSelectDay(day) {
+    const date = new Date(day);
+    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    this.setState({
+      showDayPicker: false,
+      selectDay: datetow,
+    });
+  }
 
   render() {
-    const operas = this.props.operas;
-    console.log(operas);
+    const initOperas = this.props.operas;
+    const operas = initOperas && initOperas.filter((item) => item.date === this.state.selectDay);
+    console.log(this.state.selectDay);
     return (
       <div>
         <HeadNaviBar>心外科手术安排</HeadNaviBar>
         <div className={styles.opera}>
           <header className={'clearfix topCardBg ' + styles.operaHeader}>
             <div className="left clearfix" onClick={this.clickShowDayPicker.bind(this)}>
-              <span className="left">2016-05-04</span>
+              <span className="left">{this.state.selectDay}</span>
               <p className="left sanjiao-bt"></p>
             </div>
             <div style={{display: this.state.showDayPicker ? 'block' : 'none'}} className={styles.operaPicker}>
               <section className="bodyBgWhiteZindex">
                 <DayPicker
                   enableOutsideDays
-                  onDayClick={(event, day) => alert(day)} />
+                  onDayClick={(event, day) => this.clickSelectDay(day)} />
               </section>
               <p></p>
             </div>
@@ -88,13 +107,13 @@ export default class Opera extends Component {
                 <section className="topCardBg" key={opear.operatingRoom.id}>
                   <header className="clearfix">
                     <span className="left">{opear.operatingRoom && opear.operatingRoom.name}</span>
-                    <p className={this.state[opear.operatingRoom.id] ? 'right sanjiao-right ' + styles.curP : 'right sanjiao-bt'} onClick={() => this.clickToggleList(opear.operatingRoom.id)}></p>
+                    <p className={this.state[opear.operatingRoom.id] ? 'right sanjiao-right' : 'right sanjiao-bt ' + styles.curP } onClick={() => this.clickToggleList(opear.operatingRoom.id)}></p>
                   </header>
-                  <ul style={{display: this.state[opear.operatingRoom.id] ? 'block' : 'none'}}>
+                  <ul style={{display: this.state[opear.operatingRoom.id] ? 'none' : 'block'}}>
                     {
                       opear && opear.surgeries && opear.surgeries.map((surgery) => {
                         return (
-                          <li className="clearfix">
+                          <li className="clearfix" key={surgery.seq}>
                             <i className="left">{surgery.seq}.</i>
                             <p className="left">
                               {surgery.patient && surgery.patient.name}（{

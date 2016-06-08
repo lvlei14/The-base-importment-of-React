@@ -14,3 +14,6 @@ export ModifyPatient from './ModifyPatient/ModifyPatient';
 export PatientInfor from './PatientInfor/PatientInfor';
 export AddSurgery from './AddSurgery/AddSurgery';
 export ModifySurgery from './ModifySurgery/ModifySurgery';
+export SurgeryInfor from './SurgeryInfor/SurgeryInfor';
+export DatePlanDetail from './DatePlanDetail/DatePlanDetail';
+export ModifyDatePlan from './ModifyDatePlan/ModifyDatePlan';

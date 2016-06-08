@@ -1,16 +1,38 @@
 @import '../../theme/variables.scss';
-.PatientInfor{
+.datePlanDetail{
   section{
     margin:.1rem $lrmargin;
+    padding: 0 $lrmargin;
+    .DatDetailTitle{
+      border-bottom: 1px solid $borderColor;
+      font-size: .24rem;
+      color: $jzfontColor;
+      padding-top: .26rem;
+      padding-bottom: .15rem;
+      text-align: center;
+      p{
+        padding-top: .1rem;
+        color: $text-color;
+        font-size: .14rem;
+      }
+    }
+    section{
+      margin: 0;
+      header{
+        color: $mainColor;
+        margin-top: .14rem;
+        margin-bottom: .05rem;
+        font-size: .15rem;
+      }
+    }
     .addPatientLi{
+      font-size: $jzfontSize;
       position: relative;
       height: .3rem;
       line-height: .3rem;
-      margin:.1rem $lrmargin;
       .leftPlaceholder{
-        font-style: normal;
-        width: .6rem;
-        text-align: right;
+        font-weight: normal;
+        width: .8rem;
         position: absolute;
         top:0;
         left:0;
@@ -46,12 +68,6 @@
           padding-right: .1rem;
         }
       }
-    }
-    .addPatientLiFirst{
-      margin-top: .16rem;
-    }
-    .addPatientLiEnd{
-      margin-bottom: .16rem;
     }
   }
   footer{

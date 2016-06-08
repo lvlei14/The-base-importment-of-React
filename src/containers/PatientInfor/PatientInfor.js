@@ -27,7 +27,7 @@ export default class PatientInfor extends Component {
 
   componentDidMount() {
     // TODO 完善Api地址
-    // this.props.addPatientInfor();
+    // this.props.loadPatientInformation();
   }
 
   goModifyPatient() {
@@ -39,7 +39,7 @@ export default class PatientInfor extends Component {
     console.log(patientInfor);
     return (
       <div className={styles.PatientInfor}>
-        <HeadNaviBar>添加患者</HeadNaviBar>
+        <HeadNaviBar>患者信息</HeadNaviBar>
         <section className="cardBgRadius">
           <div className={styles.addPatientLi + ' ' + styles.addPatientLiFirst}>
             <label className={ styles.leftPlaceholder}>患者姓名</label>
