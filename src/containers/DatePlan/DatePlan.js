@@ -316,85 +316,102 @@ class ScdItems extends Component {
   }
 
   // curDayContactList(curDayContactComponent, curDayContact) {
-  curDayContactList(curDayContactComponent) {
-    return (
-      <li>{curDayContactComponent}</li>
-    );
-  }
+  // curDayContactList(curDayContactComponent) {
+  //   return (
+  //     <li>{curDayContactComponent}</li>
+  //   );
+  // }
 
-  checkContact(curDayContact) {
-    return this.curDayContactList(
-      <div className={styles.checkPlan}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.startTime}</span>
-        <i className="left">查</i>
-        <span className="left">查房</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.startTime} － {curDayContact.endTime}</span>
-        <span style={{display: curDayContact.locale === 'out' ? 'boock' : 'none'}}
-          className={styles.outside + ' left'}>院外</span>
-        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-      </div>
-      , curDayContact);
-  }
+  // checkContact(curDayContact) {
+  //   return this.curDayContactList(
+  //     <div className={styles.checkPlan}>
+  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime}</span>
+  //       <i className="left">查</i>
+  //       <span className="left">查房</span>
+  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime} － {curDayContact.endTime}</span>
+  //       <span style={{display: curDayContact.locale === 'out' ? 'boock' : 'none'}}
+  //         className={styles.outside + ' left'}>院外</span>
+  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+  //     </div>
+  //     , curDayContact);
+  // }
 
-  mettingContact(curDayContact) {
-    return this.curDayContactList(
-      <div className={styles.metting}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-        <i className="left">会</i>
-        <span className="left">会议</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-      </div>
-      , curDayContact);
-  }
+  // mettingContact(curDayContact) {
+  //   return this.curDayContactList(
+  //     <div className={styles.metting}>
+  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
+  //       <i className="left">会</i>
+  //       <span className="left">会议</span>
+  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+  //     </div>
+  //     , curDayContact);
+  // }
 
-  operaContact(curDayContact) {
-    return this.curDayContactList(
-      <div className={styles.opera}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-        <i className="left">术</i>
-        <span className="left">手术</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-      </div>
-      , curDayContact);
-  }
+  // operaContact(curDayContact) {
+  //   return this.curDayContactList(
+  //     <div className={styles.opera}>
+  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
+  //       <i className="left">术</i>
+  //       <span className="left">手术</span>
+  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+  //     </div>
+  //     , curDayContact);
+  // }
 
-  dutyContact(curDayContact) {
-    return this.curDayContactList(
-      <div className={styles.duty}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-        <i className="left">值</i>
-        <span className="left">值班</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-      </div>
-      , curDayContact);
-  }
+  // dutyContact(curDayContact) {
+  //   return this.curDayContactList(
+  //     <div className={styles.duty}>
+  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
+  //       <i className="left">值</i>
+  //       <span className="left">值班</span>
+  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+  //     </div>
+  //     , curDayContact);
+  // }
 
-  otherContact(curDayContact) {
-    return this.curDayContactList(
-      <div className={styles.duty}>
-        <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-        <i className="left">其</i>
-        <span className="left">其它</span>
-        <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-        <span style={{display: curDayContact.locale.value === '院外' ? 'boock' : 'none'}}
-          className={styles.outside + ' left'}>院外</span>
-        <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-         className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-      </div>
-      , curDayContact);
+  // otherContact(curDayContact) {
+  //   return this.curDayContactList(
+  //     <div className={styles.duty}>
+  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
+  //       <i className="left">其</i>
+  //       <span className="left">其它</span>
+  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
+  //       <span style={{display: curDayContact.locale.value === '院外' ? 'boock' : 'none'}}
+  //         className={styles.outside + ' left'}>院外</span>
+  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
+  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+  //     </div>
+  //     , curDayContact);
+  // }
+
+  itemTimeIcon(itemTimePeriod) {
+    let itemIcon;
+    if (itemTimePeriod.type.value === '查房') {
+      itemIcon = <i className={'left ' + styles.checkPlan}>查</i>;
+    }else if (itemTimePeriod.type.value === '会议') {
+      itemIcon = <i className={'left ' + styles.metting}>会</i>;
+    }else if (itemTimePeriod.type.value === '手术') {
+      itemIcon = <i className={'left ' + styles.opera}>术</i>;
+    }else if (itemTimePeriod.type.value === '值班') {
+      itemIcon = <i className={'left ' + styles.duty}>值</i>;
+    }else {
+      itemIcon = <i className="left">其</i>;
+    }
+    return itemIcon;
   }
 
   render() {
     const scheduleItems = this.props.scheduleItems || [];
     console.log('----');
     console.log(this.props.scheduleItems);
+    let schItemIkey = 0;
     return (
       <div>
         {
@@ -406,19 +423,34 @@ class ScdItems extends Component {
                   <ul className={styles.curDayContact}>
                     {
                       scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
-                        if (itemTimePeriod.type.value === '查房') {
-                          const idnelg = this.checkContact(itemTimePeriod);
-                          console.log(idnelg);
-                          return this.checkContact(itemTimePeriod);
-                        }else if (itemTimePeriod.type.value === '会议') {
-                          return this.mettingContact(itemTimePeriod);
-                        }else if (itemTimePeriod.type.value === '手术') {
-                          return this.operaContact(itemTimePeriod);
-                        }else if (itemTimePeriod.type.value === '值班') {
-                          return this.dutyContact(itemTimePeriod);
-                        }else {
-                          return this.otherContact(itemTimePeriod);
-                        }
+                        schItemIkey = schItemIkey + 1;
+                        return (
+                          <li key={schItemIkey}>
+                            <div>
+                              <span className={styles.timeStart + ' left'}>{itemTimePeriod.startTime.value}</span>
+                              {this.itemTimeIcon(itemTimePeriod)}
+                              <span className="left">其他</span>
+                              <span className={styles.timeRange + ' left'}>{itemTimePeriod.startTime.value} － {itemTimePeriod.endTime.value}</span>
+                              <span style={{display: itemTimePeriod.locale.value === '院外' ? 'boock' : 'none'}}
+                                className={styles.outside + ' left'}>院外</span>
+                              <span style={{display: itemTimePeriod.conflict ? 'block' : 'noen'}}
+                               className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+                            </div>
+                          </li>
+                        );
+                        // if (itemTimePeriod.type.value === '查房') {
+                        //   const idnelg = this.checkContact(itemTimePeriod);
+                        //   console.log(idnelg);
+                        //   return this.checkContact(itemTimePeriod);
+                        // }else if (itemTimePeriod.type.value === '会议') {
+                        //   return this.mettingContact(itemTimePeriod);
+                        // }else if (itemTimePeriod.type.value === '手术') {
+                        //   return this.operaContact(itemTimePeriod);
+                        // }else if (itemTimePeriod.type.value === '值班') {
+                        //   return this.dutyContact(itemTimePeriod);
+                        // }else {
+                        //   return this.otherContact(itemTimePeriod);
+                        // }
                       })
                     }
                   </ul>
@@ -498,7 +530,7 @@ class FilterScheduleItem extends Component {
                     key = 'out';
                   }
                   return (
-                      <span className={this.props.filterRequires.type === key ? styles.curSpan : ''}
+                      <span key={key} className={this.props.filterRequires.type === key ? styles.curSpan : ''}
                           onClick={() => this.clickFilterScheduleType(key)}>{title}</span>
                   );
                 })
@@ -513,7 +545,7 @@ class FilterScheduleItem extends Component {
                     {
                       scheduleTypes[key] && scheduleTypes[key].map((scheduleType) => {
                         return (
-                          <span className={this.props.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
+                          <span key={scheduleType.id} className={this.props.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
                                 onClick={() => this.clickFilterScheduleType(scheduleType.id)}
                           >{ scheduleType.name}</span>
                         );
@@ -545,7 +577,7 @@ class AddPlan extends Component {
 
   static propTypes = {
     loadTemplates: PropTypes.func,
-    templates: PropTypes.object,
+    templates: PropTypes.array,
     pushState: PropTypes.func,
   };
 
@@ -558,7 +590,6 @@ class AddPlan extends Component {
   }
 
   componentDidMount() {
-
   }
 
   addPlan() {
@@ -570,6 +601,20 @@ class AddPlan extends Component {
 
   goTemplatePage(templateId) {
     this.props.pushState('/add-date-plan/' + templateId);
+  }
+
+  templateImgSrc(template) {
+    let imgSrc;
+    if (template.name === '查房') {
+      imgSrc = chafang;
+    } else if (template.name === '会议') {
+      imgSrc = huiyi;
+    } else if (template.name === '手术') {
+      imgSrc = shoushu;
+    } else {
+      imgSrc = zidingyi;
+    }
+    return imgSrc;
   }
 
   render() {
@@ -584,35 +629,12 @@ class AddPlan extends Component {
           >
           {
             templates && templates.map((template) => {
-              if (template.name === '查房') {
-                return (
-                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
-                    <dt><img src={chafang} /></dt>
-                    <dd>{template.name}</dd>
-                  </dl>
-                );
-              } else if (template.name === '会议') {
-                return (
-                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
-                    <dt><img src={huiyi} /></dt>
-                    <dd>{template.name}</dd>
-                  </dl>
-                );
-              } else if (template.name === '手术') {
-                return (
-                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
-                    <dt><img src={shoushu} /></dt>
-                    <dd>{template.name}</dd>
-                  </dl>
-                );
-              } else {
-                return (
-                  <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
-                    <dt><img src={zidingyi} /></dt>
-                    <dd>{template.name}</dd>
-                  </dl>
-                );
-              }
+              return (
+                <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                  <dt><img src={this.templateImgSrc(template)} /></dt>
+                  <dd>{template.name}</dd>
+                </dl>
+              );
             })
           }
         </Modal>

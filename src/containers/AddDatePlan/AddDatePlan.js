@@ -133,23 +133,21 @@ export default class AddDatePlan extends Component {
   }
 
   showLocalSelect(templateType) {
+    let templateTypeCon;
     if (templateType === '其他') {
-      return (
-        <div className="select">
-          <select ref="localRef">
-            <option value="in">院内</option>
-            <option value="out">院外</option>
-          </select>
-          <p className="caret"></p>
-        </div>
-      );
+      templateTypeCon = (<div className="select">
+                          <select ref="localRef">
+                            <option value="in">院内</option>
+                            <option value="out">院外</option>
+                          </select>
+                          <p className="caret"></p>
+                        </div>);
     } else {
-      return (
-        <div>
-          <input ref="localRef" className={styles.selectNoCur} value="院内" readOnly="true" />
-        </div>
-      );
+      templateTypeCon = (<div>
+                          <input ref="localRef" className={styles.selectNoCur} value="院内" readOnly="true" />
+                        </div>);
     }
+    return templateTypeCon;
   }
 
   render() {

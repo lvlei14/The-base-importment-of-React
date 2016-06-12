@@ -66,7 +66,7 @@ export default class Duty extends Component {
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.props.dutys;
+    // const dayItems = this.props.dutys;
     return (
       <div>
         {date}
@@ -77,7 +77,7 @@ export default class Duty extends Component {
   }
 
   render() {
-    const dutys = this.props.dutys;
+    // const dutys = this.props.dutys;
     return (
       <div className={styles.duty}>
         <HeadNaviBar>

@@ -135,29 +135,22 @@
             }
           }
         }
-        .checkPlan{
-          i{
-            color: #f5a623;
-            border: 1px solid #f5a623;
-          }
+ 
+        i.checkPlan{
+          color: #f5a623;
+          border: 1px solid #f5a623;
         }
-        .metting{
-          i{
-            color: #4a90e2;
-            border: 1px solid #4a90e2;
-          }
+        i.metting{
+          color: #4a90e2;
+          border: 1px solid #4a90e2;
         }
-        .opera{
-          i{
-            color: #33c7a6;
-            border: 1px solid #33c7a6;
-          }
+        i.opera{
+          color: #33c7a6;
+          border: 1px solid #33c7a6;
         }
-        .duty{
-          i{
-            color: #2faf2d;
-            border: 1px solid #2faf2d;
-          }
+        i.duty{
+          color: #2faf2d;
+          border: 1px solid #2faf2d;
         }
       }
     }
