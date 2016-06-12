@@ -1,0 +1,13 @@
+{
+  "apps" : [{
+    "name"        : "yichenwechat",
+    "script"      : "bin/server.js",
+    "watch"       : false,
+    "env": {
+      "NODE_PATH": "./src",
+      "PORT": 7220,
+      "APIPORT": 7210,
+      "NODE_ENV": "production"
+    }
+  }]
+}
