@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import DayPicker, {DateUtils} from 'react-day-picker';
 
 import { loaddutys } from '../../redux/modules/duty';
 const styles = require('./Duty.scss');
@@ -21,13 +22,24 @@ export default class Duty extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      monthState: '3'
+      monthState: '3',
+      selectDay: this.getNowFormatDate(),
     };
   }
 
   componentDidMount() {
     // TODO 完善接口地址
     // this.props.loaddutys();
+  }
+
+  getNowFormatDate() {
+    const date = new Date();
+    const seperator1 = '-';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
   }
 
   changeMonth(event) {
@@ -44,16 +56,40 @@ export default class Duty extends Component {
     this.props.pushState('/appart-duty');
   }
 
+  clickSelectDay(day) {
+    const date = new Date(day);
+    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    this.setState({
+      selectDay: datetow,
+    });
+  }
+
+  renderDay(day) {
+    const date = day.getDate().toString();
+    // const dayItems = this.props.dutys;
+    return (
+      <div>
+        {date}
+        <div className={styles.dayItemOut}>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const dutys = this.props.dutys;
-    const monthDutys = dutys && dutys.filter((item) => item.month === this.state.monthState);
-    console.log(monthDutys);
+    // const dutys = this.props.dutys;
     return (
       <div className={styles.duty}>
         <HeadNaviBar>
           我的值班
         </HeadNaviBar>
         <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
+          <DayPicker
+            disabledDays={DateUtils.isPastDay}
+            enableOutsideDays
+            onDayClick={(event, day) => this.clickSelectDay(day)}
+            renderDay={this.renderDay.bind(this)} />
+
           <select className="left" value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
             <option value="3">3月</option>
             <option value="4">4月</option>
@@ -73,6 +109,7 @@ export default class Duty extends Component {
               <th>周六</th>
             </tr>
             <tr>
+              {/*
               {
                 monthDutys && monthDutys.map((monthDuty) => {
                   return (
@@ -85,7 +122,7 @@ export default class Duty extends Component {
                     </td>
                   );
                 })
-              }
+              }*/}
             </tr>
             </tbody>
           </table>

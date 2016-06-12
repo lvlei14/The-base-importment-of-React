@@ -4,10 +4,12 @@ const styles = require('./Modal.scss');
 
 export default class Modal extends Component {
   static propTypes = {
-    children: PropTypes.string,
+    children: PropTypes.array,
     showModal: PropTypes.boolean,
     title: PropTypes.string,
     clickConfirm: PropTypes.func,
+    hideHideModalBtn: PropTypes.boolean,
+    hideModalFooter: PropTypes.boolean,
   }
 
   constructor(props) {
@@ -41,11 +43,11 @@ export default class Modal extends Component {
             <p className={'bodyBgWhite ' + styles.modalBg}></p>
             <div className={'bodyBgWhiteZindex ' + styles.modalSection}>
               <header className={'clearfix ' + styles.modalTitle}>
-                <h3 className="left">{this.props.title}</h3>
-                <span className="right" onClick={this.clickHideModal.bind(this)}>x</span>
+                <h3>{this.props.title}</h3>
+                <span style={{display: this.props.hideHideModalBtn ? 'none' : 'block'}} onClick={this.clickHideModal.bind(this)}>x</span>
               </header>
               <section className={styles.modalSectionSection}>{this.props.children}</section>
-              <footer className={styles.modalButton + ' clearfix'}>
+              <footer style={{display: this.props.hideModalFooter ? 'none' : 'block'}} className={styles.modalButton + ' clearfix'}>
                 <button className="left" onClick={this.clickHideModal.bind(this)}>取消</button>
                 <button className={'right ' + styles.modalConfirm} onClick={this.clickConfirm.bind(this)}>确定</button>
               </footer>

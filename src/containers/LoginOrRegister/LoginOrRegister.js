@@ -20,7 +20,8 @@ export default class LoginOrRegister extends Component {
     selectTab: PropTypes.func,
     getMsgCode: PropTypes.func,
     newUserId: PropTypes.string,
-    user: PropTypes.obj,
+    msgCode: PropTypes.string,
+    user: PropTypes.object,
     msg: PropTypes.string,
     errMsg: PropTypes.string,
     pushState: PropTypes.func,
@@ -35,18 +36,15 @@ export default class LoginOrRegister extends Component {
     };
   }
 
-  goMainPage() {
-    this.props.pushState('/');
-  }
-
   render() {
     const selectTabKey = this.props.selectedTabName;
     const self = this;
     return (
-      <div className={styles.container}>
+      <div className={'bodyBgWhiteZindex ' + styles.container}>
+        <p className="bodyBgWhite"></p>
         <div className={styles.bgContainer}>
           <img src={bgPic} alt="背景图" className={styles.bgImg}/>
-          <p>掌上医院</p>
+          <p>医程</p>
           <ul>
             <li onClick={() => self.props.selectTab(1)} className={ selectTabKey === 1 ? styles.bottomBorder : ''}>
               登录
@@ -62,12 +60,12 @@ export default class LoginOrRegister extends Component {
                  msg={this.props.msg}
                  errMsg={this.props.errMsg}
                  user={this.props.user}
-                 goMainPage={this.goMainPage.bind(this)}
           />
         </div>
-        <div style={{display: selectTabKey === 2 ? 'block' : 'none'}}>
+        <div style={{display: selectTabKey === 2 ? 'none' : 'none'}}>
           <Register register={this.props.register}
                     getMsgCode={this.props.getMsgCode}
+                    msgCode={this.props.msgCode}
                     registerStatus={this.props.newUserId}
                     msg={this.props.msg}
                     errMsg={this.props.errMsg}

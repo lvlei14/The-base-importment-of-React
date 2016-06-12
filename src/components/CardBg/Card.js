@@ -6,7 +6,7 @@ export default class CardBg extends Component {
   }
   render() {
     return (
-      <div className={styles.cardBg}>
+      <div className={styles.cardBg + ' clearfix'}>
         {this.props.children}
       </div>
     );

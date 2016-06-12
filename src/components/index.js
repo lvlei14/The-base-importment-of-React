@@ -13,4 +13,5 @@ export SurveyForm from './SurveyForm/SurveyForm';
 export WidgetForm from './WidgetForm/WidgetForm';
 export Login from './Login-Register/Login';
 export Register from './Login-Register/Register';
+export Diaglog from './Diaglog/Diaglog';
 export Modal from './Modal/Modal';

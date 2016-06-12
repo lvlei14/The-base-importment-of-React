@@ -8,6 +8,7 @@ import counter from './counter';
 import {reducer as form} from 'redux-form';
 import info from './info';
 import widgets from './widgets';
+import { diaglogReducer } from './diaglog';
 import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
 import { addDatePlanReducer } from './addDatePlan';
@@ -16,6 +17,14 @@ import { appartDutyReducer } from './appartDuty';
 import { changeDutyReducer } from './changeDuty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
 import { operaReducer } from './opera';
+import { operaPatientListReducer } from './operaInfor';
+import { addPatientInforReducer } from './addPatient';
+import { patientInforReducer } from './modifyPatient';
+import { addSurgeryInforReducer } from './addSurgery';
+import { loadSurgeryInforReducer } from './surgeryInfor';
+import { accountReducer } from './account';
+import { userSurgeryInforReducer } from './modifySurgery';
+import { datePlanDetailReducer } from './datePlanDetail';
 
 export default combineReducers({
   routing: routerReducer,
@@ -29,6 +38,7 @@ export default combineReducers({
   }),
   info,
   widgets,
+  diaglog: diaglogReducer,
   popUp: popUpReducer,
   schedules: datePlanSchedulesReducer,
   addDatePlan: addDatePlanReducer,
@@ -37,4 +47,12 @@ export default combineReducers({
   changeDutys: changeDutyReducer,
   changeDutyRecords: changeDutyRecordsReducer,
   operas: operaReducer,
+  planedOpePatiens: operaPatientListReducer,
+  addPatientInforReducer,
+  patientInfor: patientInforReducer,
+  addSurgeryInforReducer,
+  surgeryInfor: loadSurgeryInforReducer,
+  account: accountReducer,
+  patientSurgeryInfor: userSurgeryInforReducer,
+  datePlanDetail: datePlanDetailReducer,
 });

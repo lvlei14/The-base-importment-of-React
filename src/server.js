@@ -19,7 +19,8 @@ import createHistory from 'react-router/lib/createMemoryHistory';
 import {Provider} from 'react-redux';
 import getRoutes from './routes';
 
-const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
+// const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
+const targetUrl = 'http://172.18.96.179:7293';
 console.log('代理API地址: ' + targetUrl);
 
 const pretty = new PrettyError();

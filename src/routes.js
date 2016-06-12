@@ -13,6 +13,14 @@ import {
     ChangeDutyRecord,
     Opera,
     OperaPatInfor,
+    AddPatient,
+    ModifyPatient,
+    PatientInfor,
+    AddSurgery,
+    ModifySurgery,
+    SurgeryInfor,
+    DatePlanDetail,
+    ModifyDatePlan,
   } from 'containers';
 
 export default (store) => {
@@ -46,13 +54,21 @@ export default (store) => {
         { /* Home (main) route */ }
         <IndexRoute component={Home}/>
         <Route path="date-plan" component={DatePlan} />
-        <Route path="add-date-plan" component={AddDatePlan} />
+        <Route path="add-date-plan/:id" component={AddDatePlan} />
         <Route path="duty" component={Duty} />
         <Route path="appart-duty" component={AppartDuty} />
         <Route path="change-duty" component={ChangeDuty} />
         <Route path="change-duty-record" component={ChangeDutyRecord} />
         <Route path="opera" component={Opera} />
         <Route path="opera-patient" component={OperaPatInfor} />
+        <Route path="add-patient" component={AddPatient} />
+        <Route path="modify-patient" component={ModifyPatient} />
+        <Route path="patient" component={PatientInfor} />
+        <Route path="add-surgery" component={AddSurgery} />
+        <Route path="modify-surgery" component={ModifySurgery} />
+        <Route path="surgery" component={SurgeryInfor} />
+        <Route path="date-plan-detail" component={DatePlanDetail} />
+        <Route path="modify-date-plan" component={ModifyDatePlan} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

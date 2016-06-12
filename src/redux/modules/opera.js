@@ -4,7 +4,124 @@ const LOAD_OPERA_FAIL = 'LOAD_OPERA_FAIL';
 
 const operas = [
   {
-  }
+    operatingRoom: {
+      name: '12手术间',
+      id: '12'
+    },
+    date: '2016-6-5',
+    surgeries: [
+      {
+        name: '手术名字1',
+        seq: 1, // 手术序号,
+        doctor: '李医生',
+        patient: {
+          name: '王春华',
+          gender: 'female',
+          age: '29',
+          id: '2000',
+          roomNum: 'F50-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      },
+      {
+        name: '手术名字2',
+        seq: 2, // 手术序号
+        patient: {
+          name: '王春华2',
+          gender: 'male',
+          age: '20',
+          id: '2002',
+          roomNum: 'F52-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      }
+    ]
+  },
+  {
+    operatingRoom: {
+      name: '13手术间',
+      id: '13'
+    },
+    date: '2016-6-5',
+    surgeries: [
+      {
+        name: '手术名字1',
+        seq: 1, // 手术序号
+        patient: {
+          name: '王春华',
+          gender: 'female',
+          age: '29',
+          id: '2000',
+          roomNum: 'F50-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      },
+      {
+        name: '手术名字2',
+        seq: 2, // 手术序号
+        patient: {
+          name: '王春华2',
+          gender: 'male',
+          age: '20',
+          id: '2002',
+          roomNum: 'F52-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      }
+    ]
+  },
+  {
+    operatingRoom: {
+      name: '12手术间',
+      id: '12'
+    },
+    date: '2016-6-7',
+    surgeries: [
+      {
+        name: '手术名字1',
+        seq: 1, // 手术序号,
+        doctor: '李医生',
+        patient: {
+          name: '王春华',
+          gender: 'female',
+          age: '29',
+          id: '2000',
+          roomNum: 'F50-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      },
+      {
+        name: '手术名字2',
+        seq: 2, // 手术序号
+        patient: {
+          name: '王春华2',
+          gender: 'male',
+          age: '20',
+          id: '2002',
+          roomNum: 'F52-11'  // 床位号  1， 2，3
+        },
+        apartment: {
+          name: '心内科',
+          id: '90'
+        }
+      }
+    ]
+  },
 ];
 
 const initState = {

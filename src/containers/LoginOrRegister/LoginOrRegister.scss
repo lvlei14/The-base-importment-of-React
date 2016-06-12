@@ -1,3 +1,5 @@
+@import '../../theme/variables.scss';
+
 .container {
   background-color: #ffffff;
   font-size: 16px;
@@ -12,7 +14,7 @@
       text-align: center;
       right: 3px;
       color: #ffffff;
-      font-size: 40px;
+      font-size: .24rem;
       z-index: 100;
     }
 
@@ -22,7 +24,8 @@
     }
 
     .bottomBorder {
-      border-bottom: 3px solid #51A7F9;
+      border-bottom: 3px solid $mainColor;
+      opacity: 1;
     }
 
     ul {
@@ -39,6 +42,8 @@
         line-height: 40px;
         text-align: center;
         display: inline-block;
+        opacity: 0.4;
+        font-size: .2rem;
       }
     }
   }

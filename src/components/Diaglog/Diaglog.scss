@@ -1,0 +1,49 @@
+.diagLog{
+  background-color: rgba(0,0,0,0.3);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 999;
+  top:0;
+  left:0;
+  bottom: 0;
+  right:0;
+}
+.loading {
+  position: fixed;
+  width: auto;
+  padding: 3px 10px;
+  height: 80px;
+  top: 200px;
+  left: 50%;
+  width: 180px;
+  text-align: center;
+  font-size: 16px;
+  margin: 0 auto;
+  margin-left: -90px;
+  background-color: hsla(0, 0%, 0%, 0.8);
+  border-radius: 7px;
+  word-wrap: break-word;
+  word-break: break-all;
+  display: table;
+  .tipWithNoRedirectUrl {
+    color: #ffffff;
+    text-align: center;
+    line-height: 24px;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .tipWithRedirectUrl {
+    color: #ffffff;
+    text-align: center;
+    padding-top: 13px;
+    font-size: 15px;
+  }
+
+  .redirectUrl {
+    color: #ffffff;
+    text-align: center;
+    padding-top: 10px;
+  }
+}
