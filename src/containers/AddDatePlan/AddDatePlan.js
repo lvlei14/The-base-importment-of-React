@@ -3,7 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
-import { laddDatePlan,  oadTemplateItem } from '../../redux/modules/addDatePlan';
+import { addDatePlan, loadTemplateItem } from '../../redux/modules/addDatePlan';
 
 
 const styles = require('./AddDatePlan.scss');
