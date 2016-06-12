@@ -30,7 +30,6 @@ const zidingyi = require('../../images/zidingyi.png');
     loadschedules,
     loadtypes,
     loadschedulesMonth,
-    filterSchedule,
   }
 )
 export default class DatePlan extends Component {
@@ -39,7 +38,6 @@ export default class DatePlan extends Component {
     schedulesMonth: PropTypes.object,
     scheduleTypes: PropTypes.object,
     filterSchedules: PropTypes.array,
-    filterSchedule: PropTypes.func,
     loadschedules: PropTypes.func,
     loadtypes: PropTypes.func,
     loadschedulesMonth: PropTypes.func,
@@ -48,19 +46,13 @@ export default class DatePlan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: this.getNowFormatDate(),
+      selectedDate: new Date(),
       tabTypeState: 'month',
       selectedDayItems: [],
       isClickFilter: false,
       scheduleItems: this.props.schedules,
-      filterItems: [],
-      showFilterRequires: false,
-      filterRequires:
-      {
-        firstDate: this.getNowFormatDate(),
-        secondDate: '',
-        typeId: 'all'
-      }
+      selectedYear: (new Date()).getFullYear(),
+      selectedMonth: (new Date()).getMonth() + 1,
     };
   }
 
@@ -68,27 +60,14 @@ export default class DatePlan extends Component {
     //  TODO 接口地址
     this.props.loadschedules();
     //  this.props.loadtypes();
+    // TODO 传当前年和月
     this.props.loadschedulesMonth();
+    // console.log(this.state.selectedYear);
+    // console.log(this.state.selectedMonth);
     this.clickHandleDay(this.state.selectedDate);
   }
 
-  getNowFormatDate() {
-    const date = new Date();
-    const seperator1 = '-';
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    const currentdate = year + seperator1 + month + seperator1 + strDate;
-    return currentdate;
-  }
-
   changeTabType(tabType) {
-    if (tabType === 'month') {
-      this.clickHandleDay(this.getNowFormatDate());
-      this.setState({
-        selectedDate: this.getNowFormatDate()
-      });
-    }
     this.setState({
       tabTypeState: tabType,
       isClickFilter: false,
@@ -105,59 +84,9 @@ export default class DatePlan extends Component {
       selectedDayItems: selectedDaySchedule
     });
   }
-
-  filterSelectedMonthItems(year, month) {
-    const schedules = this.props.schedules;
-    const selectMonthItems = schedules && schedules.filter((item) => item.year === year && item.month === month);
-    return selectMonthItems;
-  }
-
-  changeFilterFirstDate(event) {
-    this.setState(
-      {
-        filterRequires: Object.assign({}, this.state.filterRequires, { firstDate: event.target.value})
-      }
-    );
-  }
-
-  changeFilterSecondDate(event) {
-    this.setState(
-      {
-        filterRequires: Object.assign({}, this.state.filterRequires, { secondDate: event.target.value})
-      }
-    );
-  }
-
-  clickFilterScheduleType(type) {
-    this.setState({
-      filterRequires: Object.assign({}, this.state.filterRequires, { type: type})
-    });
-  }
-
-  showFilterReq() {
-    this.setState({
-      showFilterRequires: true
-    });
-  }
-
   hideFilterReq() {
-    const requires = this.state.filterRequires;
-    //  TODO 如果什么都没有改变,就不设置有没有点击筛选
     this.setState({
-      showFilterRequires: false,
       isClickFilter: true,
-    });
-
-    if (requires.secondDate && requires.firstDate > requires.secondDate) {
-      //  TODO 弹窗提示:开始日期不能大于结束日期
-      alert('开始日期不能大于结束日期');
-      return;
-    }
-
-    this.props.filterSchedule(this.state.filterRequires);
-
-    this.setState({
-      filterItems: this.props.filterSchedules
     });
   }
 
@@ -194,37 +123,41 @@ export default class DatePlan extends Component {
   }
 
   navbar({ previousMonth, onPreviousClick, onNextClick, className}) {
-    // const months = localeUtils.getMonths();
-    let currentYear = (new Date()).getFullYear();
-    // const prev = months[previousMonth.getMonth()];
-    // const next = months[nextMonth.getMonth()];
     let prevMonth = previousMonth.getMonth();
     if (prevMonth === 11) {
       prevMonth = -1;
     }
     const curMonth = prevMonth + 2;
-    // console.log(prevMonth);
-    // console.log('----');
-    // console.log(curMonth);
-    if (curMonth === 1) {
-      // console.log('1月份了');
-      currentYear = currentYear + 1;
-    }
-    if (curMonth === 12) {
-      // console.log('12月份了');
-      currentYear = currentYear - 1;
-    }
-    // console.log(currentYear);
     return (
       <div className={className} style={{ fontSize: '.75em' }}>
         <span style={{ float: 'left', cursor: 'pointer' }} onClick={() => onPreviousClick()}>
-          《
+          <span onClick={() => this.previousClickHandler(curMonth)}>《</span>
         </span>
         <span style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
-          》
+          <span onClick={() => this.nextClickHandle(curMonth)}>》</span>
         </span>
       </div>
     );
+  }
+
+  previousClickHandler(curMonth) {
+    const {selectedYear} = this.state;
+    if (curMonth === 1) {
+      this.setState({
+        selectedYear: selectedYear - 1,
+      });
+    }
+    // this.props.loadschedulesMonth();
+  }
+
+  nextClickHandle(curMonth) {
+    const {selectedYear} = this.state;
+    if (curMonth === 12) {
+      this.setState({
+        selectedYear: selectedYear + 1,
+      });
+    }
+    // this.props.loadschedulesMonth();
   }
 
   renderDay(day) {
@@ -241,8 +174,7 @@ export default class DatePlan extends Component {
   }
 
   render() {
-    const {schedules, scheduleTypes} = this.props;
-    // console.log(this.props);
+    const {schedules, filterSchedules} = this.props;
 
     let scheduleItems;
 
@@ -251,14 +183,13 @@ export default class DatePlan extends Component {
         scheduleItems = this.state.selectedDayItems;
       }
       if (this.state.tabTypeState === 'list') {
-        scheduleItems = this.props.schedules.result;
+        scheduleItems = schedules.result;
       }
     }else {
-      scheduleItems = this.state.filterItems;
+      scheduleItems = filterSchedules;
     }
     console.log('上面的接口');
     console.log(scheduleItems);
-
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
@@ -268,21 +199,14 @@ export default class DatePlan extends Component {
               <li className={this.state.tabTypeState === 'month' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('month')}>月</li>
               <li className={this.state.tabTypeState === 'list' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('list')}>列表</li>
             </TabOutside>
-            <div className={styles.scheduleFilterBtn}>
-              <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}} onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
-              <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}} onClick={() => this.hideFilterReq(schedules)}><i></i>完成</h3>
+            <div>
               <FilterScheduleItem
-                showFilterRequires = {this.state.showFilterRequires}
-                filterRequires = {this.state.filterRequires}
-                changeFilterFirstDate = {this.changeFilterFirstDate.bind(this)}
-                changeFilterSecondDate = {this.changeFilterSecondDate.bind(this)}
-                clickFilterScheduleType = {this.clickFilterScheduleType.bind(this)}
-                scheduleTypes = { scheduleTypes} />
+                hideFilterReq = {this.hideFilterReq.bind(this)} />
             </div>
           </div>
           <div className={styles.datePlanPicker}>
             {
-              this.state.tabTypeState === 'month' ?
+              this.state.tabTypeState === 'month' && !this.state.isClickFilter ?
                 <DayPicker
                     disabledDays={DateUtils.isPastDay}
                     enableOutsideDays
@@ -468,96 +392,202 @@ class ScdItems extends Component {
 /**
   * component: filter scheduleee
   */
+@connect(
+  state => ({scheduleTypes: state.schedules.scheduleTypes}),
+  {
+    filterSchedule,
+  }
+)
 class FilterScheduleItem extends Component {
-
   static propTypes = {
-    showFilterRequires: PropTypes.boolean,
-    filterRequires: PropTypes.object,
-    changeFilterFirstDate: PropTypes.func,
-    changeFilterSecondDate: PropTypes.func,
-    clickFilterScheduleType: PropTypes.func,
     scheduleTypes: PropTypes.object,
+    hideFilterReq: PropTypes.func,
+    filterSchedule: PropTypes.func,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showFilterRequires: false,
+      showFirstDayPicker: false,
+      showSecondDayPicker: false,
+      filterRequires:
+      {
+        firstDate: this.getNowFormatDate(),
+        secondDate: '不限',
+        typeId: 'all'
+      },
+    };
+  }
 
   componentDidMount() {
   }
 
-  changeFilterFirstDate(event) {
-    this.props.changeFilterFirstDate(event);
+  getNowFormatDate() {
+    const date = new Date();
+    const seperator1 = '-';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
   }
 
-  changeFilterSecondDate(event) {
-    this.props.changeFilterSecondDate(event);
+  showFilterReq() {
+    this.setState({
+      showFilterRequires: true
+    });
   }
 
-  clickFilterScheduleType(key) {
-    this.props.clickFilterScheduleType(key);
+  clickShowFirstDayPicker() {
+    this.setState({
+      showFirstDayPicker: true,
+    });
+  }
+
+  clickFilterFirstDate(day) {
+    const date = new Date(day);
+    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    this.setState(
+      {
+        showFirstDayPicker: false,
+        filterRequires: Object.assign({}, this.state.filterRequires, { firstDate: datetow})
+      }
+    );
+  }
+
+  clickShowSecondDayPicker() {
+    this.setState({
+      showSecondDayPicker: true,
+    });
+  }
+
+  changeFilterSecondDate(day) {
+    const date = new Date(day);
+    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    this.setState(
+      {
+        showSecondDayPicker: false,
+        filterRequires: Object.assign({}, this.state.filterRequires, { secondDate: datetow})
+      }
+    );
+  }
+
+  clickFilterScheduleType(typeId) {
+    this.setState({
+      filterRequires: Object.assign({}, this.state.filterRequires, { typeId: typeId})
+    });
+  }
+
+  hideFilterReq() {
+    this.props.hideFilterReq();
+    const requires = this.state.filterRequires;
+    //  TODO 如果什么都没有改变,就不设置有没有点击筛选
+    this.setState({
+      showFilterRequires: false,
+    });
+
+    if (requires.secondDate && requires.firstDate > requires.secondDate) {
+      //  TODO 弹窗提示:开始日期不能大于结束日期
+      alert('开始日期不能大于结束日期');
+      return;
+    }
+    this.props.filterSchedule(requires);
   }
 
   render() {
     const scheduleTypes = this.props.scheduleTypes;
+    console.log('筛选条件');
+    console.log(this.state.filterRequires);
     return (
-      <section className={styles.scheduleFilterCon} style={{display: this.props.showFilterRequires ? 'block' : 'none'}}>
-        <div className={styles.modolBackDrop}></div>
-        <div className="clearfix">
-          <i className="left">日期</i>
-          <section className={'left clearfix ' + styles.selectDateFilter}>
-            <div className="left">
-              <input type="date"
-                   value={this.props.filterRequires.firstDate}
-                   onChange={this.changeFilterFirstDate.bind(this)} />
-            </div>
-            <p className={styles.dateSpan + ' left'}>至</p>
-            <div className="right">
-              <input type="date"
-                   value={this.props.filterRequires.secondDate}
-                   onChange={this.changeFilterSecondDate.bind(this)} />
-            </div>
-          </section>
-        </div>
-        <div className="clearfix">
-          <i className="left">类型</i>
-          <section className="left">
-            <header>
+      <div className={styles.scheduleFilterBtn}>
+        <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}}
+            onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
+        <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}}
+            onClick={() => this.hideFilterReq()}><i></i>完成</h3>
+        <section className={styles.scheduleFilterCon}
+            style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
+          <div className={styles.modolBackDrop}></div>
+          <div className="clearfix">
+            <i className="left">日期</i>
+            <section className={'left clearfix ' + styles.selectDateFilter}>
+              <div className={'left ' + styles.filterDate}>
+                <div onClick={this.clickShowFirstDayPicker.bind(this)} className="select">
+                  <span>{this.state.filterRequires.firstDate}</span>
+                  <p className="caret"></p>
+                </div>
+                <div className={styles.datePlanFilterPicker}
+                  style={{display: this.state.showFirstDayPicker ? 'block' : 'none'}}>
+                  <DayPicker
+                      disabledDays={DateUtils.isPastDay}
+                      enableOutsideDays
+                      onDayClick={(event, day) => this.clickFilterFirstDate(day)}
+                      localeUtils={LocaleUtils}
+                      locale="zh-cn" />
+                </div>
+              </div>
+              <p className={styles.dateSpan + ' left'}>至</p>
+              <div className={'right ' + styles.filterDate}>
+                <div onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
+                  <span>{this.state.filterRequires.secondDate}</span>
+                  <p className="caret"></p>
+                </div>
+                <div className={styles.datePlanFilterPicker}
+                  style={{display: this.state.showSecondDayPicker ? 'block' : 'none'}}>
+                  <DayPicker
+                      disabledDays={DateUtils.isPastDay}
+                      enableOutsideDays
+                      onDayClick={(event, day) => this.changeFilterSecondDate(day)}
+                      localeUtils={LocaleUtils}
+                      locale="zh-cn" />
+                </div>
+              </div>
+            </section>
+          </div>
+          <div className="clearfix">
+            <i className="left">类型</i>
+            <section className={'left ' + styles.filterType}>
+              <header>
+                {
+                  ['全部', '院内', '院外'].map((title) => {
+                    let key;
+                    if (title === '全部') {
+                      key = 'all';
+                    } else if (title === '院内') {
+                      key = 'in';
+                    } else {
+                      key = 'out';
+                    }
+                    return (
+                        <span key={key} className={this.state.filterRequires.type === key ? styles.curSpan : ''}
+                            onClick={() => this.clickFilterScheduleType(key)}>{title}</span>
+                    );
+                  })
+                }
+              </header>
+
               {
-                ['全部', '院内', '院外'].map((title) => {
-                  let key;
-                  if (title === '全部') {
-                    key = 'all';
-                  } else if (title === '院内') {
-                    key = 'in';
-                  } else {
-                    key = 'out';
-                  }
+                ['院内', '院外'].map((time) => {
+                  const key = time === '院内' ? 'in' : 'out';
                   return (
-                      <span key={key} className={this.props.filterRequires.type === key ? styles.curSpan : ''}
-                          onClick={() => this.clickFilterScheduleType(key)}>{title}</span>
+                    <p>
+                      {
+                        scheduleTypes[key] && scheduleTypes[key].map((scheduleType) => {
+                          return (
+                            <span key={scheduleType.id} className={this.state.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
+                                  onClick={() => this.clickFilterScheduleType(scheduleType.id)}
+                            >{ scheduleType.name}</span>
+                          );
+                        })
+                      }
+                    </p>
                   );
                 })
               }
-            </header>
-
-            {
-              ['院内', '院外'].map((time) => {
-                const key = time === '院内' ? 'in' : 'out';
-                return (
-                  <p>
-                    {
-                      scheduleTypes[key] && scheduleTypes[key].map((scheduleType) => {
-                        return (
-                          <span key={scheduleType.id} className={this.props.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
-                                onClick={() => this.clickFilterScheduleType(scheduleType.id)}
-                          >{ scheduleType.name}</span>
-                        );
-                      })
-                    }
-                  </p>
-                );
-              })
-            }
-          </section>
-        </div>
-      </section>
+            </section>
+          </div>
+        </section>
+      </div>
     );
   }
 }
