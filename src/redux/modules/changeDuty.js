@@ -7,77 +7,77 @@ const SECOND_CHANGE_DUTY_REQUEST_SUCCESS = 'SECOND_CHANGE_DUTY_REQUEST_SUCCESS';
 const SECOND_CHANGE_DUTY_REQUEST_FAIL = 'SECOND_CHANGE_DUTY_REQUEST_FAIL';
 
 
-const changeDutys = [
-  {
-    id: '2',
-    day: '15',
-    month: '3',
-    doctor: '李柳',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '5',
-    day: '16',
-    month: '3',
-    doctor: '李湘子',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '6',
-    day: '17',
-    month: '3',
-    doctor: '何仙姑',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '7',
-    day: '18',
-    month: '3',
-    doctor: '刘备',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '8',
-    day: '19',
-    month: '3',
-    doctor: '白灰灰',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '9',
-    day: '20',
-    month: '3',
-    doctor: '刘备',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '10',
-    day: '21',
-    month: '3',
-    doctor: '白灰灰',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '3',
-    day: '16',
-    month: '4',
-    doctor: '刘平',
-    isSelf: false,
-    level: '4',
-  }
-];
+// const changeDutys = [
+//   {
+//     id: '2',
+//     day: '15',
+//     month: '3',
+//     doctor: '李柳',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '5',
+//     day: '16',
+//     month: '3',
+//     doctor: '李湘子',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '6',
+//     day: '17',
+//     month: '3',
+//     doctor: '何仙姑',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '7',
+//     day: '18',
+//     month: '3',
+//     doctor: '刘备',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '8',
+//     day: '19',
+//     month: '3',
+//     doctor: '白灰灰',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '9',
+//     day: '20',
+//     month: '3',
+//     doctor: '刘备',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '10',
+//     day: '21',
+//     month: '3',
+//     doctor: '白灰灰',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '3',
+//     day: '16',
+//     month: '4',
+//     doctor: '刘平',
+//     isSelf: false,
+//     level: '4',
+//   }
+// ];
 
 const initState = {
   loading: false,
   tip: null,
-  changeDutys: changeDutys || [],
+  changeDutys: {},
 };
 
 

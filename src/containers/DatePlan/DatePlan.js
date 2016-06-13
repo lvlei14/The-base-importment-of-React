@@ -15,7 +15,6 @@ import { showPopUp } from '../../redux/modules/popUp';
 import { loadschedulesMonth } from '../../redux/modules/datePlan';
 import { loadschedules } from '../../redux/modules/datePlan';
 import { loadtypes } from '../../redux/modules/datePlan';
-import { filterSchedule } from '../../redux/modules/datePlan';
 import { loadTemplates } from '../../redux/modules/datePlan';
 
 const styles = require('./DatePlan.scss');
@@ -37,7 +36,6 @@ export default class DatePlan extends Component {
     schedules: PropTypes.array,
     schedulesMonth: PropTypes.object,
     scheduleTypes: PropTypes.object,
-    filterSchedules: PropTypes.array,
     loadschedules: PropTypes.func,
     loadtypes: PropTypes.func,
     loadschedulesMonth: PropTypes.func,
@@ -59,9 +57,10 @@ export default class DatePlan extends Component {
   componentDidMount() {
     //  TODO 接口地址
     this.props.loadschedules();
-    //  this.props.loadtypes();
-    // TODO 传当前年和月
-    this.props.loadschedulesMonth();
+    this.props.loadtypes();
+    const {selectedYear, selectedMonth} = this.state;
+    const date = selectedYear + '-' + selectedMonth;
+    this.props.loadschedulesMonth(date);
     // console.log(this.state.selectedYear);
     // console.log(this.state.selectedMonth);
     this.clickHandleDay(this.state.selectedDate);
@@ -141,23 +140,31 @@ export default class DatePlan extends Component {
   }
 
   previousClickHandler(curMonth) {
-    const {selectedYear} = this.state;
+    const {selectedYear, selectedMonth} = this.state;
     if (curMonth === 1) {
       this.setState({
         selectedYear: selectedYear - 1,
       });
     }
-    // this.props.loadschedulesMonth();
+    this.setState({
+      selectedMonth: curMonth - 1,
+    });
+    const date = selectedYear + '-' + selectedMonth;
+    this.props.loadschedulesMonth(date);
   }
 
   nextClickHandle(curMonth) {
-    const {selectedYear} = this.state;
+    const {selectedYear, selectedMonth} = this.state;
     if (curMonth === 12) {
       this.setState({
         selectedYear: selectedYear + 1,
       });
     }
-    // this.props.loadschedulesMonth();
+    this.setState({
+      selectedMonth: curMonth + 1,
+    });
+    const date = selectedYear + '-' + selectedMonth;
+    this.props.loadschedulesMonth(date);
   }
 
   renderDay(day) {
@@ -167,17 +174,16 @@ export default class DatePlan extends Component {
       <div>
         {date}
         <div className={styles.dayItemOut}>
-          {this.showSingleDayItem(dayItems[date])}
+          {dayItems && dayItems[date] && this.showSingleDayItem(dayItems[date])}
         </div>
       </div>
     );
   }
 
   render() {
-    const {schedules, filterSchedules} = this.props;
+    const {schedules} = this.props;
 
     let scheduleItems;
-
     if (!this.state.isClickFilter) {
       if (this.state.tabTypeState === 'month') {
         scheduleItems = this.state.selectedDayItems;
@@ -186,10 +192,11 @@ export default class DatePlan extends Component {
         scheduleItems = schedules.result;
       }
     }else {
-      scheduleItems = filterSchedules;
+      scheduleItems = schedules.result;
     }
-    console.log('上面的接口');
-    console.log(scheduleItems);
+
+    // console.log('的item');
+    // console.log(scheduleItems);
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
@@ -289,7 +296,7 @@ class ScdItems extends Component {
 
   // dutyContact(curDayContact) {
   //   return this.curDayContactList(
-  //     <div className={styles.duty}>
+  //     <div classNam e={styles.duty}>
   //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
   //       <i className="left">值</i>
   //       <span className="left">值班</span>
@@ -333,8 +340,8 @@ class ScdItems extends Component {
 
   render() {
     const scheduleItems = this.props.scheduleItems || [];
-    console.log('----');
-    console.log(this.props.scheduleItems);
+    console.log('item接收到的数据');
+    console.log(scheduleItems);
     let schItemIkey = 0;
     return (
       <div>
@@ -395,14 +402,14 @@ class ScdItems extends Component {
 @connect(
   state => ({scheduleTypes: state.schedules.scheduleTypes}),
   {
-    filterSchedule,
+    loadschedules,
   }
 )
 class FilterScheduleItem extends Component {
   static propTypes = {
-    scheduleTypes: PropTypes.object,
+    scheduleTypes: PropTypes.array,
     hideFilterReq: PropTypes.func,
-    filterSchedule: PropTypes.func,
+    loadschedules: PropTypes.func,
   };
 
   constructor(props) {
@@ -413,9 +420,9 @@ class FilterScheduleItem extends Component {
       showSecondDayPicker: false,
       filterRequires:
       {
-        firstDate: this.getNowFormatDate(),
-        secondDate: '不限',
-        typeId: 'all'
+        startDate: this.getNowFormatDate(),
+        endDate: '不限',
+        typeId: ''
       },
     };
   }
@@ -451,7 +458,7 @@ class FilterScheduleItem extends Component {
     this.setState(
       {
         showFirstDayPicker: false,
-        filterRequires: Object.assign({}, this.state.filterRequires, { firstDate: datetow})
+        filterRequires: Object.assign({}, this.state.filterRequires, { startDate: datetow})
       }
     );
   }
@@ -468,7 +475,7 @@ class FilterScheduleItem extends Component {
     this.setState(
       {
         showSecondDayPicker: false,
-        filterRequires: Object.assign({}, this.state.filterRequires, { secondDate: datetow})
+        filterRequires: Object.assign({}, this.state.filterRequires, { endDate: datetow})
       }
     );
   }
@@ -487,18 +494,18 @@ class FilterScheduleItem extends Component {
       showFilterRequires: false,
     });
 
-    if (requires.secondDate && requires.firstDate > requires.secondDate) {
+    if (requires.endDate && requires.startDate > requires.endDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
       alert('开始日期不能大于结束日期');
       return;
     }
-    this.props.filterSchedule(requires);
+    console.log('筛选条件');
+    console.log(this.state.filterRequires);
+    this.props.loadschedules(JSON.stringify(requires));
   }
 
   render() {
     const scheduleTypes = this.props.scheduleTypes;
-    console.log('筛选条件');
-    console.log(this.state.filterRequires);
     return (
       <div className={styles.scheduleFilterBtn}>
         <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}}
@@ -513,7 +520,7 @@ class FilterScheduleItem extends Component {
             <section className={'left clearfix ' + styles.selectDateFilter}>
               <div className={'left ' + styles.filterDate}>
                 <div onClick={this.clickShowFirstDayPicker.bind(this)} className="select">
-                  <span>{this.state.filterRequires.firstDate}</span>
+                  <span>{this.state.filterRequires.startDate}</span>
                   <p className="caret"></p>
                 </div>
                 <div className={styles.datePlanFilterPicker}
@@ -529,7 +536,7 @@ class FilterScheduleItem extends Component {
               <p className={styles.dateSpan + ' left'}>至</p>
               <div className={'right ' + styles.filterDate}>
                 <div onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
-                  <span>{this.state.filterRequires.secondDate}</span>
+                  <span>{this.state.filterRequires.endDate}</span>
                   <p className="caret"></p>
                 </div>
                 <div className={styles.datePlanFilterPicker}
@@ -547,6 +554,7 @@ class FilterScheduleItem extends Component {
           <div className="clearfix">
             <i className="left">类型</i>
             <section className={'left ' + styles.filterType}>
+              {/*
               <header>
                 {
                   ['全部', '院内', '院外'].map((title) => {
@@ -581,6 +589,16 @@ class FilterScheduleItem extends Component {
                         })
                       }
                     </p>
+                  );
+                })
+              }
+              */}
+              {
+                scheduleTypes && scheduleTypes.map((scheduleType) => {
+                  return (
+                    <span key={scheduleType.id} className={this.state.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
+                                  onClick={() => this.clickFilterScheduleType(scheduleType.id)}
+                            >{scheduleType.name}</span>
                   );
                 })
               }

@@ -1,3 +1,5 @@
+import cookie from 'js-cookie';
+
 const LOGIN = 'LOGIN';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_FAIL = 'LOGIN_FAIL';
@@ -37,13 +39,13 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOGIN_SUCCESS:
-      console.log('====登录结果====');
+      cookie.set('__token', action.result.token, {expires: 7});
+      console.log('登陆成功');
       console.log(action);
-      localStorage.setItem('token', action.result.token);
       return {
         ...state,
         loading: false,
-        user: action.result && action.result.user,
+        user: Object.assign({}, action.result && action.result.user, {token: action.result && action.result.token}),
         msg: action.result && action.result.success_msg
       };
     case LOGIN_FAIL:

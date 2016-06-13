@@ -20,7 +20,8 @@ import {Provider} from 'react-redux';
 import getRoutes from './routes';
 
 const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
-// const targetUrl = 'http://172.18.96.179:7293';
+// const targetUrl = 'http://172.18.96.231:7293'; //值班IP
+// const targetUrl = 'http://172.18.96.254:7293'; //日程IP
 console.log('代理API地址: ' + targetUrl);
 
 const pretty = new PrettyError();

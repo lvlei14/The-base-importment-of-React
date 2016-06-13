@@ -1,21 +1,10 @@
 @import '../../theme/variables.scss';
-
-.selectMonth{
-    position: absolute;
-    top: .08rem;
-    right: $lrmargin;
-    color: #fff;
-    font-size: $jzjzfontSize;
-    select{
-      background: transparent;
-      border: 0px solid #fff;
-      margin-top: .02rem;
-    }
-    p{
-      position: absolute;
-      top: .12rem;
-      right: 0;
-    }
+.dutyReTab{
+  text-align: center;
+  .curTab{
+    color: #fff !important;
+    background-color: $mainColor;
+  }
 }
 
 .dutyRecords{  

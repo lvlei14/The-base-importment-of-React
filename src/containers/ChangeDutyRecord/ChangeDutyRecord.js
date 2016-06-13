@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
+import TabOutside from '../../components/TabOutside/TabOutside';
 
 import { loadChangeDutyRecords } from '../../redux/modules/changeDuty';
 
@@ -19,19 +20,13 @@ export default class ChangeDutyRecord extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      monthState: '4',
+      tabTypeState: 'mySend'
     };
   }
 
   componentDidMount() {
     // TODO 完善接口地址
     // this.props.loadChangeDutyRecords();
-  }
-
-  changeMonth(event) {
-    this.setState({
-      monthState: event.target.value
-    });
   }
 
   handleState(recordState) {
@@ -50,6 +45,12 @@ export default class ChangeDutyRecord extends Component {
     }
   }
 
+  changeTabType(type) {
+    this.setState({
+      tabTypeState: type
+    });
+  }
+
   render() {
     const changeDutyRecords = this.props.changeDutyRecords;
     const monthRecords = changeDutyRecords && changeDutyRecords.filter((item) => item.month === this.state.monthState);
@@ -59,14 +60,16 @@ export default class ChangeDutyRecord extends Component {
     return (
       <div>
         <HeadNaviBar>换班日志</HeadNaviBar>
-        <div className={'bodyBgWhiteZindex select clearfix ' + styles.selectMonth}>
-          <select value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
-            <option value="4">4月</option>
-            <option value="5">5月</option>
-          </select>
-          <p className="sanjiao-bt"></p>
+        <div className={styles.dutyReTab}>
+          <TabOutside>
+            <li className={this.state.tabTypeState === 'allRecords' ? styles.curTab + ' left' : 'left'}
+              onClick={() => this.changeTabType('allRecords')}>全部</li>
+            <li className={this.state.tabTypeState === 'mySend' ? styles.curTab + ' left' : 'left'}
+              onClick={() => this.changeTabType('mySend')}>我发起的</li>
+            <li className={this.state.tabTypeState === 'myReceive' ? styles.curTab + ' left' : 'left'}
+              onClick={() => this.changeTabType('myReceive')}>发给我的</li>
+          </TabOutside>
         </div>
-
         <div>
           <p className="bodyBgWhite"></p>
           <div className={'bodyBgWhiteZindex ' + styles.dutyRecords}>
