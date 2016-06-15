@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { showPopUp } from '../../redux/modules/popUp';
-import { loadschedulesMonth } from '../../redux/modules/datePlan';
 import { loadschedules } from '../../redux/modules/datePlan';
 import { loadtypes } from '../../redux/modules/datePlan';
 import { loadTemplates } from '../../redux/modules/datePlan';
@@ -28,17 +27,13 @@ const zidingyi = require('../../images/zidingyi.png');
   state => ({...state.schedules}), {
     loadschedules,
     loadtypes,
-    loadschedulesMonth,
   }
 )
 export default class DatePlan extends Component {
   static propTypes = {
-    schedules: PropTypes.array,
-    schedulesMonth: PropTypes.object,
-    scheduleTypes: PropTypes.object,
+    schedules: PropTypes.object,
     loadschedules: PropTypes.func,
     loadtypes: PropTypes.func,
-    loadschedulesMonth: PropTypes.func,
   };
 
   constructor(props) {
@@ -55,14 +50,13 @@ export default class DatePlan extends Component {
   }
 
   componentDidMount() {
-    //  TODO 接口地址
-    this.props.loadschedules();
+    const requires = {};
+    this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
-    const {selectedYear, selectedMonth} = this.state;
-    const date = selectedYear + '-' + selectedMonth;
-    this.props.loadschedulesMonth(date);
-    // console.log(this.state.selectedYear);
-    // console.log(this.state.selectedMonth);
+    this.clickHandleDay(this.state.selectedDate);
+  }
+
+  componentWillReceiveProps() {
     this.clickHandleDay(this.state.selectedDate);
   }
 
@@ -76,8 +70,8 @@ export default class DatePlan extends Component {
   clickHandleDay(day) {
     const date = new Date(day);
     const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    const schedules = this.props.schedules;
-    const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
+    const schedules = this.props.schedules.list || [];
+    const selectedDaySchedule = schedules && schedules.filter((item) => item.date.value === datetow);
     this.setState({
       selectedDate: datetow,
       selectedDayItems: selectedDaySchedule
@@ -140,36 +134,45 @@ export default class DatePlan extends Component {
   }
 
   previousClickHandler(curMonth) {
-    const {selectedYear, selectedMonth} = this.state;
+    const {selectedYear} = this.state;
     if (curMonth === 1) {
       this.setState({
         selectedYear: selectedYear - 1,
       });
     }
+    const selectedMonth = curMonth - 1;
     this.setState({
-      selectedMonth: curMonth - 1,
+      selectedMonth: selectedMonth,
     });
     const date = selectedYear + '-' + selectedMonth;
-    this.props.loadschedulesMonth(date);
+    const requires = {
+      date: date
+    };
+    this.props.loadschedules(JSON.stringify(requires));
   }
 
   nextClickHandle(curMonth) {
-    const {selectedYear, selectedMonth} = this.state;
+    const {selectedYear} = this.state;
     if (curMonth === 12) {
       this.setState({
         selectedYear: selectedYear + 1,
       });
     }
+    const selectedMonth = curMonth + 1;
     this.setState({
-      selectedMonth: curMonth + 1,
+      selectedMonth: selectedMonth,
     });
     const date = selectedYear + '-' + selectedMonth;
-    this.props.loadschedulesMonth(date);
+    const requires = {
+      date: date
+    };
+    this.props.loadschedules(JSON.stringify(requires));
   }
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.props.schedulesMonth;
+    const dayItems = this.props.schedules.calendar;
+    // console.log(dayItems);
     return (
       <div>
         {date}
@@ -182,21 +185,14 @@ export default class DatePlan extends Component {
 
   render() {
     const {schedules} = this.props;
-
     let scheduleItems;
-    if (!this.state.isClickFilter) {
-      if (this.state.tabTypeState === 'month') {
-        scheduleItems = this.state.selectedDayItems;
-      }
-      if (this.state.tabTypeState === 'list') {
-        scheduleItems = schedules.result;
-      }
-    }else {
-      scheduleItems = schedules.result;
+    if (this.state.tabTypeState === 'month') {
+      scheduleItems = this.state.selectedDayItems;
+    }
+    if (this.state.tabTypeState === 'list') {
+      scheduleItems = schedules.list || [];
     }
 
-    // console.log('的item');
-    // console.log(scheduleItems);
     return (
       <div>
         <HeadNaviBar>日程</HeadNaviBar>
@@ -213,7 +209,7 @@ export default class DatePlan extends Component {
           </div>
           <div className={styles.datePlanPicker}>
             {
-              this.state.tabTypeState === 'month' && !this.state.isClickFilter ?
+              this.state.tabTypeState === 'month' ?
                 <DayPicker
                     disabledDays={DateUtils.isPastDay}
                     enableOutsideDays
@@ -238,89 +234,20 @@ export default class DatePlan extends Component {
 /**
   * component: every day schedule item
   */
+@connect(
+  state => ({...state}),
+  {
+    pushState: push,
+  }
+)
 class ScdItems extends Component {
   static propTypes = {
     scheduleItems: PropTypes.array,
+    pushState: PropTypes.func,
   }
 
   componentDidMount() {
   }
-
-  // curDayContactList(curDayContactComponent, curDayContact) {
-  // curDayContactList(curDayContactComponent) {
-  //   return (
-  //     <li>{curDayContactComponent}</li>
-  //   );
-  // }
-
-  // checkContact(curDayContact) {
-  //   return this.curDayContactList(
-  //     <div className={styles.checkPlan}>
-  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime}</span>
-  //       <i className="left">查</i>
-  //       <span className="left">查房</span>
-  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime} － {curDayContact.endTime}</span>
-  //       <span style={{display: curDayContact.locale === 'out' ? 'boock' : 'none'}}
-  //         className={styles.outside + ' left'}>院外</span>
-  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-  //     </div>
-  //     , curDayContact);
-  // }
-
-  // mettingContact(curDayContact) {
-  //   return this.curDayContactList(
-  //     <div className={styles.metting}>
-  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-  //       <i className="left">会</i>
-  //       <span className="left">会议</span>
-  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-  //     </div>
-  //     , curDayContact);
-  // }
-
-  // operaContact(curDayContact) {
-  //   return this.curDayContactList(
-  //     <div className={styles.opera}>
-  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-  //       <i className="left">术</i>
-  //       <span className="left">手术</span>
-  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-  //     </div>
-  //     , curDayContact);
-  // }
-
-  // dutyContact(curDayContact) {
-  //   return this.curDayContactList(
-  //     <div classNam e={styles.duty}>
-  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-  //       <i className="left">值</i>
-  //       <span className="left">值班</span>
-  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-  //     </div>
-  //     , curDayContact);
-  // }
-
-  // otherContact(curDayContact) {
-  //   return this.curDayContactList(
-  //     <div className={styles.duty}>
-  //       <span className={styles.timeStart + ' left'}>{curDayContact.startTime.value}</span>
-  //       <i className="left">其</i>
-  //       <span className="left">其它</span>
-  //       <span className={styles.timeRange + ' left'}>{curDayContact.startTime.value} － {curDayContact.endTime.value}</span>
-  //       <span style={{display: curDayContact.locale.value === '院外' ? 'boock' : 'none'}}
-  //         className={styles.outside + ' left'}>院外</span>
-  //       <span style={{display: curDayContact.conflict ? 'block' : 'noen'}}
-  //        className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-  //     </div>
-  //     , curDayContact);
-  // }
 
   itemTimeIcon(itemTimePeriod) {
     let itemIcon;
@@ -338,10 +265,19 @@ class ScdItems extends Component {
     return itemIcon;
   }
 
+  goDatePlanDetail(id, typeVal) {
+    this.props.pushState('/date-plan-detail/' + id + '/' + typeVal);
+  }
+
+  handleTime(time) {
+    const newTime = time.substr(time.length - 5);
+    return newTime;
+  }
+
   render() {
     const scheduleItems = this.props.scheduleItems || [];
-    console.log('item接收到的数据');
-    console.log(scheduleItems);
+    // console.log('item接收到的数据');
+    // console.log(scheduleItems);
     let schItemIkey = 0;
     return (
       <div>
@@ -356,32 +292,19 @@ class ScdItems extends Component {
                       scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
                         schItemIkey = schItemIkey + 1;
                         return (
-                          <li key={schItemIkey}>
+                          <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
                             <div>
-                              <span className={styles.timeStart + ' left'}>{itemTimePeriod.startTime.value}</span>
+                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)}</span>
                               {this.itemTimeIcon(itemTimePeriod)}
-                              <span className="left">其他</span>
-                              <span className={styles.timeRange + ' left'}>{itemTimePeriod.startTime.value} － {itemTimePeriod.endTime.value}</span>
+                              <span className="left">{itemTimePeriod.type.value}</span>
+                              <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)} － {this.handleTime(itemTimePeriod.endTime.value)}</span>
                               <span style={{display: itemTimePeriod.locale.value === '院外' ? 'boock' : 'none'}}
                                 className={styles.outside + ' left'}>院外</span>
-                              <span style={{display: itemTimePeriod.conflict ? 'block' : 'noen'}}
+                              <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
                                className={styles.conflict + ' left'}><i>!</i>有冲突</span>
                             </div>
                           </li>
                         );
-                        // if (itemTimePeriod.type.value === '查房') {
-                        //   const idnelg = this.checkContact(itemTimePeriod);
-                        //   console.log(idnelg);
-                        //   return this.checkContact(itemTimePeriod);
-                        // }else if (itemTimePeriod.type.value === '会议') {
-                        //   return this.mettingContact(itemTimePeriod);
-                        // }else if (itemTimePeriod.type.value === '手术') {
-                        //   return this.operaContact(itemTimePeriod);
-                        // }else if (itemTimePeriod.type.value === '值班') {
-                        //   return this.dutyContact(itemTimePeriod);
-                        // }else {
-                        //   return this.otherContact(itemTimePeriod);
-                        // }
                       })
                     }
                   </ul>
@@ -418,6 +341,7 @@ class FilterScheduleItem extends Component {
       showFilterRequires: false,
       showFirstDayPicker: false,
       showSecondDayPicker: false,
+      resetFilterRequires: false,
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
@@ -486,10 +410,18 @@ class FilterScheduleItem extends Component {
     });
   }
 
+  resetFilterReq() {
+    this.setState({
+      resetFilterRequires: true,
+    });
+  }
+
   hideFilterReq() {
     this.props.hideFilterReq();
-    const requires = this.state.filterRequires;
-    //  TODO 如果什么都没有改变,就不设置有没有点击筛选
+    let requires = this.state.filterRequires;
+    if (this.state.resetFilterRequires) {
+      requires = {};
+    }
     this.setState({
       showFilterRequires: false,
     });
@@ -499,8 +431,6 @@ class FilterScheduleItem extends Component {
       alert('开始日期不能大于结束日期');
       return;
     }
-    console.log('筛选条件');
-    console.log(this.state.filterRequires);
     this.props.loadschedules(JSON.stringify(requires));
   }
 
@@ -508,13 +438,9 @@ class FilterScheduleItem extends Component {
     const scheduleTypes = this.props.scheduleTypes;
     return (
       <div className={styles.scheduleFilterBtn}>
-        <h3 style={{display: this.state.showFilterRequires ? 'none' : 'block'}}
-            onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
-        <h3 style={{display: this.state.showFilterRequires ? 'block' : 'none'}}
-            onClick={() => this.hideFilterReq()}><i></i>完成</h3>
+        <h3 onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
         <section className={styles.scheduleFilterCon}
             style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
-          <div className={styles.modolBackDrop}></div>
           <div className="clearfix">
             <i className="left">日期</i>
             <section className={'left clearfix ' + styles.selectDateFilter}>
@@ -554,45 +480,6 @@ class FilterScheduleItem extends Component {
           <div className="clearfix">
             <i className="left">类型</i>
             <section className={'left ' + styles.filterType}>
-              {/*
-              <header>
-                {
-                  ['全部', '院内', '院外'].map((title) => {
-                    let key;
-                    if (title === '全部') {
-                      key = 'all';
-                    } else if (title === '院内') {
-                      key = 'in';
-                    } else {
-                      key = 'out';
-                    }
-                    return (
-                        <span key={key} className={this.state.filterRequires.type === key ? styles.curSpan : ''}
-                            onClick={() => this.clickFilterScheduleType(key)}>{title}</span>
-                    );
-                  })
-                }
-              </header>
-
-              {
-                ['院内', '院外'].map((time) => {
-                  const key = time === '院内' ? 'in' : 'out';
-                  return (
-                    <p>
-                      {
-                        scheduleTypes[key] && scheduleTypes[key].map((scheduleType) => {
-                          return (
-                            <span key={scheduleType.id} className={this.state.filterRequires.typeId === scheduleType.id ? styles.curSpan : ''}
-                                  onClick={() => this.clickFilterScheduleType(scheduleType.id)}
-                            >{ scheduleType.name}</span>
-                          );
-                        })
-                      }
-                    </p>
-                  );
-                })
-              }
-              */}
               {
                 scheduleTypes && scheduleTypes.map((scheduleType) => {
                   return (
@@ -603,6 +490,12 @@ class FilterScheduleItem extends Component {
                 })
               }
             </section>
+          </div>
+          <div className={'clearfix ' + styles.filterBtn}>
+            <h3 className="left"
+                onClick={() => this.resetFilterReq()}><i></i>重置</h3>
+            <h3 className="right" style={{display: this.state.showFilterRequires ? 'block' : 'none'}}
+                onClick={() => this.hideFilterReq()}><i></i>完成</h3>
           </div>
         </section>
       </div>
@@ -625,7 +518,7 @@ class AddPlan extends Component {
 
   static propTypes = {
     loadTemplates: PropTypes.func,
-    templates: PropTypes.array,
+    templates: PropTypes.object,
     pushState: PropTypes.func,
   };
 
@@ -672,13 +565,13 @@ class AddPlan extends Component {
         <a className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</a>
         <Modal
             showModal = {this.state.showModal}
-            title = {'添加手术'}
+            title = {'添加日程'}
             hideModalFooter = {this.state.hideModalFooter}
           >
           {
             templates && templates.map((template) => {
               return (
-                <dl className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                <dl key={template._id} className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
                   <dt><img src={this.templateImgSrc(template)} /></dt>
                   <dd>{template.name}</dd>
                 </dl>

@@ -55,7 +55,8 @@ export default (store) => {
         <IndexRoute component={Home}/>
         <Route path="date-plan" component={DatePlan} />
         <Route path="add-date-plan/:id" component={AddDatePlan} />
-        <Route path="duty" component={Duty} />
+        <Route path="date-plan-detail/:id/:type" component={DatePlanDetail} />
+        <Route path="duty/:pageType" component={Duty} />
         <Route path="appart-duty" component={AppartDuty} />
         <Route path="change-duty" component={ChangeDuty} />
         <Route path="change-duty-record" component={ChangeDutyRecord} />
@@ -67,7 +68,6 @@ export default (store) => {
         <Route path="add-surgery" component={AddSurgery} />
         <Route path="modify-surgery" component={ModifySurgery} />
         <Route path="surgery" component={SurgeryInfor} />
-        <Route path="date-plan-detail" component={DatePlanDetail} />
         <Route path="modify-date-plan" component={ModifyDatePlan} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />

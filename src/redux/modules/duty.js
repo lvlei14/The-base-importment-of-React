@@ -114,10 +114,10 @@ export function loaddutys(uid, month, year, level, scope) {
  * @param
  * @returns {{types: *[], promise: promise}}
  */
-export function sendChangeDutyRequest() {
+export function sendChangeDutyRequest(uid) {
   return {
     types: [SECOND_CHANGE_DUTY_REQUEST, SECOND_CHANGE_DUTY_REQUEST_SUCCESS, SECOND_CHANGE_DUTY_REQUEST_FAIL],
-    promise: (client) => client.get('')
+    promise: (client) => client.get('/:' + uid + '/exAttendance')
   };
 }
 

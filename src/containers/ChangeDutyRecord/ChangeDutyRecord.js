@@ -62,8 +62,6 @@ export default class ChangeDutyRecord extends Component {
         <HeadNaviBar>换班日志</HeadNaviBar>
         <div className={styles.dutyReTab}>
           <TabOutside>
-            <li className={this.state.tabTypeState === 'allRecords' ? styles.curTab + ' left' : 'left'}
-              onClick={() => this.changeTabType('allRecords')}>全部</li>
             <li className={this.state.tabTypeState === 'mySend' ? styles.curTab + ' left' : 'left'}
               onClick={() => this.changeTabType('mySend')}>我发起的</li>
             <li className={this.state.tabTypeState === 'myReceive' ? styles.curTab + ' left' : 'left'}

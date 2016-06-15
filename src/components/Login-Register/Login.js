@@ -44,7 +44,7 @@ export default class Login extends Component {
       });
     }
     if (!this.props.user && nextProps.user) {
-      this.props.showDiaglog(nextProps.msg, '/duty');
+      this.props.showDiaglog(nextProps.msg, '/date-plan');
     }
   }
 

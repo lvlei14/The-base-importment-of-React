@@ -2,10 +2,6 @@ const LOAD_SCHEDULE = 'LOAD_SCHEDULE';
 const LOAD_SCHEDULE_SUCCESS = 'LOAD_SCHEDULE_SUCCESS';
 const LOAD_SCHEDULE_FAIL = 'LOAD_SCHEDULE_FAIL';
 
-const LOAD_DAYPICKER_MONTH = 'LOAD_DAYPICKER_MONTH';
-const LOAD_DAYPICKER_MONTH_SUCCESS = 'LOAD_DAYPICKER_MONTH_SUCCESS';
-const LOAD_DAYPICKER_MONTH_FAIL = 'LOAD_DAYPICKER_MONTH_FAIL';
-
 const LOAD_TYPE = 'LOAD_TYPE';
 const LOAD_TYPE_SUCCESS = 'LOAD_TYPE_SUCCESS';
 const LOAD_TYPE_FAIL = 'LOAD_TYPE_FAIL';
@@ -48,10 +44,9 @@ const LOAD_TEMPLATE_FAIL = 'LOAD_TEMPLATE_FAIL';
 const initState = {
   loading: false,
   tip: null,
-  schedules: [],
+  schedules: {},
   scheduleTypes: [],
-  schedulesMonth: {},
-  templates: [],
+  templates: {},
 };
 
 
@@ -66,39 +61,15 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
 
     case LOAD_SCHEDULE_SUCCESS:
       console.log('加载列表 Action');
-      console.log(action);
+      console.log(action.result.result);
       return {
         ...state,
         loading: false,
-        schedules: action.result,
+        schedules: action.result.result,
         tip: action.tip
       };
 
     case LOAD_SCHEDULE_FAIL:
-      return {
-        ...state,
-        loading: false,
-        tip: action.tip
-      };
-
-
-    case LOAD_DAYPICKER_MONTH:
-      return {
-        ...state,
-        loading: true
-      };
-
-    case LOAD_DAYPICKER_MONTH_SUCCESS:
-      // console.log('加载month Action');
-      // console.log(action);
-      return {
-        ...state,
-        loading: false,
-        schedulesMonth: action.result,
-        tip: action.tip
-      };
-
-    case LOAD_DAYPICKER_MONTH_FAIL:
       return {
         ...state,
         loading: false,
@@ -167,19 +138,6 @@ export function loadschedules(requires) {
   return {
     types: [LOAD_SCHEDULE, LOAD_SCHEDULE_SUCCESS, LOAD_SCHEDULE_FAIL],
     promise: (client) => client.get('/schedule/' + requires)
-  };
-}
-
-
-/**
- * action: load day picker by month,year
- * @param text String
- * @returns {{types: *[], promise: promise}}
- */
-export function loadschedulesMonth(date) {
-  return {
-    types: [LOAD_DAYPICKER_MONTH, LOAD_DAYPICKER_MONTH_SUCCESS, LOAD_DAYPICKER_MONTH_FAIL],
-    promise: (client) => client.get('/schedule/' + date + '/calendar/')
   };
 }
 

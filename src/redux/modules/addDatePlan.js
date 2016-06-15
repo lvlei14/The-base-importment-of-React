@@ -22,6 +22,8 @@ export function addDatePlanReducer(state = initState, action = {}) {
       };
 
     case LOAD_TEMPLATE_ITEM_SUCCESS:
+      console.log('--加载模板消息返回结果');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -44,7 +46,7 @@ export function addDatePlanReducer(state = initState, action = {}) {
       };
 
     case ADD_DATEPLAN_SUCCESS:
-      console.log('--请求返回结果');
+      console.log('--添加返回结果');
       console.log(action.result);
       return {
         ...state,
