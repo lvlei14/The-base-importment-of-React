@@ -2,11 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-
 import { loadAppartDutys } from '../../redux/modules/appartDuty';
 const styles = require('../Duty/Duty.scss');
 @connect(
-  state => ({...state.appartDutys}), {
+  state => ({...state.appartDutys, ...state.auth}), {
     pushState: push,
     loadAppartDutys
   }
@@ -15,7 +14,8 @@ export default class AppartDuty extends Component {
   static propTypes = {
     pushState: PropTypes.func,
     loadAppartDutys: PropTypes.func,
-    appartDutys: PropTypes.array,
+    appartDutys: PropTypes.object,
+    user: PropTypes.object,
   };
 
   constructor(props) {
@@ -27,7 +27,9 @@ export default class AppartDuty extends Component {
 
   componentDidMount() {
     // TODO 完善接口地址
-    // this.props.loaddutys();
+    console.log('用户信息');
+    console.log(this.props.user);
+    this.props.loadAppartDutys('00203', '6', '2016', '', 'self');
   }
 
   changeMonth(event) {
@@ -62,13 +64,15 @@ export default class AppartDuty extends Component {
 
   render() {
     const appartDutys = this.props.appartDutys;
-    const monthAppartDutys = appartDutys && appartDutys.filter((item) => item.month === this.state.monthState);
-    console.log(monthAppartDutys);
+    console.log('--数据--');
+    console.log(appartDutys);
+    // const monthAppartDutys = appartDutys && appartDutys.filter((item) => item.month === this.state.monthState);
     return (
       <div className={styles.duty + ' ' + styles.appartDuty}>
         <HeadNaviBar>
           XX科室值班表
         </HeadNaviBar>
+        {/*
         <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <select className="left" value={this.state.monthState} onChange={this.changeMonth.bind(this)}>
             <option value="3">3月</option>
@@ -113,7 +117,7 @@ export default class AppartDuty extends Component {
         </section>
         <footer>
           <p className="tip">功能提示：点击想要交换的值班日期，可以申请换班哦~~</p>
-        </footer>
+        </footer>*/}
       </div>
     );
   }

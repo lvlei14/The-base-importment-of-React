@@ -60,48 +60,7 @@
           border-left: 1px solid $borderColor;
           width: 14.28%;
           div{
-            position: relative;
-            height: .72rem;
-            border: 2px solid #fff;
-            .dateDay{
-              margin-bottom: .06rem;
-              padding-top: .12rem;
-            }
-            .dateAppart{
-              font-size: .12rem;
-              color: $text-color;
-              margin-bottom: .2rem;
-              i{
-                float: left;
-                width: .12rem;
-                height: .14rem;
-                color: #fff;
-                background: url('../../images/sprite.png');
-                background-size: 2.4rem;
-              }
-              i.levelFir{
-                background-position: 0 -0px;
-              }
-              i.levelSec{
-                background-position: 0 -96px;
-              }
-              i.levelThr{
-                background-position: 0 -113px;
-              }
-              i.levelFour{
-                background-position: 0 -130px;
-              }
-            }
-            .dateSelf{
-              position: absolute;
-              top: 0;
-              left: 0rem;
-              width: .12rem;
-              height: .24rem;
-              background: url('../../images/sprite.png');
-              background-size: 2rem;
-              background-position: 0 -.3rem;
-            }
+            
           }
           div.divCur{
             border: 2px solid $mainColor;
@@ -128,9 +87,60 @@
   height: 1.12rem;
 }
 
+.dutyPicker{
+  
+}
+
 @media(max-width: 370px) {
   .duty .dutyTop table tr td div .dateSelf{
     background-size: 1.6rem;
     background-position: 0 -.26rem;
+  }
+}
+
+.dutyItem{
+  position: relative;
+  height: .72rem;
+  .dutyItemDay{
+    padding-top: .08rem;
+  }
+  .dateDay{
+    margin-bottom: .06rem;
+    padding-top: .12rem;
+  }
+  .dateSelf{
+    position: absolute;
+    top: 0;
+    right: 0rem;
+    width: .12rem;
+    height: .24rem;
+    background: url('../../images/sprite.png');
+    background-size: 2rem;
+    background-position: 0 -.3rem;
+  }
+  .dateAppart{
+    font-size: .12rem;
+    color: $text-color;
+    margin-bottom: .2rem;
+    i{
+      float: left;
+      width: .12rem;
+      height: .14rem;
+      color: #fff;
+      background: url('../../images/sprite.png');
+      background-size: 2.4rem;
+    }
+    i.levelFir{
+      background-position: 0 -0px;
+    }
+    i.levelSec{
+      background-position: 0 -96px;
+    }
+    i.levelThr{
+      background-position: 0 -113px;
+    }
+    i.levelFour{
+      background-position: 0 -130px;
+    }
   }
 }

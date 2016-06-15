@@ -53,7 +53,7 @@ export default class Home extends Component {
         <HeadNaviBar>首页</HeadNaviBar>
         <div className={ styles.home}>
           首页
-          <Link to="/duty">值班</Link>
+          <Link to="/duty/self">值班</Link>
           <Link to="/opera">手术</Link>
           <div>
             <p onClick={this.clickShowModal.bind(this)}>弹窗</p>

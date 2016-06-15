@@ -14,7 +14,7 @@ function formatUrl(path) {
 }
 
 export default class ApiClient {
-  constructor() {
+  constructor(req) {
     methods.forEach((method) =>
       this[method] = (path, { params, data } = {}) => new Promise((resolve, reject) => {
         const request = superagent[method](formatUrl(path));
@@ -22,6 +22,12 @@ export default class ApiClient {
         if (params) {
           request.query(params);
         }
+
+        const _cookies = req.get('cookie');
+        if (__SERVER__ && _cookies) {
+          request.set('cookie', _cookies);
+        }
+
         if (data) {
           request.send(data);
         }

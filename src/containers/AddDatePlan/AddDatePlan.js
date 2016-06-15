@@ -21,22 +21,18 @@ export default class AddDatePlan extends Component {
     loadTemplateItem: PropTypes.func,
     showDiaglog: PropTypes.func,
     addDatePlan: PropTypes.func,
+    msg: PropTypes.string,
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
 
   componentDidMount() {
     const templateId = this.props.routeParams.id;
-    //  TODO 接口地址
     this.props.loadTemplateItem(templateId);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.props.showDiaglog(nextProps.msg, '/date-plan-detail');
+    if (!this.props.msg && nextProps.msg) {
+      this.props.showDiaglog(nextProps.msg, '/date-plan');
+    }
   }
 
   clickAddBtn() {
@@ -52,6 +48,8 @@ export default class AddDatePlan extends Component {
       };
       temItem.push(obj);
     }
+    console.log('-提交院内input的值-');
+    console.log(this.refs.localRef.value);
     const tempObject = {
       name: temItem[0],
       type: {
@@ -60,12 +58,13 @@ export default class AddDatePlan extends Component {
       },
       is_inner: {
         label: '是否院内',
-        value: this.refs.localRef.value === '院内' ? true : false
+        value: this.refs.localRef.value === 'in' ? true : false
       },
       start_time: temItem[1],
       end_time: temItem[2],
       repeat: temItem[3],
-      notice: temItem[4],
+      remind: temItem[4],
+      template: template && template[0]._id,
       content: {},
     };
 
@@ -75,16 +74,18 @@ export default class AddDatePlan extends Component {
         participants: temItem[6]
       };
     } else if (templateType === '手术') {
+      tempObject.repeat = '';
+      tempObject.remind = temItem[3];
       tempObject.content = {
-        patientName: temItem[5],
-        gender: temItem[6],
-        age: temItem[7],
-        operatingRoom: temItem[8],
-        diagnosis: temItem[9],
-        surgery: temItem[10],
-        bodyCycle: temItem[11],
-        bedNumber: temItem[12],
-        accessStationInfo: temItem[13],
+        patientName: temItem[4],
+        gender: temItem[5],
+        age: temItem[6],
+        operatingRoom: temItem[7],
+        diagnosis: temItem[8],
+        surgery: temItem[9],
+        bodyCycle: temItem[10],
+        bedNumber: temItem[11],
+        accessStationInfo: temItem[12],
       };
     }else if (templateType === '会议') {
       tempObject.content = {
@@ -94,6 +95,7 @@ export default class AddDatePlan extends Component {
       };
     }
 
+    console.log(tempObject);
     this.props.addDatePlan(tempObject);
   }
 
