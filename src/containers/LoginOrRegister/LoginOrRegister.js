@@ -49,7 +49,7 @@ export default class LoginOrRegister extends Component {
             <li onClick={() => self.props.selectTab(1)} className={ selectTabKey === 1 ? styles.bottomBorder : ''}>
               登录
             </li>
-            <li onClick={() => self.props.selectTab(2)} className={ selectTabKey === 2 ? styles.bottomBorder : ''}>
+            <li style={{display: 'none'}} onClick={() => self.props.selectTab(2)} className={ selectTabKey === 2 ? styles.bottomBorder : ''}>
               注册
             </li>
           </ul>

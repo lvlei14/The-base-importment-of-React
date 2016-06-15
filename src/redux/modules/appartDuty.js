@@ -2,37 +2,37 @@ const LOAD_APPART_DUTY = 'LOAD_APPART_DUTY';
 const LOAD_APPART_DUTY_SUCCESS = 'LOAD_APPART_DUTY_SUCCESS';
 const LOAD_APPART_DUTY_FAIL = 'LOAD_APPART_DUTY_FAIL';
 
-const appartDutys = [
-  {
-    id: '1',
-    day: '14',
-    month: '3',
-    doctor: '李兰',
-    isSelf: false,
-    level: '4',
-  },
-  {
-    id: '2',
-    day: '15',
-    month: '3',
-    doctor: '李柳',
-    isSelf: false,
-    level: '3',
-  },
-  {
-    id: '3',
-    day: '16',
-    month: '4',
-    doctor: '刘平',
-    isSelf: false,
-    level: '1',
-  }
-];
+// const appartDutys = [
+//   {
+//     id: '1',
+//     day: '14',
+//     month: '3',
+//     doctor: '李兰',
+//     isSelf: false,
+//     level: '4',
+//   },
+//   {
+//     id: '2',
+//     day: '15',
+//     month: '3',
+//     doctor: '李柳',
+//     isSelf: false,
+//     level: '3',
+//   },
+//   {
+//     id: '3',
+//     day: '16',
+//     month: '4',
+//     doctor: '刘平',
+//     isSelf: false,
+//     level: '1',
+//   }
+// ];
 
 const initState = {
   loading: false,
   tip: null,
-  appartDutys: appartDutys || [],
+  appartDutys: {},
 };
 
 
@@ -66,13 +66,15 @@ export function appartDutyReducer(state = initState, action = {}) {
 }
 
 /**
- * action: load APPART_DUTYs
+ * action: load every month appartment duty by month and year
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function loadAppartDutys() {
+export function loadAppartDutys(uid, month, year, level, scope) {
+  console.log('发请求地址');
+  console.log('/user/:' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope);
   return {
     types: [LOAD_APPART_DUTY, LOAD_APPART_DUTY_SUCCESS, LOAD_APPART_DUTY_FAIL],
-    promise: (client) => client.get('')
+    promise: (client) => client.get('/user/:' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope)
   };
 }

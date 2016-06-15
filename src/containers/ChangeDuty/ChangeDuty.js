@@ -8,7 +8,7 @@ import { sendChangeDutyRequest } from '../../redux/modules/changeDuty';
 
 const styles = require('../Duty/Duty.scss');
 @connect(
-  state => ({...state.changeDutys}), {
+  state => ({...state.changeDutys, ...state.auth}), {
     loadChangeDutys,
     sendChangeDutyRequest,
     pushState: push,
@@ -79,11 +79,14 @@ export default class ChangeDuty extends Component {
   }
 
   render() {
-    const changeDutys = this.props.changeDutys;
-    const monthChangeDutys = changeDutys && changeDutys.filter((item) => item.month === this.state.monthState);
+    console.log('交换申请props');
+    console.log(this.props);
+    // const changeDutys = this.props.changeDutys;
+    // const monthChangeDutys = changeDutys && changeDutys.filter((item) => item.month === this.state.monthState);
     return (
       <div className={styles.duty}>
         <HeadNaviBar>换班申请</HeadNaviBar>
+      {/*
         <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <article className={'clearfix left ' + styles.changeDutyRecord} onClick={this.goChangeDutyRecord.bind(this)}>
             <i className="left"></i>
@@ -136,6 +139,7 @@ export default class ChangeDuty extends Component {
           <button className="mainBtn" onClick={this.clickChangeDuty.bind(this)}>交换</button>
           <p className="tip">功能提示：点击想要交换的值班日期，可以申请换班哦~~</p>
         </footer>
+        */}
       </div>
     );
   }

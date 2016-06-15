@@ -2,61 +2,51 @@ const LOAD_SCHEDULE = 'LOAD_SCHEDULE';
 const LOAD_SCHEDULE_SUCCESS = 'LOAD_SCHEDULE_SUCCESS';
 const LOAD_SCHEDULE_FAIL = 'LOAD_SCHEDULE_FAIL';
 
-const LOAD_DAYPICKER_MONTH = 'LOAD_DAYPICKER_MONTH';
-const LOAD_DAYPICKER_MONTH_SUCCESS = 'LOAD_DAYPICKER_MONTH_SUCCESS';
-const LOAD_DAYPICKER_MONTH_FAIL = 'LOAD_DAYPICKER_MONTH_FAIL';
-
 const LOAD_TYPE = 'LOAD_TYPE';
 const LOAD_TYPE_SUCCESS = 'LOAD_TYPE_SUCCESS';
 const LOAD_TYPE_FAIL = 'LOAD_TYPE_FAIL';
-
-const FILTER_SCHEDULE = 'FILTER_SCHEDULE';
-const FILTER_SCHEDULE_SUCCESS = 'FILTER_SCHEDULE_SUCCESS';
-const FILTER_SCHEDULE_FAIL = 'FILTER_SCHEDULE_FAIL';
 
 const LOAD_TEMPLATE = 'LOAD_TEMPLATE';
 const LOAD_TEMPLATE_SUCCESS = 'LOAD_TEMPLATE_SUCCESS';
 const LOAD_TEMPLATE_FAIL = 'LOAD_TEMPLATE_FAIL';
 
-const scheduleTypes = {
-  in: [
-    {
-      name: '查房',
-      id: '111'
-    },
-    {
-      name: '值班',
-      id: '112'
-    },
-    {
-      name: '会议',
-      id: '113'
-    },
-    {
-      name: '手术',
-      id: '114'
-    }
-  ],
-  out: [
-    {
-      name: '院外1',
-      id: '211'
-    },
-    {
-      name: '院外2',
-      id: '212'
-    }
-  ]
-};
+// const scheduleTypes = {
+//   in: [
+//     {
+//       name: '查房',
+//       id: '111'
+//     },
+//     {
+//       name: '值班',
+//       id: '112'
+//     },
+//     {
+//       name: '会议',
+//       id: '113'
+//     },
+//     {
+//       name: '手术',
+//       id: '114'
+//     }
+//   ],
+//   out: [
+//     {
+//       name: '院外1',
+//       id: '211'
+//     },
+//     {
+//       name: '院外2',
+//       id: '212'
+//     }
+//   ]
+// };
 
 const initState = {
   loading: false,
   tip: null,
-  schedules: [],
-  scheduleTypes: scheduleTypes || {},
-  schedulesMonth: {},
-  filterSchedules: [],
-  templates: [],
+  schedules: {},
+  scheduleTypes: [],
+  templates: {},
 };
 
 
@@ -70,38 +60,16 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_SUCCESS:
-      console.log('action访问接口');
+      console.log('加载列表 Action');
       console.log(action.result.result);
       return {
         ...state,
         loading: false,
-        schedules: action.result,
+        schedules: action.result.result,
         tip: action.tip
       };
 
     case LOAD_SCHEDULE_FAIL:
-      return {
-        ...state,
-        loading: false,
-        tip: action.tip
-      };
-
-
-    case LOAD_DAYPICKER_MONTH:
-      return {
-        ...state,
-        loading: true
-      };
-
-    case LOAD_DAYPICKER_MONTH_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        schedulesMonth: action.result,
-        tip: action.tip
-      };
-
-    case LOAD_DAYPICKER_MONTH_FAIL:
       return {
         ...state,
         loading: false,
@@ -116,36 +84,16 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_TYPE_SUCCESS:
+      // console.log('加载type Action');
+      // console.log(action);
       return {
         ...state,
         loading: false,
-        scheduleTypes: action.result,
+        scheduleTypes: action.result.result,
         tip: action.tip
       };
 
     case LOAD_TYPE_FAIL:
-      return {
-        ...state,
-        loading: false,
-        tip: action.tip
-      };
-
-
-    case FILTER_SCHEDULE:
-      return {
-        ...state,
-        loading: true
-      };
-
-    case FILTER_SCHEDULE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        filterSchedules: action.result,
-        tip: action.tip
-      };
-
-    case FILTER_SCHEDULE_FAIL:
       return {
         ...state,
         loading: false,
@@ -159,8 +107,8 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_TEMPLATE_SUCCESS:
-      console.log('action取模板信息');
-      console.log(action.result);
+      // console.log('action取模板信息');
+      // console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -186,23 +134,10 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function loadschedules() {
+export function loadschedules(requires) {
   return {
     types: [LOAD_SCHEDULE, LOAD_SCHEDULE_SUCCESS, LOAD_SCHEDULE_FAIL],
-    promise: (client) => client.get('/schedule/aa')
-  };
-}
-
-
-/**
- * action: load day picker by month,year
- * @param text String
- * @returns {{types: *[], promise: promise}}
- */
-export function loadschedulesMonth() {
-  return {
-    types: [LOAD_DAYPICKER_MONTH, LOAD_DAYPICKER_MONTH_SUCCESS, LOAD_DAYPICKER_MONTH_FAIL],
-    promise: (client) => client.get('/schedule/aa/calendar')
+    promise: (client) => client.get('/schedule/' + requires)
   };
 }
 
@@ -215,22 +150,10 @@ export function loadschedulesMonth() {
 export function loadtypes() {
   return {
     types: [LOAD_TYPE, LOAD_TYPE_SUCCESS, LOAD_TYPE_FAIL],
-    promise: (client) => client.get('')
+    promise: (client) => client.get('/scheduleTypes')
   };
 }
 
-
-/**
- * action: fitler result by stateTime,endTime,科室id,typeId
- * @param text String
- * @returns {{types: *[], promise: promise}}
- */
-export function filterSchedule() {
-  return {
-    types: [FILTER_SCHEDULE, FILTER_SCHEDULE_SUCCESS, FILTER_SCHEDULE_FAIL],
-    promise: (client) => client.get('')
-  };
-}
 
 /**
  * action: load template

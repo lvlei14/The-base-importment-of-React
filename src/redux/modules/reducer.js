@@ -24,7 +24,6 @@ import { addSurgeryInforReducer } from './addSurgery';
 import { loadSurgeryInforReducer } from './surgeryInfor';
 import { accountReducer } from './account';
 import { userSurgeryInforReducer } from './modifySurgery';
-import { datePlanDetailReducer } from './datePlanDetail';
 
 export default combineReducers({
   routing: routerReducer,
@@ -54,5 +53,4 @@ export default combineReducers({
   surgeryInfor: loadSurgeryInforReducer,
   account: accountReducer,
   patientSurgeryInfor: userSurgeryInforReducer,
-  datePlanDetail: datePlanDetailReducer,
 });

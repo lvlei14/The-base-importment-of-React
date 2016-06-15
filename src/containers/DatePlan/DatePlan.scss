@@ -246,3 +246,14 @@
 .templateBtn:first-child{
   margin-left: 0;
 }
+
+.filterBtn{
+  margin-top: .1rem;
+  h3{
+    border: 1px solid $borderColor;
+    border-radius: .2rem;
+    padding: 0rem .2rem;
+    height: .3rem;
+    line-height: .3rem;
+  }
+}
