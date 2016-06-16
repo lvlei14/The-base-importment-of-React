@@ -3,18 +3,18 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import TabOutside from '../../components/TabOutside/TabOutside';
 
-import { loadChangeDutyRecords } from '../../redux/modules/changeDuty';
+import { loadCDutyRecords } from '../../redux/modules/changeDutyRecord';
 
 const styles = require('../ChangeDutyRecord/ChangeDutyRecord.scss');
 @connect(
   state => ({...state.changeDutyRecords}), {
-    loadChangeDutyRecords,
+    loadCDutyRecords,
   }
 )
 export default class ChangeDutyRecord extends Component {
   static propTypes = {
-    loadChangeDutyRecords: PropTypes.func,
-    changeDutyRecords: PropTypes.array,
+    loadCDutyRecords: PropTypes.func,
+    cDutyRecords: PropTypes.array,
   };
 
   constructor(props) {
@@ -26,7 +26,7 @@ export default class ChangeDutyRecord extends Component {
 
   componentDidMount() {
     // TODO 完善接口地址
-    // this.props.loadChangeDutyRecords();
+    // this.props.loadCDutyRecords();
   }
 
   handleState(recordState) {
@@ -52,8 +52,8 @@ export default class ChangeDutyRecord extends Component {
   }
 
   render() {
-    const changeDutyRecords = this.props.changeDutyRecords;
-    const monthRecords = changeDutyRecords && changeDutyRecords.filter((item) => item.month === this.state.monthState);
+    const cDutyRecords = this.props.cDutyRecords;
+    const monthRecords = cDutyRecords && cDutyRecords.filter((item) => item.month === this.state.monthState);
     const monthHandlingRecords = monthRecords && monthRecords.filter((item) => item.handleState === 'handling');
     const monthHandledRecords = monthRecords && monthRecords.filter((item) => item.handleState !== 'handling');
     console.log(monthHandledRecords);

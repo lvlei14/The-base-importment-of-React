@@ -1,12 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import DayPicker from 'react-day-picker';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { Link } from 'react-router';
-
 import { connect } from 'react-redux';
 import { getPassword } from '../../redux/modules/auth';
-
-import { Modal } from '../../components';
 
 const styles = require('./Home.scss');
 
@@ -33,41 +29,44 @@ export default class Home extends Component {
     this.props.getPassword(this.props.user && this.props.user._id);
   }
 
-  clickShowModal() {
-    this.setState({
-      showModal: true
-    });
+  getNowFormatDate() {
+    const date = new Date();
+    const seperator1 = '-';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
   }
-
-  clickConfirm() {
-    alert('点击确定按钮');
-    this.setState({
-      showModal: false
-    });
-  }
-
 
   render() {
+    const zhibanPng = require('../../images/zhiban.png');
     return (
       <div>
         <HeadNaviBar>首页</HeadNaviBar>
         <div className={ styles.home}>
-          首页
-          <Link to="/duty/self">值班</Link>
-          <Link to="/opera">手术</Link>
-          <div>
-            <p onClick={this.clickShowModal.bind(this)}>弹窗</p>
-            <Modal
-              showModal= {this.state.showModal}
-              title= {'弹窗titile'}
-              clickConfirm = {this.clickConfirm.bind(this)}
-            >
-              弹窗<span>内容</span>
-            </Modal>
+          <ul className={'clearfix topCardBg ' + styles.kuaiNav}>
+            <li className="left">
+              <Link to="/duty/self">
+                <article className={styles.navLiFir}>
+                  <img src = {zhibanPng} alt="值班入口" />
+                </article>
+                <p>值班</p>
+              </Link>
+            </li>
+          </ul>
+          <div className={'clearfix topCardBg ' + styles.datePlan}>
+            <header>
+              <strong className="left"></strong>
+              <h3 className="left">今日日程（{this.getNowFormatDate()}）</h3>
+              <footer className="right">
+                <Link to = "/date-plan">
+                  更多
+                  <i className="fa fa-angle-left"></i>
+                </Link>
+              </footer>
+            </header>
           </div>
-          <DayPicker
-            enableOutsideDays
-            onDayClick={(event, day) => alert(day)} />
         </div>
       </div>
     );

@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import DayPicker, {DateUtils} from 'react-day-picker';
 require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
-
+import { Modal } from '../../components';
 import { loaddutys } from '../../redux/modules/duty';
 import { sendChangeDutyRequest } from '../../redux/modules/duty';
 const styles = require('./Duty.scss');
@@ -35,28 +35,24 @@ export default class Duty extends Component {
     this.props.pushState('/change-duty-record');
   }
 
-  goAppartPage() {
-    const appartPage = 'appart';
-    this.props.pushState('/duty/' + appartPage);
-  }
-
-  goChangeDutyPage() {
-    const changeDutyPage = 'appart-level';
-    this.props.pushState('/duty/' + changeDutyPage);
+  showHeadBarCon() {
+    const {pageType} = this.props.routeParams;
+    let headBarCon;
+    if (pageType === 'self') {
+      headBarCon = '我的值班';
+    } else if (pageType === 'appartment') {
+      headBarCon = '全部科室值班';
+    } else if (pageType === 'appart-level') {
+      headBarCon = '换班申请';
+    }
+    return headBarCon;
   }
 
   render() {
     const {pageType} = this.props.routeParams;
-    if (pageType === 'self') {
-      console.log('我的值班页面');
-    } else if (pageType === 'appart') {
-      console.log('全部科室值班表页面');
-    } else if (pageType === 'appart-level') {
-      console.log('换班申请页面');
-    }
     return (
       <div className={'duty ' + styles.duty}>
-        <HeadNaviBar>我的值班</HeadNaviBar>
+        <HeadNaviBar>{this.showHeadBarCon()}</HeadNaviBar>
         <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <article className={'clearfix left ' + styles.changeDutyRecord} onClick={this.goChangeDutyRecord.bind(this)}>
             <i className="left"></i>
@@ -68,46 +64,8 @@ export default class Duty extends Component {
           <div className={'bodyBgWhiteZindex ' + styles.dutyTop}>
             <Calendar
               pageType = {pageType} />
-            <footer style={{display: pageType === 'self' ? 'block' : 'none'}}>
-              <button className="mainBtn" onClick={this.goAppartPage.bind(this)}>查看科室值班表</button>
-              <p className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
-            </footer>
           </div>
-          {/*
-          <table>
-            <tbody>
-            <tr>
-              <th>周日</th>
-              <th>周一</th>
-              <th>周二</th>
-              <th>周三</th>
-              <th>周四</th>
-              <th>周五</th>
-              <th>周六</th>
-            </tr>
-            <tr>
-              {
-                monthDutys && monthDutys.map((monthDuty) => {
-                  return (
-                    <td key={monthDuty.id} onClick={() => this.goChangeDuty()}>
-                      <div>
-                        <section className={styles.dateDay}>{monthDuty.day}</section>
-                        <article className={styles.dateAppart}>{monthDuty.appartment}</article>
-                        <i className={styles.dateSelf}></i>
-                      </div>
-                    </td>
-                  );
-                })
-              }
-            </tr>
-            </tbody>
-          </table>*/}
         </section>
-      {/*
-        <footer>
-          <button className="mainBtn" onClick={this.goChangeDuty.bind(this)}>交换</button>
-          <p className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
-        </footer>*/}
       </div>
     );
   }
@@ -128,6 +86,7 @@ class Calendar extends Component {
     dutys: PropTypes.object,
     sendChangeDutyRequest: PropTypes.func,
     pageType: PropTypes.string,
+    pushState: PropTypes.func,
   };
 
   constructor(props) {
@@ -137,17 +96,38 @@ class Calendar extends Component {
       selectedYear: (new Date()).getFullYear(),
       selectedMonth: (new Date()).getMonth() + 1,
       selChaDutyId: '',
+      showModal: false,
+      selDoctor: {
+        _id: '',
+        name: '',
+      }
     };
   }
 
   componentDidMount() {
-    console.log('用户信息');
-    console.log(this.props.user);
-    this.props.loaddutys('00203', this.state.selectedMonth, this.state.selectedYear, '01', 'appartment');
+    // console.log('用户信息');
+    // console.log(this.props.user);
+    this.loadMonthDutysBypage(this.state.selectedMonth, this.state.selectedYear);
   }
-  sendChangeDuty() {
-    // const {selectDay, selChaDutyId} = this.state;
-    this.props.sendChangeDutyRequest();
+
+  componentWillReceiveProps() {
+  }
+
+  loadMonthDutysBypage(month, year) {
+    const {pageType} = this.props;
+    let level;
+    let type;
+    if (pageType === 'self') {
+      level = '';
+      type = 'self';
+    } else if (pageType === 'appartment') {
+      level = '';
+      type = 'appartment';
+    } else if (pageType === 'appart-level') {
+      level = '01';
+      type = 'appartment';
+    }
+    this.props.loaddutys('00203', month, year, level, type);
   }
 
   clickSelectDay(day) {
@@ -183,57 +163,118 @@ class Calendar extends Component {
         selectedYear: selectedYear - 1,
       });
     }
-    this.props.loaddutys(curMonth - 1, this.state.selectedYear);
+    const selectedMonth = curMonth - 1;
+    this.loadMonthDutysBypage(selectedMonth, selectedYear);
   }
 
   nextClickHandle(curMonth) {
     const {selectedYear} = this.state;
-    console.log('点击下一个月');
-    console.log(curMonth);
     if (curMonth === 12) {
       this.setState({
         selectedYear: selectedYear + 1,
       });
     }
-    this.props.loaddutys(curMonth + 1, this.state.selectedYear);
+    const selectedMonth = curMonth + 1;
+    this.loadMonthDutysBypage(selectedMonth, selectedYear);
   }
 
-  changeSelChDutyId(id) {
+  sendChangeDutyRequest() {
+    this.props.sendChangeDutyRequest();
+  }
+
+  clickShowModal() {
     this.setState({
-      selChaDutyId: id,
+      showModal: true,
     });
+  }
+
+  changeSelChDutyId(changeId, selDoctor) {
+    const pageType = this.props.pageType;
+    if (pageType === 'appartment') {
+      this.goChangeDuty();
+    } else {
+      this.setState({
+        selChaDutyId: changeId,
+        selDoctor: selDoctor,
+      });
+    }
   }
 
   loadLevel(level) {
     let levelDiv;
-    if (level === '1') {
+    if (level === 1) {
       levelDiv = (<i className={styles.levelFir}></i>);
-    } else if (level === '2') {
+    } else if (level === 2) {
       levelDiv = (<i className={styles.levelSec}></i>);
-    }else if (level === '3') {
+    }else if (level === 3) {
       levelDiv = (<i className={styles.levelThr}></i>);
-    }else if (level === '4') {
+    }else if (level === 4) {
       levelDiv = (<i className={styles.levelFour}></i>);
     }
     return levelDiv;
   }
 
-  showSingleDayItem(dutyDay) {
-    // TODO 如果有自己，就不能点击换班
+  appLevelDayItem(dutyDayItem) {
     const uid = '575e153bd12f4418f32b82e4';
     return (
-      dutyDay && dutyDay.map((dutyDayItem) => {
-        return (
-          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.changeSelChDutyId(dutyDayItem._id)}>
-            <article className={styles.dateAppart}>
+      <div>
+      {
+        dutyDayItem.doctor._id !== uid ?
+          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.changeSelChDutyId(dutyDayItem._id, dutyDayItem.doctor)}>
+            <article className={'clearfix ' + styles.dateAppart}>
               {
                 this.loadLevel(dutyDayItem.doctorLevel.number)
               }
               <span className="left">{dutyDayItem.doctor && dutyDayItem.doctor.name}</span>
             </article>
-            <i style={{display: dutyDayItem.doctor._id === uid ? 'block' : 'none'}} className={styles.dateSelf}></i>
           </div>
-        );
+        :
+          <div className={styles.dateDayFa} key={dutyDayItem._id}>
+            <article>
+              <i className={styles.dateSelf}></i>
+              <p className = {styles.selfDayBg}></p>
+            </article>
+          </div>
+      }
+      </div>
+    );
+  }
+
+  goChangeDuty() {
+    this.props.pushState('/duty/appart-level');
+    const level = '01';
+    const type = 'appartment';
+    this.props.loaddutys('00203', this.state.selectedMonth, this.state.selectedYear, level, type);
+  }
+
+  goAppartPage() {
+    this.props.pushState('/duty/appartment');
+    const level = '';
+    const type = 'appartment';
+    this.props.loaddutys('00203', this.state.selectedMonth, this.state.selectedYear, level, type);
+  }
+
+  selfDayItem(dutyDayItem) {
+    return (
+      <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={this.goChangeDuty.bind(this)}>
+        <article className={styles.dateAppart}>{dutyDayItem.apartment.name}</article>
+        <i className={styles.dateSelf}></i>
+      </div>
+    );
+  }
+
+  showSingleDayItem(dutyDay) {
+    // TODO 如果有自己，就不能点击换班
+    const pageType = this.props.pageType;
+    let DayItem;
+    return (
+      dutyDay && dutyDay.map((dutyDayItem) => {
+        if (pageType === 'self') {
+          DayItem = this.selfDayItem(dutyDayItem);
+        } else {
+          DayItem = this.appLevelDayItem(dutyDayItem);
+        }
+        return DayItem;
       })
     );
   }
@@ -241,8 +282,9 @@ class Calendar extends Component {
   renderDay(day) {
     const date = day.getDate().toString();
     const dutys = this.props.dutys;
+    const pageType = this.props.pageType;
     return (
-      <div className={styles.dutyItem}>
+      <div className={pageType === 'appartment' ? styles.appItem + ' ' + styles.dutyItem : styles.dutyItem}>
         <span className={styles.dutyItemDay}>{date}</span>
         <div>
           {dutys && this.showSingleDayItem(dutys[date])}
@@ -252,8 +294,6 @@ class Calendar extends Component {
   }
 
   render() {
-    console.log('----');
-    console.log(this.props.pageType);
     return (
       <div>
         <div className={styles.dutyPicker}>
@@ -266,10 +306,21 @@ class Calendar extends Component {
               localeUtils={LocaleUtils}
               locale="zh-cn" />
         </div>
-        <footer>
-          <button className="mainBtn" onClick={this.sendChangeDuty.bind(this)}>交换</button>
+        <footer className={styles.dutyFooterBtn} style={{display: this.props.pageType === 'appart-level' ? 'block' : 'none'}}>
+          <button className="mainBtn" onClick={this.clickShowModal.bind(this)}>交换</button>
           <p className="tip">功能提示：点击想要交换的值班日期，可以申请换班哦~</p>
         </footer>
+        <footer className={styles.dutyFooterBtn} style={{display: this.props.pageType === 'self' ? 'block' : 'none'}}>
+          <button className="mainBtn" onClick={this.goAppartPage.bind(this)}>查看科室值班表</button>
+          <p className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
+        </footer>
+        <Modal
+            showModal = {this.state.showModal}
+            title = {'换班申请'}
+            clickConfirm = {this.sendChangeDutyRequest.bind(this)}
+          >
+          您确定要与{this.state.selDoctor.name}在{this.state.selectDay}进行换班吗？
+        </Modal>
       </div>
     );
   }

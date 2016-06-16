@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import { push } from 'react-router-redux';
 import config from '../../config';
 import { Diaglog } from '../../components';
+import { Link } from 'react-router';
 
 const styles = require('./App.scss');
 
@@ -74,28 +75,28 @@ export default class App extends Component {
         <div className={styles.footer}>
           <ul className={styles.bottomBar}>
             <li className={styles.naviBtn}>
-              <a href="/" onClick={() => this.clickNaviBtn(0)}>
+              <Link to ="/" onClick={() => this.clickNaviBtn(0)}>
                 <img src={this.state.activeBtnSeq === 0 ? btImageHomeOn : btImageHome} className={styles.btImage} alt="首页"/>
                 <p className={this.state.activeBtnSeq === 0 ? styles.btnameOn : ''}>首页</p>
-              </a>
+              </Link>
             </li>
             <li className={styles.naviBtn}>
-              <a href="/date-plan" onClick={() => this.clickNaviBtn(1)}>
+              <Link to="/date-plan" onClick={() => this.clickNaviBtn(1)}>
                 <img src={this.state.activeBtnSeq === 1 ? btImageTripOn : btImageTrip} className={styles.btImage} alt="日程"/>
                 <p className={this.state.activeBtnSeq === 1 ? styles.btnameOn : ''}>日程</p>
-              </a>
+              </Link>
             </li>
             <li className={styles.naviBtn}>
-              <a href="/hospital-appointment" onClick={() => this.clickNaviBtn(2)}>
+              <Link to="/hospital-appointment" onClick={() => this.clickNaviBtn(2)}>
                 <img src={this.state.activeBtnSeq === 2 ? btImageQunOn : btImageQun} className={styles.btImage} alt="群组"/>
                 <p className={this.state.activeBtnSeq === 2 ? styles.btnameOn : ''}>群组</p>
-              </a>
+              </Link>
             </li>
             <li className={styles.naviBtn}>
-              <a href="/my-profile" onClick={() => this.clickNaviBtn(3)}>
+              <Link to="/my-profile" onClick={() => this.clickNaviBtn(3)}>
                 <img src={this.state.activeBtnSeq === 3 ? btImageMyOn : btImageMy} className={styles.btImage} alt="我的"/>
                 <p className={this.state.activeBtnSeq === 3 ? styles.btnameOn : ''}>我的</p>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
