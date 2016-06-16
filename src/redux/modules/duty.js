@@ -102,10 +102,10 @@ export function dutyReducer(state = initState, action = {}) {
  */
 export function loaddutys(uid, month, year, level, scope) {
   console.log('发请求地址');
-  console.log('/user/:' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope);
+  console.log('/user/' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope);
   return {
     types: [LOAD_DUTY, LOAD_DUTY_SUCCESS, LOAD_DUTY_FAIL],
-    promise: (client) => client.get('/user/:' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope)
+    promise: (client) => client.get('/user/' + uid + '/attendance?year=' + year + '&month=' + month + '&level=' + level + '&scope=' + scope)
   };
 }
 

@@ -341,7 +341,6 @@ class FilterScheduleItem extends Component {
       showFilterRequires: false,
       showFirstDayPicker: false,
       showSecondDayPicker: false,
-      resetFilterRequires: false,
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
@@ -411,8 +410,10 @@ class FilterScheduleItem extends Component {
   }
 
   resetFilterReq() {
+    const requires = {};
+    this.props.loadschedules(JSON.stringify(requires));
     this.setState({
-      resetFilterRequires: true,
+      showFilterRequires: false,
     });
   }
 
@@ -439,6 +440,8 @@ class FilterScheduleItem extends Component {
     return (
       <div className={styles.scheduleFilterBtn}>
         <h3 onClick={this.showFilterReq.bind(this)}><i></i>筛选</h3>
+        <p className={styles.modolBackDrop}
+          style={{display: this.state.showFilterRequires ? 'block' : 'none'}}></p>
         <section className={styles.scheduleFilterCon}
             style={{display: this.state.showFilterRequires ? 'block' : 'none'}}>
           <div className="clearfix">

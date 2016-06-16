@@ -38,48 +38,9 @@
     color: $jzfontColor;
     font-size: $jzfontSize;
     text-align: center;
-    table{
-      width: 100%;
-      tr{
-        width: 14.28%;
-        th,td{
-          text-align: center;
-        }
-        th{
-          font-size: $jzjzfontSize;
-          padding:.08rem 0 .1rem;
-          background-color: #fff;
-          font-weight: normal;
-          color: $jzfontColor;
-        }
-        th:first-child{
-          border-left: 1px solid #fff;
-        }
-        td{
-          border-bottom: 1px solid #ececec;
-          border-left: 1px solid $borderColor;
-          width: 14.28%;
-          div{
-            
-          }
-          div.divCur{
-            border: 2px solid $mainColor;
-          }
-        }
-        td.curTd{
-          div{
-            border:2px solid $mainColor;
-          }
-        }
-        td:first-child{
-          border-left:1px solid #fff;
-        }
-      }
+    .dutyFooterBtn{
+      padding: .1rem $lrmargin;
     }
-  }
-  footer{
-    padding: 0 $lrmargin;
-    text-align: center;
   }
 }  
 
@@ -87,22 +48,17 @@
   height: 1.12rem;
 }
 
-.dutyPicker{
-  
+.appItem{
+  height: 1rem;
 }
-
-@media(max-width: 370px) {
-  .duty .dutyTop table tr td div .dateSelf{
-    background-size: 1.6rem;
-    background-position: 0 -.26rem;
-  }
-}
-
 .dutyItem{
   position: relative;
-  height: .72rem;
+  min-height: .72rem;
   .dutyItemDay{
     padding-top: .08rem;
+    padding-bottom:.16rem;
+    position: relative;
+    z-index: 10;
   }
   .dateDay{
     margin-bottom: .06rem;
@@ -111,17 +67,18 @@
   .dateSelf{
     position: absolute;
     top: 0;
-    right: 0rem;
+    left: .02rem;
     width: .12rem;
     height: .24rem;
     background: url('../../images/sprite.png');
     background-size: 2rem;
     background-position: 0 -.3rem;
+    z-index: 10;
   }
   .dateAppart{
     font-size: .12rem;
     color: $text-color;
-    margin-bottom: .2rem;
+    position: relative;
     i{
       float: left;
       width: .12rem;
@@ -129,18 +86,35 @@
       color: #fff;
       background: url('../../images/sprite.png');
       background-size: 2.4rem;
+      position: absolute;
+      top: 0;
+      left: .03rem;
+    }
+    span{
+      margin-left: .12rem;
+      height: .18rem;
+      overflow: hidden;
     }
     i.levelFir{
-      background-position: 0 -0px;
+      background-position: 0 -.76rem;
     }
     i.levelSec{
-      background-position: 0 -96px;
+      background-position: 0 -.96rem;
     }
     i.levelThr{
-      background-position: 0 -113px;
+      background-position: 0 -1.13rem;
     }
     i.levelFour{
-      background-position: 0 -130px;
+      background-position: 0 -1.30rem;
     }
   }
+}
+
+.selfDayBg{
+  background: #f2f2f2;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

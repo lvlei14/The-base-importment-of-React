@@ -1,3 +1,50 @@
+@import '../../theme/variables.scss';
 .home{
+	.kuaiNav{
+		border-top: 1px solid $borderColor;
+		margin: $tbmargin 0;
+		padding: .3rem .3rem .2rem;
+		text-align: center;
+		li{
+			article{
+				display: block;
+				width: .6rem;
+				height: .6rem;
+				text-align: center;
+				border-radius: .04rem;
+				background: #A1D766;
+				img{
+					width: .24rem;
+					margin: .15rem auto 0;
+				}
+			}
+			p{
+				padding-top: .1rem;
+				color: $text-color;
+			}
+		}
+	}
+	.datePlan{
+		padding: 0 $lrmargin;
+		header{
+			height: .35rem;
+			line-height: .35rem;
+			border-bottom: 1px solid $borderColor;
+			strong{
 
+			}
+			h3{
+				font-size: $jzfontSize;
+				font-weight: normal;
+				line-height: .35rem;
+			}
+			a{
+				color: $xsfontColor;
+				i{
+					transform: rotate(180deg);
+					margin-left: .08rem;
+				}
+			}
+		}
+	}
 }
