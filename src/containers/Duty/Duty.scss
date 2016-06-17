@@ -1,5 +1,9 @@
 @import '../../theme/variables.scss';
 .duty{
+  .dutyJzFColor{
+    font-style: normal;
+    color: $mainColor;
+  }
   .selectMonth{
     position: absolute;
     top: .08rem;
@@ -40,6 +44,9 @@
     text-align: center;
     .dutyFooterBtn{
       padding: .1rem $lrmargin;
+      p{
+        margin-top: .1rem;
+      }
     }
   }
 }  
@@ -108,6 +115,9 @@
       background-position: 0 -1.30rem;
     }
   }
+}
+.dutyItem:focus{
+  outline: 2px solid $mainColor;
 }
 
 .selfDayBg{

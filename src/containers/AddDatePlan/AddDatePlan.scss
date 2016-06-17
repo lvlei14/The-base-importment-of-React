@@ -8,12 +8,11 @@
     margin-top: $tbmargin;
   }
   ul{
-    padding:4px 14px;
+    padding:.08rem .2rem;
     li{
       position: relative;
-      height: .3rem;
-      line-height: .3rem;
-      margin:.1rem 0;
+      line-height: .36rem;
+      margin:.14rem 0;
       .leftPlaceholder{
         font-style: normal;
         width: .6rem;
@@ -46,8 +45,8 @@
         .selectNoCur{
           border: 1px solid $borderColor;
           border-radius: 2px;
-          height: .28rem;
-          line-height: .28rem;
+          height: .38rem;
+          line-height: .38rem;
         }
         div{
           display: inline-block;

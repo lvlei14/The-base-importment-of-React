@@ -38,6 +38,8 @@ const initState = {
   loading: false,
   tip: null,
   dutys: {},
+  sendIsSuccessMeg: '',
+  errorMeg: '',
 };
 
 
@@ -75,9 +77,12 @@ export function dutyReducer(state = initState, action = {}) {
       };
 
     case SECOND_CHANGE_DUTY_REQUEST_SUCCESS:
+      console.log('换班申请action');
+      console.log(action);
       return {
         ...state,
         loading: false,
+        sendIsSuccessMeg: action.result.success_msg,
         tip: action.tip
       };
 
@@ -85,6 +90,7 @@ export function dutyReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: false,
+        errorMeg: action.result,
         tip: action.tip
       };
 
@@ -110,14 +116,19 @@ export function loaddutys(uid, month, year, level, scope) {
 }
 
 /**
- * action: send change duty request
+ * action: send change duty request send uid/eid/attendance
  * @param
  * @returns {{types: *[], promise: promise}}
  */
-export function sendChangeDutyRequest(uid) {
+export function sendChangeDutyRequest(uid, mySelChaDutyId, selChaDutyId, selChaDoctorId) {
   return {
     types: [SECOND_CHANGE_DUTY_REQUEST, SECOND_CHANGE_DUTY_REQUEST_SUCCESS, SECOND_CHANGE_DUTY_REQUEST_FAIL],
-    promise: (client) => client.get('/:' + uid + '/exAttendance')
+    promise: (client) => client.post('/user/' + uid + '/exAttendance', {
+      data: {
+        fromAttendance: mySelChaDutyId,
+        toAttendance: selChaDutyId,
+        toDoctor: selChaDoctorId,
+      }
+    })
   };
 }
-

@@ -71,7 +71,7 @@ export default class DatePlan extends Component {
     const date = new Date(day);
     const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     const schedules = this.props.schedules.list || [];
-    const selectedDaySchedule = schedules && schedules.filter((item) => item.date.value === datetow);
+    const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
       selectedDate: datetow,
       selectedDayItems: selectedDaySchedule
@@ -84,8 +84,8 @@ export default class DatePlan extends Component {
   }
 
   showSingleDayItem(scheduleDay) {
-    const outsideNum = scheduleDay && scheduleDay.filter((item) => item.locale.value === '院外') || [];
-    const sideNum = scheduleDay && scheduleDay.filter((item) => item.locale.value === '院内') || [];
+    const outsideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === false) || [];
+    const sideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === true) || [];
     const conflictNum = scheduleDay && scheduleDay.filter((item) => item.conflict) || [];
     if (outsideNum.length > 0 && sideNum.length > 0) {
       return (
@@ -194,7 +194,7 @@ export default class DatePlan extends Component {
     }
 
     return (
-      <div>
+      <div className="datePlanPage">
         <HeadNaviBar>日程</HeadNaviBar>
         <div className={styles.dateTop + ' datePlan'}>
           <div className={styles.dateTitle + ' topCardBg'}>
@@ -270,7 +270,10 @@ class ScdItems extends Component {
   }
 
   handleTime(time) {
-    const newTime = time.substr(time.length - 5);
+    const date = new Date(time);
+    const newTimeHour = date.getHours();
+    const newTimeMinute = date.getMinutes();
+    const newTime = newTimeHour + ':' + newTimeMinute;
     return newTime;
   }
 
@@ -285,8 +288,8 @@ class ScdItems extends Component {
           scheduleItems.length ?
             scheduleItems.map((scheduleItem)=> {
               return (
-                <CardBg key={scheduleItem.date.value}>
-                  <p className={styles.curDaytitle}>{scheduleItem.date.value}</p>
+                <CardBg key={scheduleItem.date}>
+                  <p className={styles.curDaytitle}>{scheduleItem.date}</p>
                   <ul className={styles.curDayContact}>
                     {
                       scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
@@ -294,11 +297,11 @@ class ScdItems extends Component {
                         return (
                           <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
                             <div>
-                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)}</span>
+                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)}</span>
                               {this.itemTimeIcon(itemTimePeriod)}
                               <span className="left">{itemTimePeriod.type.value}</span>
-                              <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)} － {this.handleTime(itemTimePeriod.endTime.value)}</span>
-                              <span style={{display: itemTimePeriod.locale.value === '院外' ? 'boock' : 'none'}}
+                              <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.start_time)} － {this.handleTime(itemTimePeriod.end_time)}</span>
+                              <span style={{display: itemTimePeriod.is_inner.value ? 'none' : 'block'}}
                                 className={styles.outside + ' left'}>院外</span>
                               <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
                                className={styles.conflict + ' left'}><i>!</i>有冲突</span>
@@ -364,14 +367,16 @@ class FilterScheduleItem extends Component {
   }
 
   showFilterReq() {
+    const filterRedState = this.state.showFilterRequires;
     this.setState({
-      showFilterRequires: true
+      showFilterRequires: !filterRedState
     });
   }
 
   clickShowFirstDayPicker() {
+    const filterDayPickerStatus = this.state.showFirstDayPicker;
     this.setState({
-      showFirstDayPicker: true,
+      showFirstDayPicker: !filterDayPickerStatus,
     });
   }
 
@@ -387,8 +392,9 @@ class FilterScheduleItem extends Component {
   }
 
   clickShowSecondDayPicker() {
+    const filterDayPickerStatus = this.state.showSecondDayPicker;
     this.setState({
-      showSecondDayPicker: true,
+      showSecondDayPicker: !filterDayPickerStatus,
     });
   }
 
@@ -414,24 +420,27 @@ class FilterScheduleItem extends Component {
     this.props.loadschedules(JSON.stringify(requires));
     this.setState({
       showFilterRequires: false,
+      filterRequires:
+      {
+        startDate: this.getNowFormatDate(),
+        endDate: '不限',
+        typeId: ''
+      },
     });
   }
 
   hideFilterReq() {
     this.props.hideFilterReq();
-    let requires = this.state.filterRequires;
-    if (this.state.resetFilterRequires) {
-      requires = {};
-    }
-    this.setState({
-      showFilterRequires: false,
-    });
-
+    const requires = this.state.filterRequires;
     if (requires.endDate && requires.startDate > requires.endDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
       alert('开始日期不能大于结束日期');
       return;
     }
+
+    this.setState({
+      showFilterRequires: false,
+    });
     this.props.loadschedules(JSON.stringify(requires));
   }
 
@@ -450,9 +459,9 @@ class FilterScheduleItem extends Component {
               <div className={'left ' + styles.filterDate}>
                 <div onClick={this.clickShowFirstDayPicker.bind(this)} className="select">
                   <span>{this.state.filterRequires.startDate}</span>
-                  <p className="caret"></p>
+                  <p className="sanjiao-bt"></p>
                 </div>
-                <div className={styles.datePlanFilterPicker}
+                <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showFirstDayPicker ? 'block' : 'none'}}>
                   <DayPicker
                       disabledDays={DateUtils.isPastDay}
@@ -464,11 +473,12 @@ class FilterScheduleItem extends Component {
               </div>
               <p className={styles.dateSpan + ' left'}>至</p>
               <div className={'right ' + styles.filterDate}>
-                <div onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
+                <div
+                  onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
                   <span>{this.state.filterRequires.endDate}</span>
-                  <p className="caret"></p>
+                  <p className="sanjiao-bt"></p>
                 </div>
-                <div className={styles.datePlanFilterPicker}
+                <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showSecondDayPicker ? 'block' : 'none'}}>
                   <DayPicker
                       disabledDays={DateUtils.isPastDay}
@@ -561,27 +571,35 @@ class AddPlan extends Component {
     return imgSrc;
   }
 
+  clickHideModal() {
+    this.setState({
+      showModal: false
+    });
+  }
+
   render() {
     const templates = this.props.templates.result;
     return (
       <div>
-        <a className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</a>
-        <Modal
-            showModal = {this.state.showModal}
-            title = {'添加日程'}
-            hideModalFooter = {this.state.hideModalFooter}
-          >
-          {
-            templates && templates.map((template) => {
-              return (
-                <dl key={template._id} className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
-                  <dt><img src={this.templateImgSrc(template)} /></dt>
-                  <dd>{template.name}</dd>
-                </dl>
-              );
-            })
-          }
-        </Modal>
+        <div className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</div>
+        <div style = {{display: this.state.showModal ? 'block' : 'none'}}>
+          <Modal
+              title = {'添加日程'}
+              hideModalFooter = {this.state.hideModalFooter}
+              clickHideModal = {this.clickHideModal.bind(this)}
+            >
+            {
+              templates && templates.map((template) => {
+                return (
+                  <dl key={template._id} className={styles.templateBtn} onClick={() => this.goTemplatePage(template._id)}>
+                    <dt><img src={this.templateImgSrc(template)} /></dt>
+                    <dd>{template.name}</dd>
+                  </dl>
+                );
+              })
+            }
+          </Modal>
+        </div>
       </div>
     );
   }

@@ -30,73 +30,45 @@ export default class AddDatePlan extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.msg);
     if (!this.props.msg && nextProps.msg) {
+      console.log('--');
       this.props.showDiaglog(nextProps.msg, '/date-plan');
     }
   }
 
   clickAddBtn() {
     const template = this.props.template;
-    const templateType = template[0].name;
+    // const templateType = template[0].name;
     const templateCon = template && template[0] && template[0].content;
     const temItem = [];
+    const result = {};
     for (const iKey in templateCon) {
       if (!templateCon.hasOwnProperty(iKey)) continue;
-      const obj = {
+      const objItem = {
         label: templateCon[iKey].label,
         value: this.refs[templateCon[iKey].key].value
       };
+      const obj = {};
+      obj[templateCon[iKey].key] = objItem;
       temItem.push(obj);
     }
-    console.log('-提交院内input的值-');
-    console.log(this.refs.localRef.value);
-    const tempObject = {
-      name: temItem[0],
-      type: {
-        label: '日程类型',
-        value: this.refs.templateTypeRef.value
-      },
-      is_inner: {
-        label: '是否院内',
-        value: this.refs.localRef.value === 'in' ? true : false
-      },
-      start_time: temItem[1],
-      end_time: temItem[2],
-      repeat: temItem[3],
-      remind: temItem[4],
-      template: template && template[0]._id,
-      content: {},
+    const type = {
+      label: '日程类型',
+      value: this.refs.templateTypeRef.value
     };
-
-    if (templateType === '查房') {
-      tempObject.content = {
-        location: temItem[5],
-        participants: temItem[6]
-      };
-    } else if (templateType === '手术') {
-      tempObject.repeat = '';
-      tempObject.remind = temItem[3];
-      tempObject.content = {
-        patientName: temItem[4],
-        gender: temItem[5],
-        age: temItem[6],
-        operatingRoom: temItem[7],
-        diagnosis: temItem[8],
-        surgery: temItem[9],
-        bodyCycle: temItem[10],
-        bedNumber: temItem[11],
-        accessStationInfo: temItem[12],
-      };
-    }else if (templateType === '会议') {
-      tempObject.content = {
-        type: temItem[5],
-        meetLocation: temItem[6],
-        meetParticipants: temItem[7]
-      };
-    }
-
-    console.log(tempObject);
-    this.props.addDatePlan(tempObject);
+    const isInner = {
+      label: '是否院内',
+      value: this.refs.localRef.value === '院内' ? true : false
+    };
+    result.content = temItem;
+    result.type = type;
+    result.is_inner = isInner;
+    result.template = template && template[0]._id;
+    result.start_time = this.refs.startTimeRef.value;
+    result.end_time = this.refs.endTimeRef.value;
+    console.log(result);
+    this.props.addDatePlan(result);
   }
 
   showFormType(formItem) {
@@ -120,14 +92,14 @@ export default class AddDatePlan extends Component {
                 })
               }
           </select>
-          <p className="caret"></p>
+          <p className="sanjiao-bt"></p>
         </div>
       );
     }
     if (formItem.type === 'textarea') {
       return (
         <div>
-          <textarea className="cardBgRadius" ref={formItem.key}></textarea>
+          <textarea ref={formItem.key}></textarea>
         </div>
       );
     }
@@ -141,7 +113,7 @@ export default class AddDatePlan extends Component {
                             <option value="in">院内</option>
                             <option value="out">院外</option>
                           </select>
-                          <p className="caret"></p>
+                          <p className="sanjiao-bt"></p>
                         </div>);
     } else {
       templateTypeCon = (<div>
@@ -170,6 +142,18 @@ export default class AddDatePlan extends Component {
                   <div>
                     <input ref="templateTypeRef" className={styles.selectNoCur} value={templateType} readOnly="true" />
                   </div>
+                </div>
+              </li>
+              <li>
+                <label className={ styles.leftPlaceholder}>开始时间</label>
+                <div className={styles.scheduleType}>
+                  <input ref="startTimeRef" type="text" />
+                </div>
+              </li>
+              <li>
+                <label className={ styles.leftPlaceholder}>结束时间</label>
+                <div className={styles.scheduleType}>
+                  <input ref="endTimeRef" type="text" />
                 </div>
               </li>
               {
