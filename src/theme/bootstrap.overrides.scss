@@ -16,7 +16,7 @@ html{
 
 body{
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: .14rem;
+  font-size: .15rem;
   background-color: #f2f2f2;
 }
 
@@ -56,6 +56,9 @@ p,h3,dl,input[type="radio"], input[type="checkbox"], label{
 dt{
   font-weight: normal;
 }
+label{
+  font-weight: normal;
+}
 
 
 //sanjiao
@@ -86,7 +89,7 @@ dt{
   height: .4rem;
   line-height: .4rem;
   border-radius: 30px;
-  margin:$tbmargin 0;
+  margin:.2rem 0 0;
   border: 0px solid $mainColor;
   width: 100%;
   padding:0;
@@ -99,18 +102,34 @@ dt{
 //input
 input, select{
   width: 100%;
-  height: .3rem;
-  line-height: .3rem;
+  height: .36rem;
+  line-height: .36rem;
+  padding: 0 .06rem;
+  border-radius: 2px;
+  border: 1px solid $borderColor;
+  background: #fff;
+  outline: none !important;
+}
+textarea{
+  padding: 0 .06rem;
   border-radius: 2px;
   border: 1px solid $borderColor;
   background: #fff;
 }
 .select{
-  .caret{
+  position: relative;
+  select{
+  //去除select右边默认的图标
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    -ms-appearance:none;
+  }
+  p.sanjiao-bt{
     position: absolute;
-    top: .12rem;
+    top: .14rem;
     right: .1rem;
-    color: $mainColor;
+    border-top:.06rem solid $mainColor;
   }
 }
 
@@ -190,8 +209,9 @@ input, select{
     position: absolute;
     left: 0;
     right: 0;
-    top: .15rem;
+    top: .13rem;
     padding: 0 .5rem;
+    font-size: .2rem !important;
   }
 
   .DayPicker-NavButton {
@@ -216,8 +236,8 @@ input, select{
 
   .DayPicker-Caption {
     display: table-caption;
-    height: .4rem;
-    line-height: .4rem;
+    height: .5rem;
+    line-height: .5rem;
     text-align: center;
   }
 
@@ -263,10 +283,6 @@ input, select{
     position: relative;
   }
 
-  .DayPicker-Day:focus{
-    outline: 2px solid $mainColor !important;
-  }
-
   .DayPicker--interactionDisabled .DayPicker-Day {
     cursor: default;
   }
@@ -301,6 +317,27 @@ input, select{
 }
 
 
-.duty .DayPicker-Day{
-  padding-top: 0;
+/* other page */
+.datePlanPage{  
+  .DayPicker-Day:focus{
+    outline: 2px solid $mainColor !important;
+  }
+  .datePlanFilterPicker {
+    .DayPicker-NavBar{
+      top: .18rem;
+    }
+    .DayPicker-Day{
+      height: .42rem;
+    }
+  }
+}
+
+
+.duty{
+  .DayPicker-Day{
+    padding-top: 0;
+  }
+  .DayPicker-Day:focus{
+    outline: none !important;
+  }
 }

@@ -86,6 +86,8 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
       };
 
     case LOAD_CHANGE_DUTY_RECORDS_SUCCESS:
+      console.log('action返回的信息');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -155,9 +157,12 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
  * @returns {{types: *[], promise: promise}}
  */
 export function loadCDutyRecords(uid, tag) {
+  console.log('请求地址');
+  console.log('/' + uid + '/exAttendance?tag=' + tag);
   return {
     types: [LOAD_CHANGE_DUTY_RECORDS, LOAD_CHANGE_DUTY_RECORDS_SUCCESS, LOAD_CHANGE_DUTY_RECORDS_FAIL],
-    promise: (client) => client.get('/' + uid + '/exAttendance?tag=' + tag)
+    // promise: (client) => client.get('')
+    promise: (client) => client.get('/user/' + uid + '/exAttendance?tag=' + tag)
   };
 }
 
@@ -169,7 +174,7 @@ export function loadCDutyRecords(uid, tag) {
 export function acceptCDuty(uid, eid) {
   return {
     types: [CHANGE_DUTY_RECORD_ACCEPT, CHANGE_DUTY_RECORD_ACCEPT_SUCCESS, CHANGE_DUTY_RECORD_ACCEPT_FAIL],
-    promise: (client) => client.put('/' + uid + '/exAttendance/' + eid + '/accept')
+    promise: (client) => client.put('/user/' + uid + '/exAttendance/' + eid + '/accept')
   };
 }
 
@@ -181,7 +186,7 @@ export function acceptCDuty(uid, eid) {
 export function denyCDuty(uid, eid) {
   return {
     types: [CHANGE_DUTY_RECORD_DENY, CHANGE_DUTY_RECORD_DENY_SUCCESS, CHANGE_DUTY_RECORD_DENY_FAIL],
-    promise: (client) => client.put('/' + uid + '/exAttendance/' + eid + '/deny')
+    promise: (client) => client.put('/user/' + uid + '/exAttendance/' + eid + '/deny')
   };
 }
 

@@ -93,14 +93,14 @@
   position: fixed;
   bottom: 76px;
   right: 14px;
-  z-index: 1000;
+  z-index: 100;
   background: #41c299;
   width: 50px;
   height: 50px;
   box-shadow: 0 0 10px rgba(65,194,153, 0.8);
   font-size: 40px;
   text-align: center;
-  line-height: 44px;
+  line-height: 50px;
   color: #fff;
   border-radius: 50%;
 }
@@ -108,11 +108,12 @@
 //modol background mask
 .modolBackDrop{
   position: fixed;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.4);
   top:1rem;
   left: 0px;
   bottom: 0px;
   right: 0px;
+  z-index: 1000;
 }
 
 .scheduleFilterBtn{
@@ -126,8 +127,8 @@
     text-align: right;
     margin-right: $lrmargin;
     font-size: $jzfontSize;
-    height: 50px;
-    line-height: 44px;
+    height: .5rem;
+    line-height: .5rem;
   }
   .scheduleFilterCon{
     width: 100%;
@@ -137,19 +138,18 @@
     padding: $tbmargin $lrmargin;
     border-top:1px solid $borderColor;
     border-bottom:1px solid $borderColor;
-    padding: $tbmargin $lrmargin;
+    padding: 0.18rem 0.2rem .12rem;
     position: relative;
     z-index: 1000;
     div{
-      padding: 4px 0;
       i{
         font-style: normal;
         color: $mainColor;
         position: absolute;
-        padding:4px 6px 4px 0;
+        padding:.04rem .06rem .04rem 0;
       }
       section{
-        padding-left: 38px;
+        padding-left: .44rem;
         text-align: left;
         width: 100%;
       }
@@ -158,10 +158,15 @@
           width: 44%;
           border: 1px solid $borderColor;
           border-radius: 3px;
+          padding: .04rem .06rem;
           position: relative;
+          p{
+            top: .08rem !important;
+            right: 0 !important;
+          }
           .datePlanFilterPicker{
             position: fixed;
-            top: 140px;
+            top: 152px;
             left: 0;
             width: 100%;
             z-index: 10000;
@@ -170,8 +175,9 @@
         }
         .dateSpan{
           width: 12%;
-          line-height: .4rem;
+          line-height: .3rem;
           text-align: center;
+          margin-bottom: .1rem;
         }
       }
       .filterType{
@@ -248,7 +254,7 @@
 }
 
 .filterBtn{
-  margin-top: .1rem;
+  margin-top: .3rem;
   h3{
     border: 1px solid $borderColor;
     border-radius: .2rem;

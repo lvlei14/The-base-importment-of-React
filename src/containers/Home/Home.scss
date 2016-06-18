@@ -29,7 +29,6 @@
 		header{
 			height: .35rem;
 			line-height: .35rem;
-			border-bottom: 1px solid $borderColor;
 			strong{
 
 			}
@@ -47,4 +46,67 @@
 			}
 		}
 	}
+
+    .curDayContact{
+      padding:12px $lrmargin 2px;
+      color: $jzfontColor;
+      li{
+        div{
+          height: 32px;
+          i{
+            font-size: 12px;
+            border-radius: 50%;
+            font-style: normal;
+            width: 20px;
+            height: 20px;
+            line-height: 19px;
+            text-align: center;
+            margin-right: 12px;
+          }
+          .timeStart{
+            color: $xsfontColor;
+            padding-right: 4px;
+          }
+          .timeRange{
+            padding:0px 4px;
+          }
+          .outside{
+            font-size: 12px;
+            background-color: #ececec;
+            padding:2px 10px;
+          }
+          .conflict{
+            font-size: 12px;
+            color: #eb3b50;
+            i{
+              margin-right: 3px;
+              margin-left: 6px;
+              display: inline-block;
+              width: 18px;
+              height: 18px;
+              text-align: center;
+              background-color: #eb3b50;
+              color: #fff;
+            }
+          }
+        }
+ 
+        i.checkPlan{
+          color: #f5a623;
+          border: 1px solid #f5a623;
+        }
+        i.metting{
+          color: #4a90e2;
+          border: 1px solid #4a90e2;
+        }
+        i.opera{
+          color: #33c7a6;
+          border: 1px solid #33c7a6;
+        }
+        i.duty{
+          color: #2faf2d;
+          border: 1px solid #2faf2d;
+        }
+      }
+    }
 }
