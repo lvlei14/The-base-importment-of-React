@@ -5,7 +5,7 @@
   text-align: center;
   padding:6px 10px;
   position: relative;
-  z-index: 10000;
+  z-index: 100;
   ul{
     border:1px solid $mainColor;
     border-radius: 4px;
@@ -13,7 +13,7 @@
     margin-top: 2px;
     li{
       padding:6px 0px;
-      width: 66px;
+      width: 106px;
       color: $mainColor;
       border-left:1px solid $mainColor;
     }

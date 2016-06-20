@@ -5,9 +5,12 @@ const styles = require('./Modal.scss');
 export default class Modal extends Component {
   static propTypes = {
     children: PropTypes.array,
-    showModal: PropTypes.boolean,
     title: PropTypes.string,
+    clickHideModal: PropTypes.func,
     clickConfirm: PropTypes.func,
+    clickCancel: PropTypes.func,
+    confirmText: PropTypes.string,
+    cancelText: PropTypes.string,
     hideHideModalBtn: PropTypes.boolean,
     hideModalFooter: PropTypes.boolean,
   }
@@ -15,41 +18,40 @@ export default class Modal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: this.props.showModal
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      showModal: nextProps.showModal
-    });
-  }
-
-  clickHideModal() {
-    this.setState({
-      showModal: false
-    });
-  }
-
-  clickConfirm() {
-    this.props.clickConfirm();
+  componentWillReceiveProps() {
   }
 
   render() {
+    const {confirmText, cancelText} = this.props;
+    let confirmTextCon;
+    let cancelTextCon;
+    if (confirmText) {
+      confirmTextCon = confirmText;
+    } else {
+      confirmTextCon = '确定';
+    }
+    if (cancelText) {
+      cancelTextCon = cancelText;
+    } else {
+      cancelTextCon = '取消';
+    }
     return (
       <div>
-        <div className={styles.modalFa} style={{display: this.state.showModal ? 'table' : 'none'}}>
+        <div className={styles.modalFa}>
           <div className={styles.modal}>
             <p className={'bodyBgWhite ' + styles.modalBg}></p>
             <div className={'bodyBgWhiteZindex ' + styles.modalSection}>
               <header className={'clearfix ' + styles.modalTitle}>
                 <h3>{this.props.title}</h3>
-                <span style={{display: this.props.hideHideModalBtn ? 'none' : 'block'}} onClick={this.clickHideModal.bind(this)}>x</span>
+                <span style={{display: this.props.hideHideModalBtn ? 'none' : 'block'}} onClick={this.props.clickHideModal}>x</span>
               </header>
               <section className={styles.modalSectionSection}>{this.props.children}</section>
               <footer style={{display: this.props.hideModalFooter ? 'none' : 'block'}} className={styles.modalButton + ' clearfix'}>
-                <button className="left" onClick={this.clickHideModal.bind(this)}>取消</button>
-                <button className={'right ' + styles.modalConfirm} onClick={this.clickConfirm.bind(this)}>确定</button>
+                <button className="left" onClick={this.props.clickCancel}>{cancelTextCon}</button>
+                <button className={'right ' + styles.modalConfirm} onClick={this.props.clickConfirm}>{confirmTextCon}</button>
               </footer>
             </div>
           </div>

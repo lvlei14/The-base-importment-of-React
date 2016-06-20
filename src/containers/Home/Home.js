@@ -4,17 +4,21 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { getPassword } from '../../redux/modules/auth';
 
-const styles = require('./Home.scss');
+import { push } from 'react-router-redux';
 
+const styles = require('./Home.scss');
+import { loadschedules } from '../../redux/modules/datePlan';
 
 @connect(
-  state => ({user: state.auth.user}),
-  { getPassword }
+  state => ({user: state.auth.user, ...state.schedules}),
+  { getPassword, loadschedules }
 )
 export default class Home extends Component {
   static propTypes = {
     getPassword: PropTypes.func,
     user: PropTypes.object,
+    loadschedules: PropTypes.func,
+    schedules: PropTypes.object,
   };
 
   constructor(props) {
@@ -27,6 +31,8 @@ export default class Home extends Component {
   componentDidMount() {
     console.log(this.props.user);
     this.props.getPassword(this.props.user && this.props.user._id);
+    const requires = {};
+    this.props.loadschedules(requires);
   }
 
   getNowFormatDate() {
@@ -41,6 +47,9 @@ export default class Home extends Component {
 
   render() {
     const zhibanPng = require('../../images/zhiban.png');
+    const nowDate = this.getNowFormatDate();
+    const schedules = this.props.schedules && this.props.schedules.list || [];
+    const scheduleItems = schedules && schedules.filter((item) => item.date.value === nowDate);
     return (
       <div>
         <HeadNaviBar>首页</HeadNaviBar>
@@ -58,7 +67,7 @@ export default class Home extends Component {
           <div className={'clearfix topCardBg ' + styles.datePlan}>
             <header>
               <strong className="left"></strong>
-              <h3 className="left">今日日程（{this.getNowFormatDate()}）</h3>
+              <h3 className="left">今日日程（{nowDate}）</h3>
               <footer className="right">
                 <Link to = "/date-plan">
                   更多
@@ -66,8 +75,94 @@ export default class Home extends Component {
                 </Link>
               </footer>
             </header>
+            <ScdItems scheduleItems = {scheduleItems} />
           </div>
         </div>
+      </div>
+    );
+  }
+}
+
+
+/**
+  * component: every day schedule item
+  */
+@connect(
+  state => ({...state}),
+  {
+    pushState: push,
+  }
+)
+class ScdItems extends Component {
+  static propTypes = {
+    scheduleItems: PropTypes.array,
+    pushState: PropTypes.func,
+  }
+
+  componentDidMount() {
+  }
+
+  itemTimeIcon(itemTimePeriod) {
+    let itemIcon;
+    if (itemTimePeriod.type.value === '查房') {
+      itemIcon = <i className={'left ' + styles.checkPlan}>查</i>;
+    }else if (itemTimePeriod.type.value === '会议') {
+      itemIcon = <i className={'left ' + styles.metting}>会</i>;
+    }else if (itemTimePeriod.type.value === '手术') {
+      itemIcon = <i className={'left ' + styles.opera}>术</i>;
+    }else if (itemTimePeriod.type.value === '值班') {
+      itemIcon = <i className={'left ' + styles.duty}>值</i>;
+    }else {
+      itemIcon = <i className="left">其</i>;
+    }
+    return itemIcon;
+  }
+
+  goDatePlanDetail(id, typeVal) {
+    this.props.pushState('/date-plan-detail/' + id + '/' + typeVal);
+  }
+
+  handleTime(time) {
+    const newTime = time.substr(time.length - 5);
+    return newTime;
+  }
+
+  render() {
+    const scheduleItems = this.props.scheduleItems || [];
+    // console.log('item接收到的数据');
+    // console.log(scheduleItems);
+    let schItemIkey = 0;
+    return (
+      <div>
+        {
+          scheduleItems.length ?
+            scheduleItems.map((scheduleItem)=> {
+              return (
+                <ul className={styles.curDayContact} key={scheduleItem.date.value}>
+                  {
+                    scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
+                      schItemIkey = schItemIkey + 1;
+                      return (
+                        <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
+                          <div>
+                            <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)}</span>
+                            {this.itemTimeIcon(itemTimePeriod)}
+                            <span className="left">{itemTimePeriod.type.value}</span>
+                            <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)} － {this.handleTime(itemTimePeriod.endTime.value)}</span>
+                            <span style={{display: itemTimePeriod.locale.value === '院外' ? 'boock' : 'none'}}
+                              className={styles.outside + ' left'}>院外</span>
+                            <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
+                             className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+                          </div>
+                        </li>
+                      );
+                    })
+                  }
+                </ul>
+              );
+            })
+          : <p className="noResult">没有日程安排</p>
+        }
       </div>
     );
   }
