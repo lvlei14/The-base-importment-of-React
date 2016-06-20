@@ -61,7 +61,7 @@ export default class Opera extends Component {
   }
 
   goAddSurgery() {
-    this.props.pushState('/add-surgery');
+    this.props.pushState('/patient-have-bed-list');
   }
   clickSelectDay(day) {
     const date = new Date(day);

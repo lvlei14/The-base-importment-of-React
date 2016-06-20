@@ -1,27 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
-
+import {push} from 'react-router-redux';
 import CardBg from '../../components/CardBg/Card';
-import { addPatientInfor } from '../../redux/modules/addPatient';
+import { createPatient } from '../../redux/modules/patient';
 import { reduxForm } from 'redux-form';
 
 const styles = require('./AddPatient.scss');
 
-@connect(
-  state => ({contact: state.form.contact}), {
-    addPatientInfor,
+@connect(state => ({
+  contact: state.form.contact,
+  ...state.patient}), {
+    createPatient,
+    push
   }
 )
 @reduxForm({
-  form: 'contact',                           // a unique name for this form
-  fields: ['name', 'gender', 'age', 'roomNum']
+  form: 'addPatient',                           // a unique name for this form
+  fields: ['name', 'gender', 'age', 'bedNumber', 'mark', 'mobile']
 })
 export default class AddPatient extends Component {
   static propTypes = {
-    addPatientInfor: PropTypes.func,
+    createPatient: PropTypes.func,
+    addPatientSuccess: PropTypes.bool,
+    loading: PropTypes.bool,
+    successMsg: PropTypes.string,
+    errorMsg: PropTypes.string,
     fields: PropTypes.object,
     values: PropTypes.object,
+    push: PropTypes.func
   };
 
   constructor(props) {
@@ -31,17 +38,24 @@ export default class AddPatient extends Component {
   }
 
   componentDidMount() {
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.addPatientSuccess && nextProps.addPatientSuccess) {
+      this.props.push('/opera-patient');
+      alert(nextProps.successMsg);
+    }
   }
 
   clickAddBtn() {
     const {values} = this.props;
     console.log(values);
-    // TODO 完善Api地址
-    // this.props.addPatientInfor();
+    this.props.createPatient(values);
   }
 
   render() {
-    const {fields: {name, gender, age, roomNum}} = this.props;
+    const {fields: {name, gender, age, bedNumber, mobile, mark}} = this.props;
     return (
       <div className={styles.addPatient}>
         <HeadNaviBar>添加患者</HeadNaviBar>
@@ -69,6 +83,12 @@ export default class AddPatient extends Component {
               </div>
             </div>
             <div className={styles.addPatientLi}>
+              <label className={ styles.leftPlaceholder}>电话</label>
+              <div>
+                <input type="text" {...mobile} />
+              </div>
+            </div>
+            <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>年龄</label>
               <div>
                 <input type="text" {...age} />
@@ -77,7 +97,13 @@ export default class AddPatient extends Component {
             <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
               <label className={ styles.leftPlaceholder}>床号</label>
               <div>
-                <input type="text" {...roomNum} />
+                <input type="text" {...bedNumber} />
+              </div>
+            </div>
+            <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
+              <label className={ styles.leftPlaceholder}>备注</label>
+              <div>
+                <input type="text" {...mark} />
               </div>
             </div>
           </CardBg>

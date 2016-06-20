@@ -18,12 +18,14 @@ import { changeDutyReducer } from './changeDuty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
 import { operaReducer } from './opera';
 import { operaPatientListReducer } from './operaInfor';
-import { addPatientInforReducer } from './addPatient';
+import patient from './patient';
 import { patientInforReducer } from './modifyPatient';
 import { addSurgeryInforReducer } from './addSurgery';
 import { loadSurgeryInforReducer } from './surgeryInfor';
 import { accountReducer } from './account';
 import { userSurgeryInforReducer } from './modifySurgery';
+import hospitalOperationRoom from './hospitalOperationRoom';
+import surgeryType from './surgeryType';
 
 export default combineReducers({
   routing: routerReducer,
@@ -47,10 +49,12 @@ export default combineReducers({
   changeDutyRecords: changeDutyRecordsReducer,
   operas: operaReducer,
   planedOpePatiens: operaPatientListReducer,
-  addPatientInforReducer,
+  patient,
   patientInfor: patientInforReducer,
   addSurgeryInforReducer,
   surgeryInfor: loadSurgeryInforReducer,
   account: accountReducer,
   patientSurgeryInfor: userSurgeryInforReducer,
+  hospitalOperationRoom,
+  surgeryType
 });

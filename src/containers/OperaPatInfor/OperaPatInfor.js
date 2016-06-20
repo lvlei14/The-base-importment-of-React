@@ -10,15 +10,20 @@ import { changeSurgeryState } from '../../redux/modules/operaInfor';
 import { loadNotRoomPatient } from '../../redux/modules/operaInfor';
 import { loadNotPlanPatient } from '../../redux/modules/operaInfor';
 
+import {getPatients} from '../../redux/modules/patient';
+
 const styles = require('./OperaPatInfor.scss');
 @connect(
-  state => ({...state}), {
+  state => ({patients: state.patient.patients}), {
     pushState: push,
+    getPatients
   }
 )
 export default class OperaPatInfor extends Component {
   static propTypes = {
     pushState: PropTypes.func,
+    getPatients: PropTypes.func,
+    patients: PropTypes.func
   };
 
   constructor(props) {
@@ -30,6 +35,7 @@ export default class OperaPatInfor extends Component {
   }
 
   componentDidMount() {
+    this.props.getPatients();
   }
 
   changeTabType(type) {
@@ -43,6 +49,18 @@ export default class OperaPatInfor extends Component {
   }
 
   render() {
+    const patients = this.props.patients || [];
+    const usersUnArrangementSurgery = [];
+    const usersArrangementSurgery = [];
+    patients.forEach(patient => {
+      if (patient.surgery) {
+        usersArrangementSurgery.push(patient);
+      } else {
+        usersUnArrangementSurgery.push(patient);
+      }
+    });
+    console.log(usersUnArrangementSurgery);
+    console.log(usersArrangementSurgery);
     return (
       <div>
         <HeadNaviBar>病患信息</HeadNaviBar>
@@ -58,10 +76,11 @@ export default class OperaPatInfor extends Component {
               <span className={this.state.tabType === 'alreadyPlan' ? styles.liCur : ''}>手术</span>
             </li>
           </ul>
-          <AlreadyPlan
-            tabType = {this.state.tabType} />
-          <NotPlan
-            tabType = {this.state.tabType} />
+          {this.state.tabType === 'alreadyPlan' ?
+            <UserArrangementedSurgery patients={usersArrangementSurgery}/>
+            :
+            <UserUnArrangementSurgery patients={usersUnArrangementSurgery}/>
+          }
         </section>
       </div>
     );
@@ -78,9 +97,8 @@ export default class OperaPatInfor extends Component {
     changeSurgeryState
   }
 )
-class AlreadyPlan extends Component {
+class UserArrangementedSurgery extends Component {
   static propTypes = {
-    tabType: PropTypes.string,
     planedOpePatiens: PropTypes.array,
     loadAlredayPlanOperaPatients: PropTypes.func,
     changeSurgeryState: PropTypes.func,
@@ -121,7 +139,7 @@ class AlreadyPlan extends Component {
   render() {
     const planedOpePatiens = this.props.planedOpePatiens;
     return (
-      <div style={{display: this.props.tabType === 'alreadyPlan' ? 'block' : 'none'}}>
+      <div>
         <div className={styles.patInforTabCon}>
           {
             planedOpePatiens && planedOpePatiens.length ?
@@ -177,34 +195,22 @@ class AlreadyPlan extends Component {
     loadNotPlanPatient
   }
 )
-class NotPlan extends Component {
+class UserUnArrangementSurgery extends Component {
   static propTypes = {
-    tabType: PropTypes.string,
-    notRoomPatiens: PropTypes.array,
-    notPlanPatiens: PropTypes.array,
-    loadNotRoomPatient: PropTypes.func,
-    loadNotPlanPatient: PropTypes.func
-  }
-
-  componentDidMount() {
-    // TODO 完善接口地址
-    // this.props.loadNotRoomPatient();
-    // this.props.loadNotPlanPatient();
+    patients: PropTypes.array
   }
 
   render() {
-    const notRoomPatiens = this.props.notRoomPatiens;
-    const notPlanPatiens = notRoomPatiens.concat(this.props.notPlanPatiens);
-    console.log(notPlanPatiens);
+    const {patients} = this.props;
     return (
-      <div className={styles.notPlanCon} style={{display: this.props.tabType === 'notPlan' ? 'block' : 'none'}}>
+      <div className={styles.notPlanCon}>
         {
-          notPlanPatiens && notPlanPatiens.length ?
-            notPlanPatiens.map((notPlanPatien) => {
+          patients && patients.length ?
+            patients.map((patient) => {
               return (
-                <CardBg key={notPlanPatien.id}>
+                <CardBg key={patient.id}>
                   <span className="left">
-                    {notPlanPatien.name} （{notPlanPatien.gender === 'female' ? '男' : '女'}，{notPlanPatien.age}）
+                    {patient.name} （{patient.gender === 'female' ? '男' : '女'}，{patient.age}）
                   </span>
                   <p className="right fa fa-angle-left"></p>
                 </CardBg>

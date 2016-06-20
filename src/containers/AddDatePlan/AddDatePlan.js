@@ -101,6 +101,13 @@ export default class AddDatePlan extends Component {
 
   showFormType(formItem) {
     if (formItem.type === 'input') {
+      if (formItem.label.indexOf('时间') !== -1) {
+        return (
+          <div>
+            <input type="date" ref={formItem.key} />
+          </div>
+        );
+      }
       return (
         <div>
           <input type="text" ref={formItem.key} />

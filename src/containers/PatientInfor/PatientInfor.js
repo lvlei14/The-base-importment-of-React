@@ -3,7 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { loadPatientInformation } from '../../redux/modules/addPatient';
+import { loadPatientInformation } from '../../redux/modules/patient';
 
 const styles = require('./PatientInfor.scss');
 @connect(

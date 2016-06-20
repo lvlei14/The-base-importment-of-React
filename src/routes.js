@@ -17,6 +17,7 @@ import {
     ModifyPatient,
     PatientInfor,
     AddSurgery,
+    PatientsCanSurgery,
     ModifySurgery,
     SurgeryInfor,
     DatePlanDetail,
@@ -65,7 +66,8 @@ export default (store) => {
         <Route path="add-patient" component={AddPatient} />
         <Route path="modify-patient" component={ModifyPatient} />
         <Route path="patient" component={PatientInfor} />
-        <Route path="add-surgery" component={AddSurgery} />
+        <Route path="patient-have-bed-list" component={PatientsCanSurgery} />
+        <Route path="createSurgery" component={AddSurgery} />
         <Route path="modify-surgery" component={ModifySurgery} />
         <Route path="surgery" component={SurgeryInfor} />
         <Route path="modify-date-plan" component={ModifyDatePlan} />

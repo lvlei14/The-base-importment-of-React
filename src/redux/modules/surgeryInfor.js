@@ -33,7 +33,19 @@ const operatingRooms = [
   }
 ];
 
-const operaNames = ['开刀手术1', '开刀手术2', '开刀手术3'];
+const operaNames = [
+  {
+    id: '01',
+    name: '开刀手术1'
+  },
+  {
+    id: '02',
+    name: '开刀手术2'
+  },
+  {
+    id: '03',
+    name: '开刀手术3'
+  }];
 
 const operaDoctors = [
   {

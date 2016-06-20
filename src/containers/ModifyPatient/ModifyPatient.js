@@ -3,8 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 
 import CardBg from '../../components/CardBg/Card';
-import { modifyPatientInfor } from '../../redux/modules/addPatient';
-import { loadPatientInformation } from '../../redux/modules/addPatient';
+import { modifyPatientInfor, loadPatientInformation } from '../../redux/modules/patient';
 import { reduxForm } from 'redux-form';
 import { loadAccount } from '../../redux/modules/account';
 
