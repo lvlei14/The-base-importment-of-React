@@ -72,7 +72,7 @@ const initState = {
   loading: false,
   tip: null,
   cDutyRecords: [],
-  changeIsSuccess: '',
+  cDutySuccess: false,
 };
 
 
@@ -110,10 +110,12 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
       };
 
     case CHANGE_DUTY_RECORD_ACCEPT_SUCCESS:
+      console.log('点击同意');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
-        changeIsSuccess: action.result,
+        cDutySuccess: true,
         tip: action.tip
       };
 
@@ -132,10 +134,12 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
       };
 
     case CHANGE_DUTY_RECORD_DENY_SUCCESS:
+      console.log('点击拒绝');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
-        changeIsSuccess: action.result,
+        cDutySuccess: true,
         tip: action.tip
       };
 
@@ -157,7 +161,7 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
  * @returns {{types: *[], promise: promise}}
  */
 export function loadCDutyRecords(uid, tag) {
-  console.log('请求地址');
+  console.log('请求列表地址');
   console.log('/' + uid + '/exAttendance?tag=' + tag);
   return {
     types: [LOAD_CHANGE_DUTY_RECORDS, LOAD_CHANGE_DUTY_RECORDS_SUCCESS, LOAD_CHANGE_DUTY_RECORDS_FAIL],
@@ -172,6 +176,8 @@ export function loadCDutyRecords(uid, tag) {
  * @returns {{types: *[], promise: promise}}
  */
 export function acceptCDuty(uid, eid) {
+  console.log('请求同意地址');
+  console.log('/user/' + uid + '/exAttendance/' + eid + '/accept');
   return {
     types: [CHANGE_DUTY_RECORD_ACCEPT, CHANGE_DUTY_RECORD_ACCEPT_SUCCESS, CHANGE_DUTY_RECORD_ACCEPT_FAIL],
     promise: (client) => client.put('/user/' + uid + '/exAttendance/' + eid + '/accept')
@@ -184,6 +190,8 @@ export function acceptCDuty(uid, eid) {
  * @returns {{types: *[], promise: promise}}
  */
 export function denyCDuty(uid, eid) {
+  console.log('请求拒绝地址');
+  console.log('/user/' + uid + '/exAttendance/' + eid + '/deny');
   return {
     types: [CHANGE_DUTY_RECORD_DENY, CHANGE_DUTY_RECORD_DENY_SUCCESS, CHANGE_DUTY_RECORD_DENY_FAIL],
     promise: (client) => client.put('/user/' + uid + '/exAttendance/' + eid + '/deny')

@@ -36,32 +36,6 @@ export default class ChangeDuty extends Component {
     // this.props.loaddutys();
   }
 
-  changeMonth(event) {
-    this.setState({
-      monthState: event.target.value
-    });
-  }
-
-  loadLevel(level) {
-    if (level === '1') {
-      return (
-        <i className={styles.levelFir}></i>
-      );
-    } else if (level === '2') {
-      return (
-        <i className={styles.levelSec}></i>
-      );
-    }else if (level === '3') {
-      return (
-        <i className={styles.levelThr}></i>
-      );
-    }else if (level === '4') {
-      return (
-        <i className={styles.levelFour}></i>
-      );
-    }
-  }
-
   clickDateItem(id) {
     this.setState({
       dateItemId: id

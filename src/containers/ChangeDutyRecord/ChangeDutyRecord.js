@@ -3,6 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import TabOutside from '../../components/TabOutside/TabOutside';
 import Modal from '../../components/Modal/Modal';
+import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { loadCDutyRecords } from '../../redux/modules/changeDutyRecord';
 import { acceptCDuty } from '../../redux/modules/changeDutyRecord';
@@ -12,10 +13,11 @@ let recordObj = {};
 const styles = require('../ChangeDutyRecord/ChangeDutyRecord.scss');
 
 @connect(
-  state => ({...state.changeDutyRecords}), {
+  state => ({...state.changeDutyRecords, user: state.auth.user}), {
     loadCDutyRecords,
     acceptCDuty,
-    denyCDuty
+    denyCDuty,
+    showDiaglog
   }
 )
 export default class ChangeDutyRecord extends Component {
@@ -24,6 +26,9 @@ export default class ChangeDutyRecord extends Component {
     cDutyRecords: PropTypes.array,
     acceptCDuty: PropTypes.func,
     denyCDuty: PropTypes.func,
+    user: PropTypes.object,
+    cDutySuccess: PropTypes.boolen,
+    showDiaglog: PropTypes.func,
   };
 
   constructor(props) {
@@ -37,8 +42,15 @@ export default class ChangeDutyRecord extends Component {
 
   componentDidMount() {
     // TODO 完善接口地址
-    const uid = '01';
+    const uid = this.props.user && this.props.user._id;
+    // const uid = '01';
     this.props.loadCDutyRecords(uid, 'sent');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.cDutySuccess && nextProps.cDutySuccess) {
+      this.props.showDiaglog('发送成功。跳转中。。。', '/duty/self');
+    }
   }
 
   handleState(recordState) {
@@ -58,13 +70,20 @@ export default class ChangeDutyRecord extends Component {
   }
 
   changeTabType(type) {
+    // const uid = '01';
+    const uid = this.props.user && this.props.user._id;
+    if (type === 'myReceive') {
+      this.props.loadCDutyRecords(uid, 'received');
+    } else if (type === 'mySend') {
+      this.props.loadCDutyRecords(uid, 'sent');
+    }
     this.setState({
       tabTypeState: type
     });
   }
 
   clickShowModal(record) {
-    if (record.status === 'send') {
+    if (record.status === 'send' && this.state.tabTypeState === 'myReceive') {
       this.setState({
         showModal: true,
         recordId: record._id
@@ -81,12 +100,21 @@ export default class ChangeDutyRecord extends Component {
 
   clickdeny() {
     this.clickHideModal();
-    this.props.denyCDuty();
+    const eid = this.state.recordId;
+    const uid = this.props.user && this.props.user._id;
+    this.props.denyCDuty(uid, eid);
   }
 
   clickaccept() {
+    const eid = this.state.recordId;
+    const uid = this.props.user && this.props.user._id;
     this.clickHideModal();
-    this.props.acceptCDuty();
+    this.props.acceptCDuty(uid, eid);
+  }
+
+  formatDate(day) {
+    const date = new Date(day);
+    return date.toISOString().substring(0, 10);
   }
 
   render() {
@@ -104,7 +132,7 @@ export default class ChangeDutyRecord extends Component {
               onClick={() => this.changeTabType('myReceive')}>发给我的</li>
           </TabOutside>
         </div>
-        <div style={{display: this.state.tabTypeState === 'mySend' ? 'block' : 'none'}}>
+        <div>
           <p className="bodyBgWhite"></p>
           <div className={'bodyBgWhiteZindex ' + styles.dutyRecords}>
             {
@@ -119,7 +147,7 @@ export default class ChangeDutyRecord extends Component {
                           records.map((record) => {
                             return (
                               <li key={record._id} onClick={() => this.clickShowModal(record)}>
-                                <article>{record.fromAttendance.created}</article>
+                                <article>{this.formatDate(record.fromAttendance.created)}</article>
                                 <p>{record.fromDoctor.name} {record.fromAttendance.date}申请：</p>
                                 <p>
                                   与{record.toDoctor.name} {record.toAttendance.date}换班，
@@ -135,10 +163,6 @@ export default class ChangeDutyRecord extends Component {
                 );
               })
             }
-          </div>
-
-          <div className="noResult" style={{display: this.state.tabTypeState === 'myReceive' ? 'block' : 'none'}}>
-            该功能正在开发中。。。
           </div>
 
           <div style={{display: this.state.showModal ? 'block' : 'none'}}>
