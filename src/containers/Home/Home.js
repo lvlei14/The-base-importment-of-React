@@ -29,6 +29,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    console.log('用户信息');
     console.log(this.props.user);
     this.props.getPassword(this.props.user && this.props.user._id);
     const requires = {};
@@ -46,7 +47,8 @@ export default class Home extends Component {
   }
 
   render() {
-    const zhibanPng = require('../../images/zhiban.png');
+    const zhibanPng = require('../../images/homeZhiban.png');
+    const shoushuPng = require('../../images/homeShoushu.png');
     const nowDate = this.getNowFormatDate();
     const schedules = this.props.schedules && this.props.schedules.list || [];
     const scheduleItems = schedules && schedules.filter((item) => item.date.value === nowDate);
@@ -61,6 +63,14 @@ export default class Home extends Component {
                   <img src = {zhibanPng} alt="值班入口" />
                 </article>
                 <p>值班</p>
+              </Link>
+            </li>
+            <li className="left">
+              <Link to="/opera">
+                <article className={styles.navLiThr}>
+                  <img src = {shoushuPng} alt="手术入口" />
+                </article>
+                <p>手术</p>
               </Link>
             </li>
           </ul>
