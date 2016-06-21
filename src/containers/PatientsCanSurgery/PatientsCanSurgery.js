@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {push} from 'react-router-redux';
 import CardBg from '../../components/CardBg/Card';
 import { loadNotPlanPatient } from '../../redux/modules/operaInfor';
-import {getPatients} from '../../redux/modules/patient';
+import {getPatientsNotSurgery} from '../../redux/modules/patient';
 
 
 const styles = require('./PatientsCanSurgery.scss');
@@ -12,13 +12,13 @@ const styles = require('./PatientsCanSurgery.scss');
   contact: state.form.contact,
   patients: state.patient.patients}), {
     loadNotPlanPatient,
-    getPatients,
+    getPatientsNotSurgery,
     push
   }
 )
 export default class PatientsCanSurgery extends Component {
   static propTypes = {
-    getPatients: PropTypes.func,
+    getPatientsNotSurgery: PropTypes.func,
     push: PropTypes.func,
     patients: PropTypes.array
   };
@@ -31,7 +31,7 @@ export default class PatientsCanSurgery extends Component {
   }
 
   componentDidMount() {
-    this.props.getPatients();
+    this.props.getPatientsNotSurgery();
   }
 
   goToSetSurgery() {

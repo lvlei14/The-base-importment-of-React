@@ -6,18 +6,22 @@ import { reduxForm } from 'redux-form';
 import {getPatientById} from '../../redux/modules/patient';
 import {getHospitalOpeRooms} from '../../redux/modules/hospitalOperationRoom';
 import {getSurgeryTypes} from '../../redux/modules/surgeryType';
-
+import {createSurgery} from '../../redux/modules/surgery';
+import {loadDoctors} from '../../redux/modules/doctor';
 
 const styles = require('../PatientsCanSurgery/PatientsCanSurgery.scss');
 
-@connect(state => ({surgeryInfor: state.surgeryInfor,
+@connect(state => ({
+  doctors: state.doctor && state.doctor.doctors,
   rooms: state.hospitalOperationRoom.operationRooms,
   surgeryTypes: state.surgeryType.surgeryTypes,
   contact: state.form.contact,
   patient: state.patient.patient}), {
     getPatientById,
     getHospitalOpeRooms,
-    getSurgeryTypes
+    getSurgeryTypes,
+    createSurgery,
+    loadDoctors
   }
 )
 @reduxForm({
@@ -37,7 +41,10 @@ export default class AddSurgery extends Component {
     getPatientById: PropTypes.func,
     getHospitalOpeRooms: PropTypes.func,
     getSurgeryTypes: PropTypes.func,
-    patient: PropTypes.object
+    patient: PropTypes.object,
+    createSurgery: PropTypes.func,
+    loadDoctors: PropTypes.func,
+    doctors: PropTypes.array
   };
 
   constructor(props) {
@@ -53,6 +60,7 @@ export default class AddSurgery extends Component {
     this.props.getPatientById(uid);
     this.props.getHospitalOpeRooms('hospitalID');
     this.props.getSurgeryTypes('hospitalID');
+    this.props.loadDoctors();
     // this.props.loadOperatingRoom,
     // this.props.loadOperaDoctor,
     // this.props.loadOperaName,
@@ -71,14 +79,14 @@ export default class AddSurgery extends Component {
     const values = Object.assign(this.props.values, {patient: patient});
     console.log(values);
     // TODO 完善Api地址
-    // this.props.addSurgeryInfor();
+    this.props.createSurgery(values);
   }
 
   render() {
     // TODO values中还需要传一个apartmentId
     const {fields: {doctor, date, seq, name, surgeryType, operatingRoom, mark}} = this.props;
-    const {patient, rooms, surgeryTypes} = this.props;
-    const {operaDoctors, selectedAbleSeqs} = this.props.surgeryInfor;
+    const {patient, rooms, surgeryTypes, doctors} = this.props;
+    const selectedAbleSeqs = [1, 2, 3, 4, 5, 6, 7];
     return (
       <div>
         <HeadNaviBar>添加手术</HeadNaviBar>
@@ -152,9 +160,9 @@ export default class AddSurgery extends Component {
               <select {...doctor}>
                   <option value="">请选择</option>
                   {
-                    operaDoctors && operaDoctors.map((operaDoctor) => {
+                    doctors && doctors.map((operaDoctor) => {
                       return (
-                        <option key={operaDoctor.id} value={operaDoctor.id}>{operaDoctor.name}</option>
+                        <option key={operaDoctor._id} value={operaDoctor._id}>{operaDoctor.name}</option>
                       );
                     })
                   }
@@ -187,7 +195,7 @@ export default class AddSurgery extends Component {
             </div>
           </div>
           <div>
-            <button onClick={this.clickAddBtn.bind(this)}>提交</button>
+            <button className="mainBtn" onClick={this.clickAddBtn.bind(this)}>提交</button>
           </div>
       </div>
     );

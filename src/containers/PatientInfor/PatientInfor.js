@@ -3,20 +3,21 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { loadPatientInformation } from '../../redux/modules/patient';
+import { loadPatientById } from '../../redux/modules/patient';
 
 const styles = require('./PatientInfor.scss');
 @connect(
-  state => ({...state.patientInfor}), {
-    loadPatientInformation,
+  state => ({patient: state.patient.patient}), {
+    loadPatientById,
     pushState: push,
   }
 )
 export default class PatientInfor extends Component {
   static propTypes = {
     pushState: PropTypes.func,
-    patientInfor: PropTypes.array,
-    loadPatientInformation: PropTypes.func,
+    patient: PropTypes.object,
+    loadPatientById: PropTypes.func,
+    routeParams: PropTypes.object,
   };
 
   constructor(props) {
@@ -26,8 +27,8 @@ export default class PatientInfor extends Component {
   }
 
   componentDidMount() {
-    // TODO 完善Api地址
-    // this.props.loadPatientInformation();
+    const {id} = this.props.routeParams;
+    this.props.loadPatientById(id);
   }
 
   goModifyPatient() {
@@ -35,8 +36,8 @@ export default class PatientInfor extends Component {
   }
 
   render() {
-    const patientInfor = this.props.patientInfor;
-    console.log(patientInfor);
+    const patient = this.props.patient;
+    console.log(patient);
     return (
       <div className={styles.PatientInfor}>
         <HeadNaviBar>患者信息</HeadNaviBar>
@@ -44,25 +45,31 @@ export default class PatientInfor extends Component {
           <div className={styles.addPatientLi + ' ' + styles.addPatientLiFirst}>
             <label className={ styles.leftPlaceholder}>患者姓名</label>
             <div>
-              {patientInfor.name}
+              {patient.name}
             </div>
           </div>
           <div className={styles.addPatientLi}>
             <label className={ styles.leftPlaceholder}>性别</label>
             <div>
-              {patientInfor.gender === 'female' ? '男' : '女'}
+              {patient.gender === 'female' ? '男' : '女'}
             </div>
           </div>
           <div className={styles.addPatientLi}>
             <label className={ styles.leftPlaceholder}>年龄</label>
             <div>
-              {patientInfor.age}
+              {patient.age}
+            </div>
+          </div>
+          <div className={styles.addPatientLi}>
+            <label className={ styles.leftPlaceholder}>床号</label>
+            <div>
+              {patient.bedNumber}
             </div>
           </div>
           <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
-            <label className={ styles.leftPlaceholder}>床号</label>
+            <label className={ styles.leftPlaceholder}>备注</label>
             <div>
-              {patientInfor.roomNum}
+              {patient.mark}
             </div>
           </div>
         </section>

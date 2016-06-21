@@ -26,6 +26,8 @@ import { accountReducer } from './account';
 import { userSurgeryInforReducer } from './modifySurgery';
 import hospitalOperationRoom from './hospitalOperationRoom';
 import surgeryType from './surgeryType';
+import surgery from './surgery';
+import doctor from './doctor';
 
 export default combineReducers({
   routing: routerReducer,
@@ -50,6 +52,8 @@ export default combineReducers({
   operas: operaReducer,
   planedOpePatiens: operaPatientListReducer,
   patient,
+  surgery,
+  doctor,
   patientInfor: patientInforReducer,
   addSurgeryInforReducer,
   surgeryInfor: loadSurgeryInforReducer,

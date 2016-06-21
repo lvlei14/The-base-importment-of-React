@@ -168,6 +168,6 @@ export function operaReducer(state = initState, action = {}) {
 export function loadOperas() {
   return {
     types: [LOAD_OPERA, LOAD_OPERA_SUCCESS, LOAD_OPERA_FAIL],
-    promise: (client) => client.get('')
+    promise: (client) => client.get('/surgery/roomFormat')
   };
 }

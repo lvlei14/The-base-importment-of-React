@@ -5,41 +5,42 @@ import { push } from 'react-router-redux';
 import DayPicker from 'react-day-picker';
 
 
-import { loadOperas } from '../../redux/modules/opera';
+import { loadSurgeryByDateAndRoom } from '../../redux/modules/surgery';
 const styles = require('./Opera.scss');
 @connect(
-  state => ({...state.operas}), {
-    pushState: push,
-    loadOperas
-  }
+  state => ({surgeries: state.surgery.roomFormatedSurgeries,
+    user: state.auth.user}), {
+      pushState: push,
+      loadSurgeryByDateAndRoom
+    }
 )
 export default class Opera extends Component {
   static propTypes = {
     pushState: PropTypes.func,
-    loadOperas: PropTypes.func,
-    operas: PropTypes.array,
+    loadSurgeryByDateAndRoom: PropTypes.func,
+    surgeries: PropTypes.array,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      selectDay: this.getNowFormatDate(),
+      selectDay: this.formatDate(new Date()),
       showDayPicker: false,
     };
   }
 
   componentDidMount() {
-    // TODO 完善接口地址
-    // this.props.loadOperas();
+    this.props.loadSurgeryByDateAndRoom(this.formatDate(new Date()));
   }
 
-  getNowFormatDate() {
-    const date = new Date();
+  formatDate(date) {
     const seperator1 = '-';
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    const _month = date.getMonth() + 1;
+    const month = _month < 10 ? '0' + _month : _month;
+    const _day = date.getDate();
+    const day = _day < 10 ? '0' + _day : _day;
+    const currentdate = year + seperator1 + month + seperator1 + day;
     return currentdate;
   }
 
@@ -63,19 +64,23 @@ export default class Opera extends Component {
   goAddSurgery() {
     this.props.pushState('/patient-have-bed-list');
   }
+
   clickSelectDay(day) {
     const date = new Date(day);
-    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const datetow = this.formatDate(date);
     this.setState({
       showDayPicker: false,
       selectDay: datetow,
     });
+    this.props.loadSurgeryByDateAndRoom(datetow);
   }
 
   render() {
-    const initOperas = this.props.operas;
-    const operas = initOperas && initOperas.filter((item) => item.date === this.state.selectDay);
-    console.log(this.state.selectDay);
+    const {surgeries} = this.props;
+    console.log(surgeries);
+    // console.log(initOperas);
+    // const operas = initOperas && initOperas.filter((item) => item.date === this.state.selectDay);
+    // console.log(this.state.selectDay);
     return (
       <div>
         <HeadNaviBar>心外科手术安排</HeadNaviBar>
@@ -102,14 +107,17 @@ export default class Opera extends Component {
             </article>
           </header>
           {
-            operas && operas.map((opear) => {
+            surgeries && surgeries.length ? surgeries.map((opear) => {
+              console.log(opear);
               return (
-                <section className="topCardBg" key={opear.operatingRoom.id}>
+                <section className="topCardBg" key={opear.operatingRoom._id}>
                   <header className="clearfix">
                     <span className="left">{opear.operatingRoom && opear.operatingRoom.name}</span>
-                    <p className={this.state[opear.operatingRoom.id] ? 'right sanjiao-right' : 'right sanjiao-bt ' + styles.curP } onClick={() => this.clickToggleList(opear.operatingRoom.id)}></p>
+                    <p className={this.state[opear.operatingRoom._id] ? 'right sanjiao-right' : 'right sanjiao-bt ' + styles.curP }
+                      onClick={() => this.clickToggleList(opear.operatingRoom._id)}>
+                    </p>
                   </header>
-                  <ul style={{display: this.state[opear.operatingRoom.id] ? 'none' : 'block'}}>
+                  <ul style={{display: this.state[opear.operatingRoom._id] ? 'none' : 'block'}}>
                     {
                       opear && opear.surgeries && opear.surgeries.map((surgery) => {
                         return (
@@ -118,9 +126,9 @@ export default class Opera extends Component {
                             <p className="left">
                               {surgery.patient && surgery.patient.name}（{
                                 surgery.patient.gender === 'female' ? '女' : '男'
-                              }）{surgery.patient && surgery.patient.age} {surgery.name}
+                              }）{surgery.patient && surgery.patient.age} {surgery.patient.name}
                             </p>
-                            <article className="right">{surgery.doctor}</article>
+                            <article className="right">{surgery.doctor.name}</article>
                           </li>
                         );
                       })
@@ -128,7 +136,7 @@ export default class Opera extends Component {
                   </ul>
                 </section>
               );
-            })
+            }) : '当天暂无手术数据'
           }
         </div>
       </div>

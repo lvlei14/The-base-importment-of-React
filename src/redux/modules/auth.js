@@ -8,6 +8,10 @@ const LOGOUT = 'LOGOUT';
 const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'LOGOUT_FAIL';
 
+const LOAD = 'LOAD';
+const LOAD_SUCCESS = 'LOAD_SUCCESS';
+const LOAD_FAIL = 'LOAD_FAIL';
+
 const REGISTER = 'REGISTER';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const REGISTER_FAIL = 'REGISTER_FAIL';
@@ -22,6 +26,7 @@ const initialState = {
   defaultLoginUser: '',
   loading: false,
   user: null,
+  loaded: false,
   newUserId: '',       // judge register result
   msgCode: '',         // register msg code
   selectedTabName: 1,  // default login tab
@@ -54,6 +59,27 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: false,
+        user: null,
+        errMsg: action.error && action.error.error_msg
+      };
+    case LOAD:
+      return {
+        ...state,
+        loading: true
+      };
+    case LOAD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        user: {token: action.result.token, ...action.result.user},
+        msg: action.result && action.result.success_msg
+      };
+    case LOAD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        loaded: false,
         user: null,
         errMsg: action.error && action.error.error_msg
       };
@@ -132,6 +158,12 @@ export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
 
+export function load() {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: (client) => client.get('/auth/local')
+  };
+}
 
 export function register(options) {
   options.reg_from = 'wechat';

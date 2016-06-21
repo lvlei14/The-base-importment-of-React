@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';  // IndexRoute
-import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
+// import { isLoaded as isAuthLoaded, load as loadAuth } from 'redux/modules/auth';
 import {
     App,
     Home,
@@ -30,16 +30,21 @@ export default (store) => {
       const { auth: { user }} = store.getState();
       if (!user) {
         // oops, not logged in, so can't be here!
-        replace('/');
+        replace('/login-or-register');
       }
       cb();
     }
 
-    if (!isAuthLoaded(store.getState())) {
-      store.dispatch(loadAuth()).then(checkAuth);
-    } else {
-      checkAuth();
-    }
+    // function authError() {
+    //   console.log('error');
+    // }
+
+    // if (!isAuthLoaded(store.getState())) {
+    //   store.dispatch(loadAuth()).then(checkAuth, authError);
+    // } else {
+    //   checkAuth();
+    // }
+    checkAuth();
   };
 
   /**
@@ -65,7 +70,7 @@ export default (store) => {
         <Route path="opera-patient" component={OperaPatInfor} />
         <Route path="add-patient" component={AddPatient} />
         <Route path="modify-patient" component={ModifyPatient} />
-        <Route path="patient" component={PatientInfor} />
+        <Route path="patient/:id" component={PatientInfor} />
         <Route path="patient-have-bed-list" component={PatientsCanSurgery} />
         <Route path="createSurgery" component={AddSurgery} />
         <Route path="modify-surgery" component={ModifySurgery} />

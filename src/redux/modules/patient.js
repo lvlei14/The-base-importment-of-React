@@ -113,3 +113,10 @@ export function getPatients() {
     promise: (client) => client.get('/patient')
   };
 }
+
+export function getPatientsNotSurgery() {
+  return {
+    types: [LOAD_PATIENTS, LOAD_PATIENTS_SUCCESS, LOAD_PATIENTS_FAIL],
+    promise: (client) => client.get('/patient/notSurgery')
+  };
+}
