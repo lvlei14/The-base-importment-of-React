@@ -42,7 +42,7 @@ export default class DatePlan extends Component {
       selNoFormatDay: new Date(),
       tabTypeState: 'month',
       selectedDayItems: [],
-      scheduleItems: this.props.schedules,
+      schedules: this.props.schedules,
       selectedYear: (new Date()).getFullYear(),
       selectedMonth: (new Date()).getMonth() + 1,
       isClickFilter: false,
@@ -60,7 +60,14 @@ export default class DatePlan extends Component {
     this.clickHandleDay(this.state.selNoFormatDay);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    console.log('接收新的props－－－－－－－');
+    console.log(nextProps.schedules);
+    this.setState({
+      schedules: nextProps.schedules,
+    }, function() {
+      console.log(this.state.schedules);
+    });
   }
 
   changeTabType(tabType) {
@@ -70,29 +77,39 @@ export default class DatePlan extends Component {
   }
 
   clickHandleDay(day) {
+    console.log('点击每天的事件----------------------');
+    console.log(day);
     const date = new Date(day);
     const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    const schedules = this.props.schedules.list || [];
+    const schedules = this.state.schedules.list || [];
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
+    console.log(selectedDaySchedule);
     this.setState({
       selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
+    }, function() {
+      console.log('******-----------*****');
+      console.log(this.state.selectedDayItems);
     });
   }
 
   backNowDate() {
-    this.setState({
-      selNoFormatDay: new Date(),
-    });
+    console.log('---000000000000');
     const selYearMon = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1);
     const requires = {
       date: selYearMon
     };
     this.props.loadschedules(JSON.stringify(requires));
+    this.setState({
+      selNoFormatDay: new Date(),
+    }, function() {
+      console.log('---111111111');
+      console.log(this.state.selNoFormatDay);
+    });
+    this.clickHandleDay(new Date());
     // console.log('------------------');
     // console.log(this.state.selNoFormatDay);
     // this.refs.daypicker.showMonth(new Date());
-    // this.clickHandleDay(this.state.selNoFormatDay);
   }
 
   showSingleDayItem(scheduleDay) {
@@ -210,7 +227,7 @@ export default class DatePlan extends Component {
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.props.schedules.calendar;
+    const dayItems = this.state.schedules.calendar;
     // console.log(dayItems);
     return (
       <div>
@@ -224,6 +241,8 @@ export default class DatePlan extends Component {
 
   render() {
     console.log(this.state.selNoFormatDay);
+    console.log('新的state');
+    console.log(this.state.schedules);
     const {schedules} = this.props;
     let scheduleItems;
     if (this.state.tabTypeState === 'month') {
