@@ -250,7 +250,8 @@ class Calendar extends Component {
       <div>
       {
         dutyDayItem.doctor._id !== uid ?
-          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.changeSelChDutyId(dutyDayItem._id, dutyDayItem.doctor)}>
+          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={(event) => { event.stopPropagation(); console.log('clicked'); this.changeSelChDutyId(dutyDayItem._id, dutyDayItem.doctor);}
+          }>
             <article className={'clearfix ' + styles.dateAppart}>
               {
                 this.loadLevel(dutyDayItem.doctorLevel.number)

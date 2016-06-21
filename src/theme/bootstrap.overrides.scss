@@ -205,10 +205,17 @@ textarea{
   user-select: none;
 }
 
+.banckNowDate{
+  position: absolute;
+  top: .14rem;
+  left: $lrmargin;
+  z-index: 120;
+}
+
   .DayPicker-NavBar {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: $lrmargin;
+    right: $lrmargin;
     top: .13rem;
     padding: 0 .5rem;
     font-size: .2rem !important;

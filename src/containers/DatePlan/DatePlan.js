@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import DayPicker, {DateUtils} from 'react-day-picker';
-// import moment from 'moment';
+import DayPicker, { DateUtils } from 'react-day-picker';
+import moment from 'moment';
 require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
 
@@ -39,31 +39,33 @@ export default class DatePlan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: new Date(),
+      selNoFormatDay: new Date(),
       tabTypeState: 'month',
       selectedDayItems: [],
-      isClickFilter: false,
       scheduleItems: this.props.schedules,
       selectedYear: (new Date()).getFullYear(),
       selectedMonth: (new Date()).getMonth() + 1,
+      isClickFilter: false,
     };
   }
 
   componentDidMount() {
-    const requires = {};
+    const date = this.state.selectedYear + '-' + this.state.selectedMonth;
+    const requires = {
+      date: date
+    };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
-    this.clickHandleDay(this.state.selectedDate);
+    console.log('－－页面加载－－');
+    this.clickHandleDay(this.state.selNoFormatDay);
   }
 
   componentWillReceiveProps() {
-    this.clickHandleDay(this.state.selectedDate);
   }
 
   changeTabType(tabType) {
     this.setState({
       tabTypeState: tabType,
-      isClickFilter: false,
     });
   }
 
@@ -73,45 +75,58 @@ export default class DatePlan extends Component {
     const schedules = this.props.schedules.list || [];
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
-      selectedDate: datetow,
+      selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
     });
   }
-  hideFilterReq() {
+
+  backNowDate() {
     this.setState({
-      isClickFilter: true,
+      selNoFormatDay: new Date(),
     });
+    const selYearMon = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1);
+    const requires = {
+      date: selYearMon
+    };
+    this.props.loadschedules(JSON.stringify(requires));
+    // console.log('------------------');
+    // console.log(this.state.selNoFormatDay);
+    // this.refs.daypicker.showMonth(new Date());
+    // this.clickHandleDay(this.state.selNoFormatDay);
   }
 
   showSingleDayItem(scheduleDay) {
-    const outsideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === false) || [];
-    const sideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === true) || [];
-    const conflictNum = scheduleDay && scheduleDay.filter((item) => item.conflict) || [];
-    if (outsideNum.length > 0 && sideNum.length > 0) {
-      return (
-        <p>
-          <span className={styles.outside}></span>
-          &nbsp;&nbsp;
-          <span className={styles.side}></span>
-          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
-        </p>
-      );
-    }
-    if (outsideNum.length > 0 && sideNum.length === 0) {
-      return (
-        <p>
-          <span className={styles.outside}></span>
-          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
-        </p>
-      );
-    }
-    if (sideNum.length > 0 && outsideNum.length === 0) {
-      return (
-        <p>
-          <span className={styles.side}></span>
-          <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
-        </p>
-      );
+    const scheduleDayMon = new Date(scheduleDay && scheduleDay[0].start_time).getMonth() + 1;
+    if (scheduleDayMon === this.state.selectedMonth) {
+      const outsideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === false) || [];
+      const sideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === true) || [];
+      const conflictNum = scheduleDay && scheduleDay.filter((item) => item.conflict) || [];
+      if (outsideNum.length > 0 && sideNum.length > 0) {
+        return (
+          <p>
+            <span className={styles.outside}></span>
+            &nbsp;&nbsp;
+            <span className={styles.side}></span>
+            <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+          </p>
+        );
+      }
+      if (outsideNum.length > 0 && sideNum.length === 0) {
+        return (
+          <p>
+            <span className={styles.outside}></span>
+            <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+          </p>
+        );
+      }
+      if (sideNum.length > 0 && outsideNum.length === 0) {
+        return (
+          <p>
+            <span className={styles.side}></span>
+            <i style={{display: conflictNum.length > 0 ? 'block' : 'none'}}>!</i>
+          </p>
+        );
+      }
     }
   }
 
@@ -141,32 +156,56 @@ export default class DatePlan extends Component {
       });
     }
     const selectedMonth = curMonth - 1;
+    const selYearMon = selectedYear + '-' + selectedMonth;
+    // const date = selYearMon + '-1';
+    // const day = (new Date(date)).toDateString() + ' ' + (new Date(date)).toTimeString();
+    const value = selYearMon + '-1';
+    const day = moment(value, 'L').toDate();
     this.setState({
       selectedMonth: selectedMonth,
+      selectedDayItems: [],
+      selNoFormatDay: day,
     });
-    const date = selectedYear + '-' + selectedMonth;
     const requires = {
-      date: date
+      date: selYearMon
     };
     this.props.loadschedules(JSON.stringify(requires));
   }
 
   nextClickHandle(curMonth) {
     const {selectedYear} = this.state;
-    if (curMonth === 12) {
+    const selectedMonth = curMonth + 1;
+    const selYearMon = selectedYear + '-' + selectedMonth;
+    const value = selYearMon + '-1';
+    const day = moment(value, 'L').toDate();
+    if (selectedMonth === 1) {
       this.setState({
         selectedYear: selectedYear + 1,
       });
     }
-    const selectedMonth = curMonth + 1;
     this.setState({
       selectedMonth: selectedMonth,
+      selectedDayItems: [],
+      selNoFormatDay: day,
     });
-    const date = selectedYear + '-' + selectedMonth;
     const requires = {
-      date: date
+      date: selYearMon
     };
     this.props.loadschedules(JSON.stringify(requires));
+  }
+
+  hideFilterReq() {
+    this.setState({
+      isClickFilter: true,
+      selectedDayItems: []
+    });
+  }
+
+  resetFilterReq() {
+    this.setState({
+      isClickFilter: false,
+      selectedDayItems: []
+    });
   }
 
   renderDay(day) {
@@ -184,9 +223,11 @@ export default class DatePlan extends Component {
   }
 
   render() {
+    console.log(this.state.selNoFormatDay);
     const {schedules} = this.props;
     let scheduleItems;
     if (this.state.tabTypeState === 'month') {
+      // this.refs.daypicker && this.refs.daypicker.showMonth(this.state.selNoFormatDay);
       scheduleItems = this.state.selectedDayItems;
     }
     if (this.state.tabTypeState === 'list') {
@@ -204,20 +245,24 @@ export default class DatePlan extends Component {
             </TabOutside>
             <div>
               <FilterScheduleItem
-                hideFilterReq = {this.hideFilterReq.bind(this)} />
+                hideFilterReq = {this.hideFilterReq.bind(this)}
+                resetFilterReq = {this.resetFilterReq.bind(this)} />
             </div>
           </div>
           <div className={styles.datePlanPicker}>
             {
               this.state.tabTypeState === 'month' ?
-                <DayPicker
-                    disabledDays={DateUtils.isPastDay}
-                    enableOutsideDays
+                <div>
+                  <span className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
+                  <DayPicker
+                    ref="daypicker"
+                    initialMonth={this.state.selNoFormatDay}
                     onDayClick={(event, day) => this.clickHandleDay(day)}
                     renderDay={this.renderDay.bind(this)}
                     navbarComponent={this.navbar.bind(this)}
                     localeUtils={LocaleUtils}
                     locale="zh-cn" />
+                </div>
               : ''
             }
           </div>
@@ -334,8 +379,9 @@ class ScdItems extends Component {
 class FilterScheduleItem extends Component {
   static propTypes = {
     scheduleTypes: PropTypes.array,
-    hideFilterReq: PropTypes.func,
     loadschedules: PropTypes.func,
+    resetFilterReq: PropTypes.func,
+    hideFilterReq: PropTypes.func,
   };
 
   constructor(props) {
@@ -344,10 +390,12 @@ class FilterScheduleItem extends Component {
       showFilterRequires: false,
       showFirstDayPicker: false,
       showSecondDayPicker: false,
+      firstDateYear: (new Date()).getFullYear(),
+      firstDateMonth: (new Date()).getMonth() + 1,
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
-        endDate: '不限',
+        endDate: null,
         typeId: ''
       },
     };
@@ -386,6 +434,8 @@ class FilterScheduleItem extends Component {
     this.setState(
       {
         showFirstDayPicker: false,
+        firstDateYear: date.getFullYear(),
+        firstDateMonth: (date.getMonth() + 1),
         filterRequires: Object.assign({}, this.state.filterRequires, { startDate: datetow})
       }
     );
@@ -418,30 +468,32 @@ class FilterScheduleItem extends Component {
   resetFilterReq() {
     const requires = {};
     this.props.loadschedules(JSON.stringify(requires));
+    this.props.resetFilterReq();
     this.setState({
       showFilterRequires: false,
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
-        endDate: '不限',
+        endDate: null,
         typeId: ''
       },
     });
   }
 
   hideFilterReq() {
-    this.props.hideFilterReq();
     const requires = this.state.filterRequires;
-    if (requires.endDate && requires.startDate > requires.endDate) {
+    const endDate = requires.endDate;
+    const startDate = requires.startDate;
+    if (endDate !== '不限' && startDate > endDate) {
       //  TODO 弹窗提示:开始日期不能大于结束日期
       alert('开始日期不能大于结束日期');
       return;
     }
-
     this.setState({
       showFilterRequires: false,
     });
     this.props.loadschedules(JSON.stringify(requires));
+    this.props.hideFilterReq();
   }
 
   render() {
@@ -475,7 +527,7 @@ class FilterScheduleItem extends Component {
               <div className={'right ' + styles.filterDate}>
                 <div
                   onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
-                  <span>{this.state.filterRequires.endDate}</span>
+                  <span>{this.state.filterRequires.endDate === null ? '不限' : this.state.filterRequires.endDate}</span>
                   <p className="sanjiao-bt"></p>
                 </div>
                 <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}

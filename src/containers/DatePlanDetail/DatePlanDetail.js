@@ -34,6 +34,12 @@ export default class DatePlanDetail extends Component {
     this.props.loadschedules(JSON.stringify(requires));
   }
 
+  getFormatDate(day) {
+    const date = new Date(day);
+    const datenow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    return datenow;
+  }
+
   goModifyPatient() {
     this.props.pushState('/modify-data-plan');
   }
@@ -56,13 +62,13 @@ export default class DatePlanDetail extends Component {
             <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>开始时间</label>
               <div>
-                {datePlanDetail.start_time}
+                {this.getFormatDate(datePlanDetail.start_time)}
               </div>
             </div>
             <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>结束时间</label>
               <div>
-                {datePlanDetail.end_time}
+                {this.getFormatDate(datePlanDetail.end_time)}
               </div>
             </div>
             {
