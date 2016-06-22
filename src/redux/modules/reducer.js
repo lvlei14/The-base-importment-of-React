@@ -13,8 +13,6 @@ import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
 import { addDatePlanReducer } from './addDatePlan';
 import { dutyReducer } from './duty';
-import { appartDutyReducer } from './appartDuty';
-import { changeDutyReducer } from './changeDuty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
 import { operaReducer } from './opera';
 import { operaPatientListReducer } from './operaInfor';
@@ -46,8 +44,6 @@ export default combineReducers({
   schedules: datePlanSchedulesReducer,
   addDatePlan: addDatePlanReducer,
   dutys: dutyReducer,
-  appartDutys: appartDutyReducer,
-  changeDutys: changeDutyReducer,
   changeDutyRecords: changeDutyRecordsReducer,
   operas: operaReducer,
   planedOpePatiens: operaPatientListReducer,

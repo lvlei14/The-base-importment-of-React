@@ -1,0 +1,50 @@
+@import '../../theme/variables.scss';
+.userPTop{
+  position: relative;
+  .userPTopBg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  section{
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    padding: .35rem 0 .3rem;
+    p{
+      img{
+        width:.84rem;
+        height: .84rem;
+      }
+      display: inline-block;
+      border-radius: 50%;
+      border: .08rem solid rgba(255,255,255,.5);
+    }
+    h3{
+      color: $jzfontColor;
+      font-size: $jzjzfontSize;
+      margin-top: .15rem;
+      margin-bottom: .02rem;
+    }
+    article{
+      color: $jzfontColor;
+    }
+  }
+}
+
+.userPUl{
+  padding: 0 $lrmargin;
+  li{
+    padding: .14rem 0;
+    font-size: $jzfontSize;
+    i{
+      font-style: normal;
+      color: $jzfontColor;
+    }
+  }
+}
+
+.userprofile footer{
+  margin: 0 $lrmargin;
+}

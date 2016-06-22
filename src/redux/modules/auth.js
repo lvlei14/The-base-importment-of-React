@@ -89,6 +89,8 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOGOUT_SUCCESS:
+      console.log('退出登录action');
+      console.log(action);
       return {
         ...state,
         loading: false,
