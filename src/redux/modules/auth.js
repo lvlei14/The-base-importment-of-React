@@ -87,8 +87,7 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOGOUT_SUCCESS:
-      console.log('退出登录action');
-      console.log(action);
+      cookie.remove('__token');
       return {
         ...state,
         loading: false,
@@ -205,9 +204,12 @@ export function getMsgCode(phone) {
 
 
 export function logout() {
+  // return {
+  //   types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
+  //   promise: (client) => client.get('/logout')
+  // };
   return {
-    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: (client) => client.get('/logout')
+    type: LOGOUT_SUCCESS
   };
 }
 

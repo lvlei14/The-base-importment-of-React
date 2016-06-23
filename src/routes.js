@@ -20,7 +20,7 @@ import {
     SurgeryInfor,
     DatePlanDetail,
     ModifyDatePlan,
-    UserProfile,
+    UserProfile
   } from 'containers';
 
 export default (store) => {
@@ -60,8 +60,6 @@ export default (store) => {
         <Route path="add-date-plan/:id" component={AddDatePlan} onEnter={requireLogin} />
         <Route path="date-plan-detail/:id/:type" component={DatePlanDetail} onEnter={requireLogin} />
         <Route path="duty/:pageType" component={Duty} onEnter={requireLogin} />
-        <Route path="appart-duty" component={AppartDuty} onEnter={requireLogin} />
-        <Route path="change-duty" component={ChangeDuty} onEnter={requireLogin} />
         <Route path="change-duty-record" component={ChangeDutyRecord} onEnter={requireLogin} />
         <Route path="opera" component={Opera} onEnter={requireLogin} />
         <Route path="opera-patient" component={OperaPatInfor} onEnter={requireLogin} />
@@ -73,6 +71,7 @@ export default (store) => {
         <Route path="modify-surgery" component={ModifySurgery} onEnter={requireLogin} />
         <Route path="surgery" component={SurgeryInfor} onEnter={requireLogin} />
         <Route path="modify-date-plan" component={ModifyDatePlan} onEnter={requireLogin} />
+        <Route path="my-profile" component={UserProfile} onEnter={requireLogin} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

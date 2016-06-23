@@ -9,14 +9,14 @@ const styles = require('./UserProfile.scss');
 
 @connect(
   state => ({...state.auth}), {
-    pushState: push,
+    push,
     logout,
     showDiaglog,
   }
 )
 export default class UserProfile extends Component {
   static propTypes = {
-    pushState: PropTypes.func,
+    push: PropTypes.func,
     user: PropTypes.object,
     logout: PropTypes.func,
     msg: PropTypes.string,
@@ -43,10 +43,10 @@ export default class UserProfile extends Component {
 
   clickLogout() {
     this.props.logout();
+    this.props.push('/login-or-register');
   }
 
   render() {
-    console.log(this.props.user);
     const userProfileBg = require('../../images/userProfileBg.png');
     const headPortrait = require('../../images/userHeadPortrait.png');
     const {user} = this.props;
@@ -75,4 +75,3 @@ export default class UserProfile extends Component {
     );
   }
 }
-
