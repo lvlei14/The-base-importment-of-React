@@ -8,8 +8,6 @@ import {
     LoginOrRegister,
     AddDatePlan,
     Duty,
-    AppartDuty,
-    ChangeDuty,
     ChangeDutyRecord,
     Opera,
     OperaPatInfor,
@@ -22,6 +20,7 @@ import {
     SurgeryInfor,
     DatePlanDetail,
     ModifyDatePlan,
+    UserProfile,
   } from 'containers';
 
 export default (store) => {

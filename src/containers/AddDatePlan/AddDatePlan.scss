@@ -8,14 +8,14 @@
     margin-top: $tbmargin;
   }
   ul{
-    padding:.08rem .2rem;
+    padding:.08rem .14rem .08rem .06rem;
     li{
       position: relative;
       line-height: .36rem;
       margin:.14rem 0;
       .leftPlaceholder{
         font-style: normal;
-        width: .6rem;
+        width: .7rem;
         text-align: right;
         position: absolute;
         top:0;
@@ -25,12 +25,12 @@
         color: #f00;
         position: absolute;
         top:0;
-        left:.64rem;
+        left:.72rem;
         font-size: $jzfontSize;
         line-height: .35rem;
       }
       div{
-        margin-left:.8rem;
+        margin-left:.9rem;
         div{
           position:relative;
           select{
