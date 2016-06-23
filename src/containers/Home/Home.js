@@ -29,9 +29,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    console.log('用户信息');
-    console.log(this.props.user);
-    this.props.getPassword(this.props.user && this.props.user._id);
     const requires = {};
     this.props.loadschedules(requires);
   }

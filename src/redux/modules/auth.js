@@ -45,8 +45,6 @@ export default function reducer(state = initialState, action = {}) {
       };
     case LOGIN_SUCCESS:
       cookie.set('__token', action.result.token, {expires: 7});
-      console.log('登陆成功');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -54,8 +52,6 @@ export default function reducer(state = initialState, action = {}) {
         msg: action.result && action.result.success_msg
       };
     case LOGIN_FAIL:
-      console.log('====登录异常====');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -65,17 +61,19 @@ export default function reducer(state = initialState, action = {}) {
     case LOAD:
       return {
         ...state,
-        loading: true
+        loading: true,
+        loaded: false
       };
     case LOAD_SUCCESS:
       return {
         ...state,
         loading: false,
         loaded: true,
-        user: {token: action.result.token, ...action.result.user},
+        user: action.result && action.result.notAuth ? null : {token: action.result.token, ...action.result.user},
         msg: action.result && action.result.success_msg
       };
     case LOAD_FAIL:
+      console.log(action);
       return {
         ...state,
         loading: false,
@@ -159,6 +157,7 @@ export function isLoaded(globalState) {
 }
 
 export function load() {
+  console.log('begin load.....');
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     promise: (client) => client.get('/auth/local')

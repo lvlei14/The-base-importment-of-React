@@ -65,7 +65,7 @@ export default class DatePlan extends Component {
     console.log(nextProps.schedules);
     this.setState({
       schedules: nextProps.schedules,
-    }, function() {
+    }, () => {
       console.log(this.state.schedules);
     });
   }
@@ -87,7 +87,7 @@ export default class DatePlan extends Component {
     this.setState({
       selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
-    }, function() {
+    }, () => {
       console.log('******-----------*****');
       console.log(this.state.selectedDayItems);
     });
@@ -102,7 +102,7 @@ export default class DatePlan extends Component {
     this.props.loadschedules(JSON.stringify(requires));
     this.setState({
       selNoFormatDay: new Date(),
-    }, function() {
+    }, () => {
       console.log('---111111111');
       console.log(this.state.selNoFormatDay);
     });
