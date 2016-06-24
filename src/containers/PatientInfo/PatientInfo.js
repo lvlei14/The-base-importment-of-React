@@ -3,21 +3,30 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { loadPatientById } from '../../redux/modules/patient';
+import { getPatientById, deletePatientById, clearInitPatient } from '../../redux/modules/patient';
 
-const styles = require('./PatientInfor.scss');
+const styles = require('./PatientInfo.scss');
 @connect(
-  state => ({patient: state.patient.patient}), {
-    loadPatientById,
-    pushState: push,
-  }
+  state => ({
+    patient: state.patient.patient,
+    successMsg: state.patient.successMsg,
+    deletePatientSuccess: state.patient.deletePatientSuccess}), {
+      getPatientById,
+      push,
+      deletePatientById,
+      clearInitPatient
+    }
 )
-export default class PatientInfor extends Component {
+export default class PatientInfo extends Component {
   static propTypes = {
-    pushState: PropTypes.func,
+    push: PropTypes.func,
     patient: PropTypes.object,
-    loadPatientById: PropTypes.func,
+    getPatientById: PropTypes.func,
     routeParams: PropTypes.object,
+    deletePatientById: PropTypes.func,
+    deletePatientSuccess: PropTypes.bool,
+    successMsg: PropTypes.string,
+    clearInitPatient: PropTypes.func
   };
 
   constructor(props) {
@@ -28,16 +37,33 @@ export default class PatientInfor extends Component {
 
   componentDidMount() {
     const {id} = this.props.routeParams;
-    this.props.loadPatientById(id);
+    this.props.getPatientById(id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.deletePatientSuccess && nextProps.deletePatientSuccess) {
+      this.props.push('/opera-patient');
+      alert(nextProps.successMsg);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.clearInitPatient();
   }
 
   goModifyPatient() {
-    this.props.pushState('/modify-patient');
+    const {id} = this.props.routeParams;
+    this.props.push('/add-patient?id=' + id);
+  }
+
+  deletePatient() {
+    // TODO 弹出删除的弹窗
+    const {id} = this.props.routeParams;
+    this.props.deletePatientById(id);
   }
 
   render() {
     const patient = this.props.patient;
-    console.log(patient);
     return (
       <div className={styles.PatientInfor}>
         <HeadNaviBar>患者信息</HeadNaviBar>
@@ -51,7 +77,7 @@ export default class PatientInfor extends Component {
           <div className={styles.addPatientLi}>
             <label className={ styles.leftPlaceholder}>性别</label>
             <div>
-              {patient.gender === 'female' ? '男' : '女'}
+              {patient.gender === 'female' ? '女' : '男'}
             </div>
           </div>
           <div className={styles.addPatientLi}>
@@ -75,6 +101,8 @@ export default class PatientInfor extends Component {
         </section>
         <footer>
           <button className="mainBtn" onClick={this.goModifyPatient.bind(this)}>修改</button>
+          <button className="mainBtn" onClick={this.addSurgery.bind(this)}>添加手术</button>
+          <button className="delBtn" onClick={this.deletePatient.bind(this)}>删除</button>
         </footer>
       </div>
     );

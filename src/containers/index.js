@@ -9,7 +9,7 @@ export Opera from './Opera/Opera';
 export OperaPatInfor from './OperaPatInfor/OperaPatInfor';
 export AddPatient from './AddPatient/AddPatient';
 export ModifyPatient from './ModifyPatient/ModifyPatient';
-export PatientInfor from './PatientInfor/PatientInfor';
+export PatientInfo from './PatientInfo/PatientInfo';
 export PatientsCanSurgery from './PatientsCanSurgery/PatientsCanSurgery';
 export ModifySurgery from './ModifySurgery/ModifySurgery';
 export SurgeryInfor from './SurgeryInfor/SurgeryInfor';

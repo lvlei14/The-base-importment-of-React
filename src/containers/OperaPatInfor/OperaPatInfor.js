@@ -5,9 +5,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Modal } from '../../components';
 
-import { loadAlredayPlanOperaPatients } from '../../redux/modules/operaInfor';
-import { changeSurgeryState } from '../../redux/modules/operaInfor';
-
 import {getPatients} from '../../redux/modules/patient';
 import {getSurgeries} from '../../redux/modules/surgery';
 
@@ -106,15 +103,12 @@ export default class OperaPatInfor extends Component {
   */
 @connect(
   state => ({...state}), {
-    loadAlredayPlanOperaPatients,
-    changeSurgeryState
+
   }
 )
 class UserArrangementedSurgery extends Component {
   static propTypes = {
     planedOpePatiens: PropTypes.array,
-    loadAlredayPlanOperaPatients: PropTypes.func,
-    changeSurgeryState: PropTypes.func,
     patients: PropTypes.array
   };
 
@@ -129,8 +123,7 @@ class UserArrangementedSurgery extends Component {
   }
 
   componentDidMount() {
-    // TODO 完善接口地址
-    // this.props.loadAlredayPlanOperaPatients();
+
   }
 
   clickShowModal(surgeryId, name) {
@@ -145,9 +138,6 @@ class UserArrangementedSurgery extends Component {
     this.setState({
       showModal: false
     });
-    alert('TODO');
-    // TODO 改变患者的手术状态
-    // this.props.changeSurgeryState(this.state.selectedSurgeryId, 'done');
   }
 
   render() {
@@ -163,7 +153,7 @@ class UserArrangementedSurgery extends Component {
                   <CardBg key={planedOpePatien.id}>
                     <dl className={'clearfix ' + styles.patItemTitle}>
                       <dt className="left">{planedOpePatien.patient.name} （
-                        {planedOpePatien.patient.gender === 'female' ? '男' : '女'}，{planedOpePatien.patient.age}&nbsp;
+                        {planedOpePatien.patient.gender === 'female' ? '女' : '男'}，{planedOpePatien.patient.age}&nbsp;
                         {planedOpePatien.operatingRoom.name})
                       </dt>
                       <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien.surgery.id, planedOpePatien.name)}>
@@ -233,12 +223,11 @@ class UserUnArrangementSurgery extends Component {
         {
           patients && patients.length ?
             patients.map((patient) => {
-              console.log(patient);
               return (
                 <CardBg key={patient._id}>
                   <div onClick={() => this.goPatientPage(patient._id)}>
                     <span className="left">
-                      {patient.name} （{patient.gender === 'female' ? '男' : '女'}，{patient.age}）
+                      {patient.name} （{patient.gender === 'female' ? '女' : '男'}，{patient.age}）
                     </span>
                     <p className="right fa fa-angle-left"></p>
                   </div>

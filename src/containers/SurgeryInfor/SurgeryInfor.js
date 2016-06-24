@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 
 import { loadUserSurgeryInformation } from '../../redux/modules/modifySurgery';
 
-const styles = require('../PatientInfor/PatientInfor.scss');
+const styles = require('../PatientInfo/PatientInfo.scss');
 @connect(
   state => ({ userSurgeryInfor: state.patientSurgeryInfor.userSurgeryInfor}), {
     loadUserSurgeryInformation,

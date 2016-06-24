@@ -55,7 +55,7 @@ export default class Home extends Component {
     const scheduleItems = schedules && schedules.filter((item) => item.date === nowDate);
     return (
       <div>
-        <HeadNaviBar>首页</HeadNaviBar>
+        <HeadNaviBar showBackArrow={false}>首页</HeadNaviBar>
         <div className={ styles.home}>
           <ul className={'clearfix topCardBg ' + styles.kuaiNav}>
             <li className="left">
