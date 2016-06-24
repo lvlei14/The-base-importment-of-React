@@ -29,8 +29,11 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    const requires = {};
-    this.props.loadschedules(requires);
+    const date = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1);
+    const requires = {
+      date: date
+    };
+    this.props.loadschedules(JSON.stringify(requires));
   }
 
   getNowFormatDate() {
@@ -47,8 +50,9 @@ export default class Home extends Component {
     const zhibanPng = require('../../images/homeZhiban.png');
     const shoushuPng = require('../../images/homeShoushu.png');
     const nowDate = this.getNowFormatDate();
-    const schedules = this.props.schedules && this.props.schedules.list || [];
-    const scheduleItems = schedules && schedules.filter((item) => item.date.value === nowDate);
+    console.log(this.props.schedules);
+    const schedules = this.props.schedules.list || [];
+    const scheduleItems = schedules && schedules.filter((item) => item.date === nowDate);
     return (
       <div>
         <HeadNaviBar showBackArrow={false}>首页</HeadNaviBar>
@@ -152,11 +156,11 @@ class ScdItems extends Component {
                       return (
                         <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
                           <div>
-                            <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)}</span>
+                            <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)}</span>
                             {this.itemTimeIcon(itemTimePeriod)}
                             <span className="left">{itemTimePeriod.type.value}</span>
-                            <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.startTime.value)} － {this.handleTime(itemTimePeriod.endTime.value)}</span>
-                            <span style={{display: itemTimePeriod.locale.value === '院外' ? 'boock' : 'none'}}
+                            <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.start_time)} － {this.handleTime(itemTimePeriod.end_time)}</span>
+                            <span style={{display: itemTimePeriod.is_inner.value === '院外' ? 'boock' : 'none'}}
                               className={styles.outside + ' left'}>院外</span>
                             <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
                              className={styles.conflict + ' left'}><i>!</i>有冲突</span>

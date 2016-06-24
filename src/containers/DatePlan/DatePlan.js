@@ -87,14 +87,10 @@ export default class DatePlan extends Component {
     this.setState({
       selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
-    }, () => {
-      console.log('******-----------*****');
-      console.log(this.state.selectedDayItems);
     });
   }
 
   backNowDate() {
-    console.log('---000000000000');
     const selYearMon = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1);
     const requires = {
       date: selYearMon
@@ -102,14 +98,8 @@ export default class DatePlan extends Component {
     this.props.loadschedules(JSON.stringify(requires));
     this.setState({
       selNoFormatDay: new Date(),
-    }, () => {
-      console.log('---111111111');
-      console.log(this.state.selNoFormatDay);
     });
     this.clickHandleDay(new Date());
-    // console.log('------------------');
-    // console.log(this.state.selNoFormatDay);
-    // this.refs.daypicker.showMonth(new Date());
   }
 
   showSingleDayItem(scheduleDay) {
@@ -228,7 +218,6 @@ export default class DatePlan extends Component {
   renderDay(day) {
     const date = day.getDate().toString();
     const dayItems = this.state.schedules.calendar;
-    // console.log(dayItems);
     return (
       <div>
         {date}
@@ -246,7 +235,6 @@ export default class DatePlan extends Component {
     const {schedules} = this.props;
     let scheduleItems;
     if (this.state.tabTypeState === 'month') {
-      // this.refs.daypicker && this.refs.daypicker.showMonth(this.state.selNoFormatDay);
       scheduleItems = this.state.selectedDayItems;
     }
     if (this.state.tabTypeState === 'list') {

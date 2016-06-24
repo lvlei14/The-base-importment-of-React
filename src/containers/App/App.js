@@ -87,7 +87,7 @@ export default class App extends Component {
               </Link>
             </li>
             <li className={styles.naviBtn}>
-              <Link to="/hospital-appointment" onClick={() => this.clickNaviBtn(2)}>
+              <Link to="/group-list" onClick={() => this.clickNaviBtn(2)}>
                 <img src={this.state.activeBtnSeq === 2 ? btImageQunOn : btImageQun} className={styles.btImage} alt="群组"/>
                 <p className={this.state.activeBtnSeq === 2 ? styles.btnameOn : ''}>群组</p>
               </Link>

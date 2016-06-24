@@ -33,8 +33,14 @@
 		header{
 			height: .35rem;
 			line-height: .35rem;
+      border-bottom: 1px solid $borderColor;
 			strong{
-
+        background: url('../../images/btImagetripOn.png');
+        width: .18rem;
+        height: .18rem;
+        background-size: .18rem;
+        margin-top: .08rem;
+        margin-right: .06rem;
 			}
 			h3{
 				font-size: $jzfontSize;
