@@ -20,7 +20,8 @@ import {
     SurgeryInfor,
     DatePlanDetail,
     ModifyDatePlan,
-    UserProfile
+    UserProfile,
+    GroupList
   } from 'containers';
 
 export default (store) => {
@@ -72,6 +73,7 @@ export default (store) => {
         <Route path="surgery" component={SurgeryInfor} onEnter={requireLogin} />
         <Route path="modify-date-plan" component={ModifyDatePlan} onEnter={requireLogin} />
         <Route path="my-profile" component={UserProfile} onEnter={requireLogin} />
+        <Route path="group-list" component={GroupList} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>
