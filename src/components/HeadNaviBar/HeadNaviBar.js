@@ -3,10 +3,15 @@ import { pushState } from 'react-router';
 
 const styles = require('./HeadNaviBar.scss');
 
+
 export default class HeadNaviBar extends Component {
   static propTypes = {
     children: PropTypes.string.isRequired,
-    pushState: PropTypes.func,
+    showBackArrow: PropTypes.bool
+  }
+
+  static defaultProps = {
+    showBackArrow: true
   }
 
   goBack() {
@@ -20,12 +25,15 @@ export default class HeadNaviBar extends Component {
   render() {
     return (
       <div className={'bodyBgWhiteZindex ' + styles.naviContainer}>
-        <div className={styles.backArrow} onClick={this.goBack.bind(this)}>
-          <i className="fa fa-angle-left"></i>
-        </div>
+        {
+          this.props.showBackArrow ?
+            <div className={styles.backArrow} onClick={this.goBack.bind(this)}>
+              <i className="fa fa-angle-left"></i>
+            </div>
+            : ''
+        }
         {this.props.children}
       </div>
     );
   }
 }
-

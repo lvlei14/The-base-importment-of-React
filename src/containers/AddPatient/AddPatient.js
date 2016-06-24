@@ -62,7 +62,11 @@ export default class AddPatient extends Component {
     }
     if (!this.props.modifyPatientSuccess && nextProps.modifyPatientSuccess) {
       this.props.push('/opera-patient');
+      this.props.clearInitPatient();
       alert(nextProps.successMsg);
+    }
+    if (!this.props.errorMsg && nextProps.errorMsg) {
+      alert(nextProps.errorMsg);
     }
   }
 

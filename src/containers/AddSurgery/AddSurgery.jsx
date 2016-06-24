@@ -13,6 +13,7 @@ const styles = require('../PatientsCanSurgery/PatientsCanSurgery.scss');
 
 @connect(state => ({
   doctors: state.doctor && state.doctor.doctors,
+  user: state.auth && state.auth.user,
   rooms: state.hospitalOperationRoom.operationRooms,
   surgeryTypes: state.surgeryType.surgeryTypes,
   contact: state.form.contact,
@@ -61,24 +62,15 @@ export default class AddSurgery extends Component {
     this.props.getHospitalOpeRooms('hospitalID');
     this.props.getSurgeryTypes('hospitalID');
     this.props.loadDoctors();
-    // this.props.loadOperatingRoom,
-    // this.props.loadOperaDoctor,
-    // this.props.loadOperaName,
-    // this.props.loadOperaSeq,
-    // this.props.loadOperaStates,
   }
 
   // componentWillReceiveProps(nextProps) {
-  //   // this.setState({
-  //   //   showModal: nextProps.showModal
-  //   // });
+  //
   // }
 
   clickAddBtn() {
     const patient = this.props.location.query.uid;
     const values = Object.assign(this.props.values, {patient: patient});
-    console.log(values);
-    // TODO 完善Api地址
     this.props.createSurgery(values);
   }
 
