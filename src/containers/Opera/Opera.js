@@ -57,7 +57,7 @@ export default class Opera extends Component {
 
   clickShowDayPicker() {
     this.setState({
-      showDayPicker: true,
+      showDayPicker: !this.state.showDayPicker,
     });
   }
 

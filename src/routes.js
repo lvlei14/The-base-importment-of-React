@@ -13,7 +13,7 @@ import {
     OperaPatInfor,
     AddPatient,
     ModifyPatient,
-    PatientInfor,
+    PatientInfo,
     AddSurgery,
     PatientsCanSurgery,
     ModifySurgery,
@@ -65,7 +65,7 @@ export default (store) => {
         <Route path="opera-patient" component={OperaPatInfor} onEnter={requireLogin} />
         <Route path="add-patient" component={AddPatient} onEnter={requireLogin} />
         <Route path="modify-patient" component={ModifyPatient} onEnter={requireLogin} />
-        <Route path="patient/:id" component={PatientInfor} onEnter={requireLogin} />
+        <Route path="patient/:id" component={PatientInfo} onEnter={requireLogin} />
         <Route path="patient-have-bed-list" component={PatientsCanSurgery} onEnter={requireLogin} />
         <Route path="createSurgery" component={AddSurgery} onEnter={requireLogin} />
         <Route path="modify-surgery" component={ModifySurgery} onEnter={requireLogin} />

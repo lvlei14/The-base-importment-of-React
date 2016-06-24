@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import {push} from 'react-router-redux';
-import CardBg from '../../components/CardBg/Card';
-import { createPatient } from '../../redux/modules/patient';
 import { reduxForm } from 'redux-form';
+import CardBg from '../../components/CardBg/Card';
+
+import { createPatient, getPatientById, modifyPatientById, clearInitPatient } from '../../redux/modules/patient';
 
 const styles = require('./AddPatient.scss');
 
@@ -12,23 +13,33 @@ const styles = require('./AddPatient.scss');
   contact: state.form.contact,
   ...state.patient}), {
     createPatient,
+    getPatientById,
+    modifyPatientById,
+    clearInitPatient,
     push
   }
 )
 @reduxForm({
   form: 'addPatient',                           // a unique name for this form
   fields: ['name', 'gender', 'age', 'bedNumber', 'mark', 'mobile']
-})
+}, state => ({
+  initialValues: state.patient.patient // will pull state into form's initialValues
+}))
 export default class AddPatient extends Component {
   static propTypes = {
     createPatient: PropTypes.func,
     addPatientSuccess: PropTypes.bool,
+    modifyPatientSuccess: PropTypes.bool,
     loading: PropTypes.bool,
+    location: PropTypes.object,
     successMsg: PropTypes.string,
     errorMsg: PropTypes.string,
     fields: PropTypes.object,
     values: PropTypes.object,
-    push: PropTypes.func
+    push: PropTypes.func,
+    getPatientById: PropTypes.func,
+    modifyPatientById: PropTypes.func,
+    clearInitPatient: PropTypes.func
   };
 
   constructor(props) {
@@ -38,11 +49,18 @@ export default class AddPatient extends Component {
   }
 
   componentDidMount() {
-
+    const {id} = this.props.location.query;
+    if (id) {
+      this.props.getPatientById(id);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.addPatientSuccess && nextProps.addPatientSuccess) {
+      this.props.push('/opera-patient');
+      alert(nextProps.successMsg);
+    }
+    if (!this.props.modifyPatientSuccess && nextProps.modifyPatientSuccess) {
       this.props.push('/opera-patient');
       alert(nextProps.successMsg);
     }
@@ -54,8 +72,15 @@ export default class AddPatient extends Component {
     this.props.createPatient(values);
   }
 
+  clickModifyBtn() {
+    const {values} = this.props;
+    const {id} = this.props.location.query;
+    this.props.modifyPatientById(id, values);
+  }
+
   render() {
     const {fields: {name, gender, age, bedNumber, mobile, mark}} = this.props;
+    const {id} = this.props.location.query;
     return (
       <div className={styles.addPatient}>
         <HeadNaviBar>添加患者</HeadNaviBar>
@@ -109,7 +134,12 @@ export default class AddPatient extends Component {
           </CardBg>
         </section>
         <footer>
-          <button className="mainBtn" onClick={this.clickAddBtn.bind(this)}>确认</button>
+          {
+            !id ?
+              <button className="mainBtn" onClick={this.clickAddBtn.bind(this)}>确认</button>
+              :
+              <button className="mainBtn" onClick={this.clickModifyBtn.bind(this)}>修改</button>
+          }
         </footer>
       </div>
     );
