@@ -1,5 +1,6 @@
 import superagent from 'superagent';
 import config from '../config';
+import cookie from 'cookie';
 
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
@@ -23,9 +24,11 @@ export default class ApiClient {
           request.query(params);
         }
 
+        // 从cookie 中获取
         const _cookies = req.get('cookie');
         if (__SERVER__ && _cookies) {
-          request.set('cookie', _cookies);
+          const {__token} = cookie.parse(_cookies);
+          request.set('Authorization', 'Bearer ' + __token);
         }
 
         if (data) {

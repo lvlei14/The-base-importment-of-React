@@ -13,7 +13,7 @@ module.exports = Object.assign({
   host: process.env.HOST || 'localhost',
   port: process.env.PORT,
   apiHost: process.env.APIHOST || 'localhost',
-  apiPort: process.env.APIPORT,
+  apiPort: process.env.APIPORT || 7293,
   app: {
     title: 'React Redux Web App',
     description: 'All the modern best practices in one example.',
