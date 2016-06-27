@@ -47,11 +47,13 @@ export default function surgeryReducer(state = initState, action = {}) {
         addSurgerySuccess: false
       };
     case ADD_SURGERY_SUCCESS:
+      console.log(action);
       return {
         ...state,
         loading: false,
         addSurgerySuccess: true,
-        successMsg: action.result.success_msg
+        successMsg: action.result.success_msg,
+        // surgery: action.result.surgery
       };
     case ADD_SURGERY_FAIL:
       return {
@@ -65,20 +67,20 @@ export default function surgeryReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: true,
-        addSurgerySuccess: false
+        modifySurgerySuccess: false
       };
     case MODIFY_SURGERY_BY_ID_SUCCESS:
       return {
         ...state,
         loading: false,
-        addSurgerySuccess: true,
+        modifySurgerySuccess: true,
         successMsg: action.result.success_msg
       };
     case MODIFY_SURGERY_BY_ID_FAIL:
       return {
         ...state,
         loading: false,
-        addSurgerySuccess: false,
+        modifySurgerySuccess: false,
         error: action.error.error_msg
       };
 
@@ -157,6 +159,13 @@ export function getSurgeryById(id) {
   return {
     types: [LOAD_SURGERY_BY_ID, LOAD_SURGERY_BY_ID_SUCCESS, LOAD_SURGERY_BY_ID_FAIL],
     promise: (client) => client.get('/surgery/' + id)
+  };
+}
+
+export function getSurgeryByIdWithoutPopulate(id) {
+  return {
+    types: [LOAD_SURGERY_BY_ID, LOAD_SURGERY_BY_ID_SUCCESS, LOAD_SURGERY_BY_ID_FAIL],
+    promise: (client) => client.get('/surgery/' + id + '/withoutPopulate')
   };
 }
 

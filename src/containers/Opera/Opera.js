@@ -75,6 +75,10 @@ export default class Opera extends Component {
     this.props.loadSurgeryByDateAndRoom(datetow);
   }
 
+  goSurgeryDetail(id) {
+    this.props.pushState(`surgery/${id}`);
+  }
+
   render() {
     const {surgeries} = this.props;
     console.log(surgeries);
@@ -121,7 +125,7 @@ export default class Opera extends Component {
                     {
                       opear && opear.surgeries && opear.surgeries.map((surgery) => {
                         return (
-                          <li className="clearfix" key={surgery.seq}>
+                          <li className="clearfix" key={surgery._id} onClick={() => this.goSurgeryDetail(surgery._id)}>
                             <i className="left">{surgery.seq}.</i>
                             <p className="left">
                               {surgery.patient && surgery.patient.name}（{
