@@ -85,6 +85,10 @@
           color: #2faf2d;
           border: 1px solid #2faf2d;
         }
+        i.zidingyi{
+          color: #B72335;
+          border: 1px solid #B72335;
+        }
       }
     }
   }
@@ -92,18 +96,13 @@
 
 .addBigBtn{
   position: fixed;
-  bottom: 76px;
-  right: 14px;
+  bottom: 66px;
+  right: 4px;
   z-index: 100;
-  background: #41c299;
-  width: 50px;
-  height: 50px;
-  box-shadow: 0 0 10px rgba(65,194,153, 0.8);
-  font-size: 40px;
-  text-align: center;
-  line-height: 50px;
-  color: #fff;
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  background: url(../../images/addBtn.png);
+  background-size: .6rem;
 }
 
 //modol background mask

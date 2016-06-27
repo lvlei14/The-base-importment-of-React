@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import DayPicker, { DateUtils } from 'react-day-picker';
+import DayPicker from 'react-day-picker';
 import moment from 'moment';
 require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
@@ -10,6 +10,7 @@ import CardBg from '../../components/CardBg/Card';
 import TabOutside from '../../components/TabOutside/TabOutside';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { showPopUp } from '../../redux/modules/popUp';
 import { loadschedules } from '../../redux/modules/datePlan';
@@ -40,7 +41,7 @@ export default class DatePlan extends Component {
     super(props);
     this.state = {
       selNoFormatDay: new Date(),
-      tabTypeState: 'month',
+      tabType: '',
       selectedDayItems: [],
       schedules: this.props.schedules,
       selectedYear: (new Date()).getFullYear(),
@@ -56,34 +57,33 @@ export default class DatePlan extends Component {
     };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
-    console.log('－－页面加载－－');
-    this.clickHandleDay(this.state.selNoFormatDay);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('接收新的props－－－－－－－');
-    console.log(nextProps.schedules);
     this.setState({
       schedules: nextProps.schedules,
-    }, () => {
-      console.log(this.state.schedules);
     });
   }
 
-  changeTabType(tabType) {
+  clickMonthTab() {
     this.setState({
-      tabTypeState: tabType,
+      tabType: '1'
     });
+    localStorage.removeItem('datePlanTabList');
+  }
+
+  clickListTab() {
+    this.setState({
+      tabType: '2'
+    });
+    localStorage.setItem('datePlanTabList', 'true');
   }
 
   clickHandleDay(day) {
-    console.log('点击每天的事件----------------------');
-    console.log(day);
     const date = new Date(day);
     const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     const schedules = this.state.schedules.list || [];
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
-    console.log(selectedDaySchedule);
     this.setState({
       selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
@@ -229,15 +229,13 @@ export default class DatePlan extends Component {
   }
 
   render() {
-    console.log(this.state.selNoFormatDay);
-    console.log('新的state');
-    console.log(this.state.schedules);
     const {schedules} = this.props;
+    const showTab = localStorage.getItem('datePlanTabList');
     let scheduleItems;
-    if (this.state.tabTypeState === 'month') {
+    if (showTab) {
       scheduleItems = this.state.selectedDayItems;
     }
-    if (this.state.tabTypeState === 'list') {
+    if (!showTab) {
       scheduleItems = schedules.list || [];
     }
 
@@ -247,8 +245,8 @@ export default class DatePlan extends Component {
         <div className={styles.dateTop + ' datePlan'}>
           <div className={styles.dateTitle + ' topCardBg'}>
             <TabOutside>
-              <li className={this.state.tabTypeState === 'month' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('month')}>月</li>
-              <li className={this.state.tabTypeState === 'list' ? styles.curTab + ' left' : 'left'} onClick={() => this.changeTabType('list')}>列表</li>
+              <li className={!showTab ? styles.curTab + ' left' : 'left'} onClick={this.clickMonthTab.bind(this)}>月</li>
+              <li className={showTab ? styles.curTab + ' left' : 'left'} onClick={this.clickListTab.bind(this)}>列表</li>
             </TabOutside>
             <div>
               <FilterScheduleItem
@@ -258,7 +256,7 @@ export default class DatePlan extends Component {
           </div>
           <div className={styles.datePlanPicker}>
             {
-              this.state.tabTypeState === 'month' ?
+              !showTab ?
                 <div>
                   <span className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
                   <DayPicker
@@ -312,7 +310,7 @@ class ScdItems extends Component {
     }else if (itemTimePeriod.type.value === '值班') {
       itemIcon = <i className={'left ' + styles.duty}>值</i>;
     }else {
-      itemIcon = <i className="left">其</i>;
+      itemIcon = <i className={'left ' + styles.zidingyi}>其</i>;
     }
     return itemIcon;
   }
@@ -331,8 +329,6 @@ class ScdItems extends Component {
 
   render() {
     const scheduleItems = this.props.scheduleItems || [];
-    // console.log('item接收到的数据');
-    // console.log(scheduleItems);
     let schItemIkey = 0;
     return (
       <div>
@@ -381,6 +377,7 @@ class ScdItems extends Component {
   state => ({scheduleTypes: state.schedules.scheduleTypes}),
   {
     loadschedules,
+    showDiaglog,
   }
 )
 class FilterScheduleItem extends Component {
@@ -389,6 +386,7 @@ class FilterScheduleItem extends Component {
     loadschedules: PropTypes.func,
     resetFilterReq: PropTypes.func,
     hideFilterReq: PropTypes.func,
+    showDiaglog: PropTypes.func,
   };
 
   constructor(props) {
@@ -492,8 +490,7 @@ class FilterScheduleItem extends Component {
     const endDate = requires.endDate;
     const startDate = requires.startDate;
     if (endDate !== '不限' && startDate > endDate) {
-      //  TODO 弹窗提示:开始日期不能大于结束日期
-      alert('开始日期不能大于结束日期');
+      this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }
     this.setState({
@@ -523,8 +520,6 @@ class FilterScheduleItem extends Component {
                 <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showFirstDayPicker ? 'block' : 'none'}}>
                   <DayPicker
-                      disabledDays={DateUtils.isPastDay}
-                      enableOutsideDays
                       onDayClick={(event, day) => this.clickFilterFirstDate(day)}
                       localeUtils={LocaleUtils}
                       locale="zh-cn" />
@@ -540,8 +535,6 @@ class FilterScheduleItem extends Component {
                 <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showSecondDayPicker ? 'block' : 'none'}}>
                   <DayPicker
-                      disabledDays={DateUtils.isPastDay}
-                      enableOutsideDays
                       onDayClick={(event, day) => this.changeFilterSecondDate(day)}
                       localeUtils={LocaleUtils}
                       locale="zh-cn" />
@@ -640,7 +633,7 @@ class AddPlan extends Component {
     const templates = this.props.templates.result;
     return (
       <div>
-        <div className={styles.addBigBtn} onClick={this.addPlan.bind(this)}>+</div>
+        <div className={styles.addBigBtn} onClick={this.addPlan.bind(this)}></div>
         <div style = {{display: this.state.showModal ? 'block' : 'none'}}>
           <Modal
               title = {'添加日程'}
