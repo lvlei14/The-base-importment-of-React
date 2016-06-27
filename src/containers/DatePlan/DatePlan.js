@@ -217,10 +217,10 @@ export default class DatePlan extends Component {
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.state.schedules.calendar;
+    const dayItems = this.state.schedules && this.state.schedules.calendar;
     return (
       <div>
-        {date}
+        <span className="dayPickerDate">{date}</span>
         <div className={styles.dayItemOut}>
           {dayItems && dayItems[date] && this.showSingleDayItem(dayItems[date])}
         </div>
@@ -232,11 +232,11 @@ export default class DatePlan extends Component {
     const {schedules} = this.props;
     const showTab = localStorage.getItem('datePlanTabList');
     let scheduleItems;
-    if (showTab) {
+    if (!showTab) {
       scheduleItems = this.state.selectedDayItems;
     }
-    if (!showTab) {
-      scheduleItems = schedules.list || [];
+    if (showTab) {
+      scheduleItems = schedules && schedules.list || [];
     }
 
     return (

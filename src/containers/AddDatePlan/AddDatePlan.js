@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
-
+const DateTimeField = require('react-bootstrap-datetimepicker');
+import './DateTimePicker.scss';
 import { addDatePlan, loadTemplateItem } from '../../redux/modules/addDatePlan';
-
 
 const styles = require('./AddDatePlan.scss');
 @connect(
@@ -142,13 +142,15 @@ export default class AddDatePlan extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>开始时间</label>
                 <div className={styles.scheduleType}>
-                  <input ref="startTimeRef" type="text" />
+                  <section className={styles.dateTimePicker}>
+                    <DateTimeField />
+                  </section>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>结束时间</label>
                 <div className={styles.scheduleType}>
-                  <input ref="endTimeRef" type="text" />
+                  <input ref="endTimeRef" type="date" />
                 </div>
               </li>
               {

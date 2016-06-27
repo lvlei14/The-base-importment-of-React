@@ -313,7 +313,13 @@ textarea{
 /* Default modifiers */
 
 .DayPicker-Day--today {
-  color: $mainColor;
+  .dayPickerDate{
+    color: #fff;
+    background: $mainColor;
+    border-radius: 50%;
+    height: .24rem;
+    line-height: .24rem;
+  }
 }
 
 .DayPicker-Day--disabled {
