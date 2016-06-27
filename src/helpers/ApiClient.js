@@ -22,6 +22,7 @@ export default class ApiClient {
         if (params) {
           request.query(params);
         }
+
         if (data) {
           request.send(data);
         }
