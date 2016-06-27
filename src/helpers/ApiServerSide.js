@@ -27,8 +27,7 @@ export default class ApiClient {
         // 从cookie 中获取
         const _cookies = req.get('cookie');
         if (__SERVER__ && _cookies) {
-          const {__token} = cookie.parse(_cookies);
-          request.set('Authorization', 'Bearer ' + __token);
+          request.set('cookie', _cookies);
         }
 
         if (data) {
