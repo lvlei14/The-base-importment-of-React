@@ -139,7 +139,7 @@ export default class ChangeDutyRecord extends Component {
               ['待处理', '已完成'].map((item) => {
                 const records = item === '待处理' ? unHandleRecords : HandledRecords;
                 return (
-                  <section>
+                  <section key={records}>
                     <header>{item}</header>
                     <ul>
                       {

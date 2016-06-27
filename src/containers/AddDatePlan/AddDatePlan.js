@@ -112,24 +112,6 @@ export default class AddDatePlan extends Component {
     }
   }
 
-  showLocalSelect(templateType) {
-    let templateTypeCon;
-    if (templateType === '其他') {
-      templateTypeCon = (<div className="select">
-                          <select ref="localRef">
-                            <option value="in">院内</option>
-                            <option value="out">院外</option>
-                          </select>
-                          <p className="sanjiao-bt"></p>
-                        </div>);
-    } else {
-      templateTypeCon = (<div>
-                          <input ref="localRef" className={styles.selectNoCur} value="院内" readOnly="true" />
-                        </div>);
-    }
-    return templateTypeCon;
-  }
-
   render() {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
@@ -145,7 +127,13 @@ export default class AddDatePlan extends Component {
                 <label className={ styles.leftPlaceholder}>日程类型</label>
                 <span className={ styles.mainIcon}>*</span>
                 <div className={styles.scheduleType}>
-                  {this.showLocalSelect(templateType)}
+                  <div className="select">
+                    <select ref="localRef">
+                      <option value="in">院内</option>
+                      <option value="out">院外</option>
+                    </select>
+                    <p className="sanjiao-bt"></p>
+                  </div>
                   <div>
                     <input ref="templateTypeRef" className={styles.selectNoCur} value={templateType} readOnly="true" />
                   </div>
