@@ -57,7 +57,7 @@ export default (store) => {
       <Route path="/" component={App} >
         { /* Home (main) route */ }
         <IndexRoute component={Home} onEnter={requireLogin} />
-        <Route path="date-plan" component={DatePlan} />
+        <Route path="date-plan" component={DatePlan} onEnter={requireLogin} />
         <Route path="add-date-plan/:id" component={AddDatePlan} />
         <Route path="date-plan-detail/:id/:type" component={DatePlanDetail} onEnter={requireLogin} />
         <Route path="duty/:pageType" component={Duty} onEnter={requireLogin} />
