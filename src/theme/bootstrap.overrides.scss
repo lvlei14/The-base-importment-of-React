@@ -386,3 +386,18 @@ textarea{
   border: 0px solid #fff;
   width: 40px;
 }
+.dropdown-menu{
+  top: .36rem !important;
+  left: 0 !important;
+}
+.table-condensed{
+  width: 100% !important;
+  text-align: center !important;
+  a{
+    color: $mainColor;
+  }
+  .btn-primary{
+    background: $mainColor;
+    border-color: $mainColor;
+  }
+}
