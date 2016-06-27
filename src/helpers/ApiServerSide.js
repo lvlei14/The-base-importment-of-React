@@ -1,6 +1,5 @@
 import superagent from 'superagent';
 import config from '../config';
-import cookie from 'cookie';
 
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
