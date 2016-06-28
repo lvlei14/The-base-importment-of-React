@@ -70,6 +70,30 @@ textarea{
   width: 100%;
   div{
     width: 100% !important;
+    ul{
+      padding: 0 !important;
+      li{
+        margin: 0;
+        span{
+          padding: 0 !important;
+          span{
+            font-size: 20px !important;
+          }
+        }
+      }
+      li:first-child{
+        margin: 0;
+        line-height: .2rem;
+        table{
+          width: 96%;
+          margin: 0 auto;
+          th{
+            font-weight: normal !important;
+            text-align: center !important;
+          }
+        }
+      }
+    }
     input{
       border-radius: 2px !important;
       border: 1px solid $borderColor !important;
@@ -77,6 +101,7 @@ textarea{
       padding: 0 .06rem !important;
       height: .36rem;
       line-height: .36rem;
+      color: $text-color;
     }
   }
 }
