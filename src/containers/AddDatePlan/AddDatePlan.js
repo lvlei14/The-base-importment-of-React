@@ -48,6 +48,17 @@ export default class AddDatePlan extends Component {
       }
     }
   }
+
+  getNowFormatDate(day) {
+    const date = new Date(day);
+    const seperator1 = '-';
+    const seperator2 = ':';
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    const currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+    return currentdate;
+  }
   clickAddBtn() {
     const template = this.props.template;
     // const templateType = template[0].name;
@@ -76,7 +87,7 @@ export default class AddDatePlan extends Component {
     result.type = type;
     result.is_inner = isInner;
     result.template = template && template[0]._id;
-    result.start_time = this.getNowFormatDate(this.state.startTime);
+    // result.start_time = this.getNowFormatDate(this.state.startTime);
     result.end_time = this.getNowFormatDate(this.state.endTime);
     const repeat = {
       label: '重复',
@@ -90,17 +101,6 @@ export default class AddDatePlan extends Component {
     result.remind = remind;
     console.log(result);
     this.props.addDatePlan(result);
-  }
-
-  getNowFormatDate(day) {
-    const date = new Date(day);
-    const seperator1 = '-';
-    const seperator2 = ':';
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    const currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-    return currentdate;
   }
 
   handleChange = (newDate) => {

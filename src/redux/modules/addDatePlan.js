@@ -16,6 +16,8 @@ const initState = {
 };
 
 export function addDatePlanReducer(state = initState, action = {}) {
+  state.successMsg = null;
+  state.errorMsg = null;
   switch (action.type) {
     case LOAD_TEMPLATE_ITEM:
       return {
