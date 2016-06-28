@@ -71,7 +71,7 @@ export default (store) => {
         {/* ?uid=patientID */}
         <Route path="createSurgery" component={AddSurgery} onEnter={requireLogin} />
         <Route path="modify-surgery" component={ModifySurgery} onEnter={requireLogin} />
-        <Route path="surgery" component={SurgeryInfor} onEnter={requireLogin} />
+        <Route path="surgery/:id" component={SurgeryInfor} onEnter={requireLogin} />
         <Route path="modify-date-plan" component={ModifyDatePlan} onEnter={requireLogin} />
         <Route path="my-profile" component={UserProfile} onEnter={requireLogin} />
         <Route path="group-list" component={GroupList} />

@@ -62,6 +62,11 @@ export default class PatientInfo extends Component {
     this.props.deletePatientById(id);
   }
 
+  addSurgery() {
+    const {id} = this.props.routeParams;
+    this.props.push(`/createSurgery?uid=${id}`);
+  }
+
   render() {
     const patient = this.props.patient;
     return (
