@@ -5,11 +5,11 @@ import { showDiaglog } from '../../redux/modules/diaglog';
 import DateTimeField from 'react-bootstrap-datetimepicker';
 // import moment from 'moment';
 import './DateTimePicker.scss';
-import { addDatePlan, loadTemplateItem } from '../../redux/modules/addDatePlan';
+import { addDatePlan, loadTemplateItem } from '../../redux/modules/datePlanInfo';
 
 const styles = require('./AddDatePlan.scss');
 @connect(
-  state => ({...state.addDatePlan}), {
+  state => ({...state.datePlanInfo}), {
     loadTemplateItem,
     addDatePlan,
     showDiaglog,
@@ -23,8 +23,8 @@ export default class AddDatePlan extends Component {
     showDiaglog: PropTypes.func,
     addDatePlan: PropTypes.func,
     addDatePlanSuccess: PropTypes.bool,
-    success_msg: PropTypes.string,
-    error_msg: PropTypes.string,
+    successMsg: PropTypes.string,
+    errorMsg: PropTypes.string,
   };
 
   constructor(props) {
@@ -43,8 +43,13 @@ export default class AddDatePlan extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.addDatePlanSuccess && nextProps.addDatePlanSuccess) {
-      if (!this.props.success_msg && nextProps.success_msg) {
-        this.props.showDiaglog(nextProps.success_msg, '/date-plan');
+      if (!this.props.successMsg && nextProps.successMsg) {
+        this.props.showDiaglog(nextProps.successMsg, '/date-plan');
+      }
+    }
+    if (!this.props.addDatePlanSuccess && !nextProps.addDatePlanSuccess) {
+      if (!this.props.errorMsg && nextProps.errorMsg) {
+        this.props.showDiaglog(nextProps.errorMsg);
       }
     }
   }
@@ -86,20 +91,19 @@ export default class AddDatePlan extends Component {
     result.content = temItem;
     result.type = type;
     result.is_inner = isInner;
-    result.template = template && template[0]._id;
-    // result.start_time = this.getNowFormatDate(this.state.startTime);
+    result.start_time = this.getNowFormatDate(this.state.startTime);
     result.end_time = this.getNowFormatDate(this.state.endTime);
     const repeat = {
       label: '重复',
-      value: this.refs.repeatRef
+      value: this.refs.repeatRef && this.refs.repeatRef.value
     };
     result.repeat = repeat;
     const remind = {
       label: '提醒',
-      value: this.refs.remindRef
+      value: this.refs.remindRef && this.refs.remindRef.value
     };
     result.remind = remind;
-    console.log(result);
+    result.template = template && template[0]._id;
     this.props.addDatePlan(result);
   }
 
@@ -158,40 +162,6 @@ export default class AddDatePlan extends Component {
     }
   }
 
-  clickAddBtn() {
-    const template = this.props.template;
-    // const templateType = template[0].name;
-    const templateCon = template && template[0] && template[0].content;
-    const temItem = [];
-    const result = {};
-    for (const iKey in templateCon) {
-      if (!templateCon.hasOwnProperty(iKey)) continue;
-      const objItem = {
-        label: templateCon[iKey].label,
-        value: this.refs[templateCon[iKey].key].value
-      };
-      const obj = {};
-      obj[templateCon[iKey].key] = objItem;
-      temItem.push(obj);
-    }
-    const type = {
-      label: '日程类型',
-      value: this.refs.templateTypeRef.value
-    };
-    const isInner = {
-      label: '是否院内',
-      value: this.refs.localRef.value === '院内' ? true : false
-    };
-    result.content = temItem;
-    result.type = type;
-    result.is_inner = isInner;
-    result.template = template && template[0] && template[0]._id;
-    result.start_time = this.getNowFormatDate(this.state.startTime);
-    result.end_time = this.getNowFormatDate(this.state.endTime);
-    console.log(result);
-    this.props.addDatePlan(result);
-  }
-
   render() {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
@@ -220,7 +190,7 @@ export default class AddDatePlan extends Component {
                   </div>
                 </div>
               </li>
-              <li>
+              <li className={styles.dateTimeFLi}>
                 <label className={ styles.leftPlaceholder}>开始时间</label>
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
@@ -230,7 +200,7 @@ export default class AddDatePlan extends Component {
                   </section>
                 </div>
               </li>
-              <li>
+              <li className={styles.dateTimeFLi}>
                 <label className={ styles.leftPlaceholder}>结束时间</label>
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
@@ -240,7 +210,7 @@ export default class AddDatePlan extends Component {
                   </section>
                 </div>
               </li>
-              <li>
+              <li style={{display: templateType === '手术' ? 'none' : 'block'}}>
                 <label className={ styles.leftPlaceholder}>重复</label>
                 <div className="select">
                   <select ref="repeatRef">

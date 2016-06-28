@@ -85,11 +85,11 @@ label{
 .mainBtn{
   background-color: $mainColor;
   color: #fff;
-  font-size: .16rem;
-  height: .4rem;
-  line-height: .4rem;
+  font-size: $jzjzfontSize;
+  height: .44rem;
+  line-height: .44rem;
   border-radius: 30px;
-  margin:.2rem 0 0;
+  margin:.12rem 0 0;
   border: 0px solid $mainColor;
   width: 100%;
   padding:0;
@@ -101,11 +101,11 @@ label{
 .delBtn{
   background-color: $delBtnColor;
   color: #fff;
-  font-size: .16rem;
-  height: .4rem;
-  line-height: .4rem;
+  font-size: $jzjzfontSize;
+  height: .44rem;
+  line-height: .44rem;
   border-radius: 30px;
-  margin:.2rem 0 0;
+  margin:.12rem 0 0;
   border: 0px solid $delBtnColor;
   width: 100%;
   padding:0;

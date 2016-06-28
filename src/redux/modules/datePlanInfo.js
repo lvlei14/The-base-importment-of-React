@@ -6,6 +6,10 @@ const ADD_DATEPLAN = 'ADD_DATEPLAN';
 const ADD_DATEPLAN_SUCCESS = 'ADD_DATEPLAN_SUCCESS';
 const ADD_DATEPLAN_FAIL = 'ADD_DATEPLAN_FAIL';
 
+const DETELE_DATEPLAN_BY_SCHEDULEID = 'DETELE_DATEPLAN_BY_SCHEDULEID';
+const DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS = 'DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS';
+const DETELE_DATEPLAN_BY_SCHEDULEID_FAIL = 'DETELE_DATEPLAN_BY_SCHEDULEID_FAIL';
+
 const initState = {
   error: null,
   tip: null,
@@ -13,9 +17,10 @@ const initState = {
   addDatePlanSuccess: false,
   successMsg: null,
   errorMsg: null,
+  deleteScheduleSuccess: false,
 };
 
-export function addDatePlanReducer(state = initState, action = {}) {
+export function datePlanInfoReducer(state = initState, action = {}) {
   state.successMsg = null;
   state.errorMsg = null;
   switch (action.type) {
@@ -51,24 +56,50 @@ export function addDatePlanReducer(state = initState, action = {}) {
       };
 
     case ADD_DATEPLAN_SUCCESS:
-      console.log('--添加返回结果');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
         addDatePlanSuccess: true,
-        success_msg: action.result.success_msg,
+        successMsg: action.result && action.result.success_msg,
         tip: action.tip,
       };
 
     case ADD_DATEPLAN_FAIL:
-      console.log('访问添加接口失败，返回action');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
         addDatePlanSuccess: false,
-        error_msg: action.result.error_msg,
+        errorMsg: action.error && action.error.error_msg,
+        tip: action.tip
+      };
+
+
+    case DETELE_DATEPLAN_BY_SCHEDULEID:
+      return {
+        ...state,
+        loading: true,
+        deleteScheduleSuccess: false
+      };
+
+    case DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS:
+      console.log('del success action');
+      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        deleteScheduleSuccess: true,
+        successMsg: action.result && action.result.success_msg,
+        tip: action.tip,
+      };
+
+    case DETELE_DATEPLAN_BY_SCHEDULEID_FAIL:
+      console.log('del fail action');
+      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        deleteScheduleSuccess: false,
+        errorMsg: action.error && action.error.error_msg,
         tip: action.tip
       };
 
@@ -101,5 +132,18 @@ export function addDatePlan(tempObject) {
     promise: (client) => client.post('/schedule/', {
       data: tempObject
     })
+  };
+}
+
+/**
+ * action: delete dateplan schedule by schedule id
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function deleteScheduleById(id) {
+  console.log('访问删除接口');
+  return {
+    types: [DETELE_DATEPLAN_BY_SCHEDULEID, DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS, DETELE_DATEPLAN_BY_SCHEDULEID_FAIL],
+    promise: (client) => client.del('schedule/' + id)
   };
 }

@@ -3,9 +3,9 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 
 import { loadtypes } from '../../redux/modules/datePlan';
-import { addDatePlan } from '../../redux/modules/addDatePlan';
-import { loadMettingInformation } from '../../redux/modules/addDatePlan';
-import { loadOperaInformation } from '../../redux/modules/addDatePlan';
+import { addDatePlan } from '../../redux/modules/datePlanInfo';
+import { loadMettingInformation } from '../../redux/modules/datePlanInfo';
+import { loadOperaInformation } from '../../redux/modules/datePlanInfo';
 
 const styles = require('./ModifyDatePlan.scss');
 @connect(
