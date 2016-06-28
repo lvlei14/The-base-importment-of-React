@@ -65,7 +65,9 @@ export default class DatePlanDetail extends Component {
   }
 
   goModifyPatient() {
-    this.props.pushState('/modify-data-plan');
+    const {id} = this.props.routeParams;
+    const {template} = this.props.schedules && this.props.schedules[0] || {};
+    this.props.pushState('/modify-date-plan/' + id + '/' + template);
   }
 
   clickShowModal() {
@@ -89,7 +91,6 @@ export default class DatePlanDetail extends Component {
   render() {
     const datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
     const {type} = this.props.routeParams;
-    console.log(datePlanDetail);
     return (
       <div className={styles.datePlanDetail}>
         <HeadNaviBar>日程详情</HeadNaviBar>

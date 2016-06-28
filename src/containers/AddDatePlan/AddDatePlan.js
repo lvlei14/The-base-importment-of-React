@@ -66,7 +66,6 @@ export default class AddDatePlan extends Component {
   }
   clickAddBtn() {
     const template = this.props.template;
-    // const templateType = template[0].name;
     const templateCon = template && template[0] && template[0].content;
     const temItem = [];
     const result = {};
@@ -86,7 +85,7 @@ export default class AddDatePlan extends Component {
     };
     const isInner = {
       label: '是否院内',
-      value: this.refs.localRef.value === '院内' ? true : false
+      value: this.refs.localRef.value === 'in' ? true : false
     };
     result.content = temItem;
     result.type = type;
@@ -104,6 +103,11 @@ export default class AddDatePlan extends Component {
     };
     result.remind = remind;
     result.template = template && template[0]._id;
+    console.log(result);
+    if (result.start_time === result.end_time) {
+      this.props.showDiaglog('开始时间与结束时间不能相同');
+      return;
+    }
     this.props.addDatePlan(result);
   }
 
@@ -123,13 +127,6 @@ export default class AddDatePlan extends Component {
 
   showFormType(formItem) {
     if (formItem.type === 'input') {
-      if (formItem.label.indexOf('时间') !== -1) {
-        return (
-          <div>
-            <input type="date" ref={formItem.key} />
-          </div>
-        );
-      }
       return (
         <div>
           <input type="text" ref={formItem.key} />
@@ -166,7 +163,6 @@ export default class AddDatePlan extends Component {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
     const templateType = template && template[0] && template[0].name;
-    console.log(templateType);
     const {inputFormat} = this.state;
     return (
       <div>
@@ -190,7 +186,7 @@ export default class AddDatePlan extends Component {
                   </div>
                 </div>
               </li>
-              <li className={styles.dateTimeFLi}>
+              <li className={styles.dateTimeFLiFirst}>
                 <label className={ styles.leftPlaceholder}>开始时间</label>
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
@@ -200,7 +196,7 @@ export default class AddDatePlan extends Component {
                   </section>
                 </div>
               </li>
-              <li className={styles.dateTimeFLi}>
+              <li className={styles.dateTimeFLiEnd}>
                 <label className={ styles.leftPlaceholder}>结束时间</label>
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
@@ -210,7 +206,7 @@ export default class AddDatePlan extends Component {
                   </section>
                 </div>
               </li>
-              <li style={{display: templateType === '手术' ? 'none' : 'block'}}>
+              <li className={styles.liMarginTopZero} style={{display: templateType === '手术' ? 'none' : 'block'}}>
                 <label className={ styles.leftPlaceholder}>重复</label>
                 <div className="select">
                   <select ref="repeatRef">
@@ -229,7 +225,7 @@ export default class AddDatePlan extends Component {
                   <p className="sanjiao-bt"></p>
                 </div>
               </li>
-              <li>
+              <li className={templateType === '手术' ? styles.liMarginTopZero : ''}>
                 <label className={ styles.leftPlaceholder}>提醒</label>
                 <div className="select">
                   <select ref="remindRef">
