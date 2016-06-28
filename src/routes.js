@@ -65,7 +65,7 @@ export default (store) => {
         <Route path="opera" component={Opera} onEnter={requireLogin} />
         <Route path="opera-patient" component={OperaPatInfor} onEnter={requireLogin} />
         <Route path="add-patient" component={AddPatient} onEnter={requireLogin} />
-        <Route path="modify-patient" component={ModifyPatient} onEnter={requireLogin} />
+        <Route path="modify-patient" component={ModifyPatient} onEnter={requireLogin}/>
         <Route path="patient/:id" component={PatientInfo} onEnter={requireLogin} />
         <Route path="patient-have-bed-list" component={PatientsCanSurgery} onEnter={requireLogin} />
         {/* ?uid=patientID */}
