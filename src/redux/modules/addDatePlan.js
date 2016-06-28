@@ -9,8 +9,10 @@ const ADD_DATEPLAN_FAIL = 'ADD_DATEPLAN_FAIL';
 const initState = {
   error: null,
   tip: null,
-  msg: null,
   template: [],
+  addDatePlanSuccess: false,
+  successMsg: null,
+  errorMsg: null,
 };
 
 export function addDatePlanReducer(state = initState, action = {}) {
@@ -42,7 +44,8 @@ export function addDatePlanReducer(state = initState, action = {}) {
     case ADD_DATEPLAN:
       return {
         ...state,
-        loading: true
+        loading: true,
+        addDatePlanSuccess: false
       };
 
     case ADD_DATEPLAN_SUCCESS:
@@ -51,14 +54,19 @@ export function addDatePlanReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: false,
-        msg: action.result.success_msg,
+        addDatePlanSuccess: true,
+        success_msg: action.result.success_msg,
         tip: action.tip,
       };
 
     case ADD_DATEPLAN_FAIL:
+      console.log('访问添加接口失败，返回action');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
+        addDatePlanSuccess: false,
+        error_msg: action.result.error_msg,
         tip: action.tip
       };
 
