@@ -8,6 +8,10 @@ const LOGOUT = 'LOGOUT';
 const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'LOGOUT_FAIL';
 
+const SEND_WX_CODE = 'SEND_WX_CODE';
+const SEND_WX_CODE_SUCCESS = 'SEND_WX_CODE_SUCCESS';
+const SEND_WX_CODE_FAIL = 'SEND_WX_CODE_FAIL';
+
 const LOAD = 'LOAD';
 const LOAD_SUCCESS = 'LOAD_SUCCESS';
 const LOAD_FAIL = 'LOAD_FAIL';
@@ -229,5 +233,14 @@ export function getPassword(id) {
   return {
     types: [LOAD_PW, LOAD_PW_SUCCESS, LOAD_PW_FAIL],
     promise: (client) => client.get(`/user/${id}/password`)
+  };
+}
+
+export function sendWxCode(code) {
+  return {
+    types: [SEND_WX_CODE, SEND_WX_CODE_SUCCESS, SEND_WX_CODE_FAIL],
+    promise: (client) => client.put(`/user/wxopenid`, {
+      data: {code}
+    })
   };
 }
