@@ -21,7 +21,9 @@ import {
     DatePlanDetail,
     ModifyDatePlan,
     UserProfile,
-    GroupList
+    GroupList,
+    ForgetPassword,
+    ResetPassword
   } from 'containers';
 
 export default (store) => {
@@ -68,6 +70,8 @@ export default (store) => {
         <Route path="modify-patient" component={ModifyPatient} onEnter={requireLogin} />
         <Route path="patient/:id" component={PatientInfo} onEnter={requireLogin} />
         <Route path="patient-have-bed-list" component={PatientsCanSurgery} onEnter={requireLogin} />
+        <Route path="forget-password" component={ForgetPassword} />
+        <Route path="resetPassword" component={ResetPassword} />
         {/* ?uid=patientID */}
         <Route path="createSurgery" component={AddSurgery} onEnter={requireLogin} />
         <Route path="modify-surgery" component={ModifySurgery} onEnter={requireLogin} />

@@ -19,8 +19,8 @@ import createHistory from 'react-router/lib/createMemoryHistory';
 import {Provider} from 'react-redux';
 import getRoutes from './routes';
 
-// const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
-const targetUrl = 'http://172.18.132.25:7293'; // 本地地址
+ const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
+//const targetUrl = 'http://172.18.96.205:7293'; // 本地地址
 console.log('代理API地址: ' + targetUrl);
 
 const pretty = new PrettyError();
