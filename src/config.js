@@ -10,6 +10,8 @@ const environment = {
 }[process.env.NODE_ENV || 'development'];
 
 module.exports = Object.assign({
+  wechatAppId: 'wx7f8b08c1e9433713',
+  wxRedirectUrl: 'yichenwechat.uthealth.com.cn',
   host: process.env.HOST || 'localhost',
   port: process.env.PORT,
   apiHost: process.env.APIHOST || 'localhost',
