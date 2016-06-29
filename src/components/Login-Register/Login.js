@@ -8,6 +8,12 @@ const styles = require('./Login-Register.scss');
 const usernameBtn = require('../../images/login-register/login_user@3x.png');
 const passwordBtn = require('../../images/login-register/login_key@3x.png');
 
+import getWxOauthUrl from '../../utils/wxOauthUrl';
+const wxOauthUrl = getWxOauthUrl();
+
+console.log(wxOauthUrl);
+
+
 @connect(
   state => ({
     text: state.diaglog.text || '',
@@ -44,7 +50,8 @@ export default class Login extends Component {
       });
     }
     if (!this.props.user && nextProps.user) {
-      this.props.showDiaglog(nextProps.msg, '/');
+      this.props.showDiaglog(nextProps.msg);
+      window.location = wxOauthUrl;
     }
   }
 

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { getPassword } from '../../redux/modules/auth';
+import { sendWxCode } from '../../redux/modules/auth';
 
 import { push } from 'react-router-redux';
 
@@ -11,12 +11,13 @@ import { loadschedules } from '../../redux/modules/datePlan';
 
 @connect(
   state => ({user: state.auth.user, ...state.schedules}),
-  { getPassword, loadschedules }
+  { sendWxCode, loadschedules }
 )
 export default class Home extends Component {
   static propTypes = {
-    getPassword: PropTypes.func,
+    sendWxCode: PropTypes.func,
     user: PropTypes.object,
+    location: PropTypes.object,
     loadschedules: PropTypes.func,
     schedules: PropTypes.object,
   };
@@ -33,6 +34,10 @@ export default class Home extends Component {
     const requires = {
       date: date
     };
+    const {code} = this.props.location.query;
+    if (code) {
+      this.props.sendWxCode(code);
+    }
     this.props.loadschedules(JSON.stringify(requires));
   }
 
