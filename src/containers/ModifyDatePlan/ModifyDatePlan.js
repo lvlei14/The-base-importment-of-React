@@ -1,17 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
+import { showDiaglog } from '../../redux/modules/diaglog';
 import DateTimeField from 'react-bootstrap-datetimepicker';
 import '../AddDatePlan/DateTimePicker.scss';
 
-import { loadTemplateItem } from '../../redux/modules/datePlanInfo';
+import { loadTemplateItem, modifyScheduleById } from '../../redux/modules/datePlanInfo';
 import { loadschedules } from '../../redux/modules/datePlan';
 
 const styles = require('../AddDatePlan/AddDatePlan.scss');
 @connect(
   state => ({...state.schedules, ...state.datePlanInfo}), {
     loadschedules,
-    loadTemplateItem
+    loadTemplateItem,
+    modifyScheduleById,
+    showDiaglog
   }
 )
 export default class ModifyDatePlan extends Component {
@@ -24,15 +27,16 @@ export default class ModifyDatePlan extends Component {
     errorMsg: PropTypes.string,
     routeParams: PropTypes.object,
     template: PropTypes.array,
-
+    modifyScheduleById: PropTypes.bool,
+    showDiaglog: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       inputFormat: 'YYYY-MM-DD h:mm A',
-      startTime: this.props.schedules && this.props.schedules[0] && this.props.schedules[0].start_time,
-      endTime: this.props.schedules && this.props.schedules[0] && this.props.schedules[0].end_time,
+      startTime: new Date(this.props.schedules && this.props.schedules[0] && this.props.schedules[0].start_time).getTime(),
+      endTime: new Date(this.props.schedules && this.props.schedules[0] && this.props.schedules[0].end_time).getTime(),
     };
   }
 
@@ -45,18 +49,18 @@ export default class ModifyDatePlan extends Component {
     this.props.loadTemplateItem(tempId);
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!this.props.modifyScheduleSuccess && nextProps.modifyScheduleSuccess) {
-  //     if (!this.props.successMsg && nextProps.successMsg) {
-  //       this.props.showDiaglog(nextProps.successMsg, '/date-plan');
-  //     }
-  //   }
-  //   if (!this.props.modifyScheduleSuccess && !nextProps.modifyScheduleSuccess) {
-  //     if (!this.props.errorMsg && nextProps.errorMsg) {
-  //       this.props.showDiaglog(nextProps.errorMsg);
-  //     }
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.modifyScheduleSuccess && nextProps.modifyScheduleSuccess) {
+      if (!this.props.successMsg && nextProps.successMsg) {
+        this.props.showDiaglog(nextProps.successMsg, '/date-plan');
+      }
+    }
+    if (!this.props.modifyScheduleSuccess && !nextProps.modifyScheduleSuccess) {
+      if (!this.props.errorMsg && nextProps.errorMsg) {
+        this.props.showDiaglog(nextProps.errorMsg);
+      }
+    }
+  }
 
   getNowFormatDate(day) {
     const date = new Date(day);
@@ -73,33 +77,78 @@ export default class ModifyDatePlan extends Component {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
     const datePlanDetail = this.props.schedules && this.props.schedules[0] && this.props.schedules[0].content || {};
-    // const newData = [];
-    console.log(templateCon);
-    console.log(datePlanDetail);
     for (const scheduKey in datePlanDetail) {
-      for (const temPlateKey in templateCon) {
-        if (datePlanDetail[scheduKey].label === templateCon[temPlateKey].label) {
-          console.log('3030');
-          templateCon[temPlateKey].value = datePlanDetail[scheduKey].value;
+      if (scheduKey) {
+        for (const temPlateKey in templateCon) {
+          if (datePlanDetail[scheduKey].label === templateCon[temPlateKey].label) {
+            templateCon[temPlateKey].value = datePlanDetail[scheduKey].value;
+          }
         }
       }
     }
-    console.log('---------------');
-    console.log(templateCon);
     return templateCon;
   }
   clickAddBtn() {
+    const template = this.props.template;
+    const templateCon = template && template[0] && template[0].content;
+    const temItem = [];
+    const result = {};
+    for (const iKey in templateCon) {
+      if (!templateCon.hasOwnProperty(iKey)) continue;
+      const objItem = {
+        label: templateCon[iKey].label,
+        value: this.refs[templateCon[iKey].key].value
+      };
+      const obj = {};
+      obj[templateCon[iKey].key] = objItem;
+      temItem.push(obj);
+    }
+    const type = {
+      label: '日程类型',
+      value: this.refs.templateTypeRef.value
+    };
+    const isInner = {
+      label: '是否院内',
+      value: this.refs.localRef.value === 'in' ? true : false
+    };
+    result.content = temItem;
+    result.type = type;
+    result.is_inner = isInner;
+    result.start_time = this.getNowFormatDate(this.state.startTime);
+    result.end_time = this.getNowFormatDate(this.state.endTime);
+    const repeat = {
+      label: '重复',
+      value: this.refs.repeatRef && this.refs.repeatRef.value
+    };
+    result.repeat = repeat;
+    const remind = {
+      label: '提醒',
+      value: this.refs.remindRef && this.refs.remindRef.value
+    };
+    result.remind = remind;
+    result.template = template && template[0]._id;
+    console.log(result);
+    if (result.start_time === result.end_time) {
+      this.props.showDiaglog('开始时间与结束时间不能相同');
+      return;
+    }
+    if (result.start_time > result.end_time) {
+      this.props.showDiaglog('开始时间不能大于结束时间');
+      return;
+    }
+    const scheduleId = this.props.schedules && this.props.schedules[0] && this.props.schedules[0]._id;
+    this.props.modifyScheduleById(scheduleId, result);
   }
 
   handleChange = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate));
+    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       startTime: newDateNew
     });
   }
 
   handleChangeEndTime = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate));
+    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       endTime: newDateNew
     });
@@ -109,14 +158,14 @@ export default class ModifyDatePlan extends Component {
     if (formItem.type === 'input') {
       return (
         <div>
-          <input type="text" ref={formItem.key} value={formItem.value} />
+          <input type="text" ref={formItem.key} defaultValue={formItem.value} />
         </div>
       );
     }
     if (formItem.type === 'radio') {
       return (
         <div className="select">
-          <select ref={formItem.key} value={formItem.value}>
+          <select ref={formItem.key} defaultValue={formItem.value}>
               <option value="">请选择</option>
               {
                 formItem && formItem.options && formItem.options.map((option) => {
@@ -133,7 +182,7 @@ export default class ModifyDatePlan extends Component {
     if (formItem.type === 'textarea') {
       return (
         <div>
-          <textarea ref={formItem.key} value={formItem.value}></textarea>
+          <textarea ref={formItem.key} defaultValue={formItem.value}></textarea>
         </div>
       );
     }
@@ -141,11 +190,10 @@ export default class ModifyDatePlan extends Component {
 
   render() {
     const template = this.props.template;
-    // const templateCon = template && template[0] && template[0].content;
+    const templateType = template && template[0] && template[0].name;
     const datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
-    const {inputFormat} = this.state;
+    const {inputFormat, startTime, endTime} = this.state;
     const newData = this.mergeScheduleValueToTemDate();
-    // this.refs.localRef && this.refs.localRef.value = datePlanDetail && datePlanDetail.is_inner && datePlanDetail.is_inner.value ? 'in' : 'out';
     return (
       <div>
         <HeadNaviBar>修改日程</HeadNaviBar>
@@ -157,7 +205,7 @@ export default class ModifyDatePlan extends Component {
                 <span className={ styles.mainIcon}>*</span>
                 <div className={styles.scheduleType}>
                   <div className="select">
-                    <select ref="localRef" value="out">
+                    <select ref="localRef" defaultValue={datePlanDetail && datePlanDetail.is_inner && datePlanDetail.is_inner.value ? 'in' : 'out'}>
                       <option value="in">院内</option>
                       <option value="out">院外</option>
                     </select>
@@ -166,7 +214,7 @@ export default class ModifyDatePlan extends Component {
                   <div>
                     <input ref="templateTypeRef"
                       className={styles.selectNoCur}
-                      value={datePlanDetail.type && datePlanDetail.type.value}
+                      defaultValue={datePlanDetail.type && datePlanDetail.type.value}
                       readOnly="true" />
                   </div>
                 </div>
@@ -176,6 +224,7 @@ export default class ModifyDatePlan extends Component {
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
                     <DateTimeField
+                      dateTime={startTime}
                       inputFormat={inputFormat}
                       onChange={this.handleChange} />
                   </section>
@@ -186,15 +235,16 @@ export default class ModifyDatePlan extends Component {
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
                     <DateTimeField
+                      dateTime={endTime}
                       inputFormat={inputFormat}
                       onChange={this.handleChangeEndTime} />
                   </section>
                 </div>
               </li>
-              <li className={styles.liMarginTopZero}>
+              <li className={styles.liMarginTopZero} style={{display: templateType === '手术' ? 'none' : 'block'}}>
                 <label className={ styles.leftPlaceholder}>重复</label>
                 <div className="select">
-                  <select ref="repeatRef" value={datePlanDetail.repeat && datePlanDetail.repeat.value}>
+                  <select ref="repeatRef" defaultValue={datePlanDetail.repeat && datePlanDetail.repeat.value}>
                       <option value="">请选择</option>
                       <option value="星期一">星期一</option>
                       <option value="星期二">星期二</option>
@@ -210,10 +260,10 @@ export default class ModifyDatePlan extends Component {
                   <p className="sanjiao-bt"></p>
                 </div>
               </li>
-              <li>
+              <li className={templateType === '手术' ? styles.liMarginTopZero : ''}>
                 <label className={ styles.leftPlaceholder}>提醒</label>
                 <div className="select">
-                  <select ref="remindRef" value={datePlanDetail.remind && datePlanDetail.remind.value}>
+                  <select ref="remindRef" defaultValue={datePlanDetail.remind && datePlanDetail.remind.value}>
                       <option value="">请选择</option>
                       <option value="5分钟">5分钟</option>
                       <option value="10分钟">10分钟</option>

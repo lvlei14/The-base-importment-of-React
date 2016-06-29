@@ -57,6 +57,7 @@ export default class DatePlan extends Component {
     };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
+    this.clickHandleDay(new Date());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -258,7 +259,7 @@ export default class DatePlan extends Component {
             {
               !showTab ?
                 <div>
-                  <span className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
+                  <span style={{display: 'none'}} className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
                   <DayPicker
                     ref="daypicker"
                     initialMonth={this.state.selNoFormatDay}

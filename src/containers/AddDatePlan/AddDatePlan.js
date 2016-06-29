@@ -108,18 +108,22 @@ export default class AddDatePlan extends Component {
       this.props.showDiaglog('开始时间与结束时间不能相同');
       return;
     }
+    if (result.start_time > result.end_time) {
+      this.props.showDiaglog('开始时间不能大于结束时间');
+      return;
+    }
     this.props.addDatePlan(result);
   }
 
   handleChange = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate));
+    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       startTime: newDateNew
     });
   }
 
   handleChangeEndTime = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate));
+    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       endTime: newDateNew
     });

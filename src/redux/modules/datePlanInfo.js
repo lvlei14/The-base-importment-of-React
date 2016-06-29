@@ -6,6 +6,10 @@ const ADD_DATEPLAN = 'ADD_DATEPLAN';
 const ADD_DATEPLAN_SUCCESS = 'ADD_DATEPLAN_SUCCESS';
 const ADD_DATEPLAN_FAIL = 'ADD_DATEPLAN_FAIL';
 
+const MODIFY_DATEPLAN_BY_SCHEDULEID = 'MODIFY_DATEPLAN_BY_SCHEDULEID';
+const MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS = 'MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS';
+const MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL = 'MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL';
+
 const DETELE_DATEPLAN_BY_SCHEDULEID = 'DETELE_DATEPLAN_BY_SCHEDULEID';
 const DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS = 'DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS';
 const DETELE_DATEPLAN_BY_SCHEDULEID_FAIL = 'DETELE_DATEPLAN_BY_SCHEDULEID_FAIL';
@@ -18,6 +22,7 @@ const initState = {
   successMsg: null,
   errorMsg: null,
   deleteScheduleSuccess: false,
+  modifyScheduleSuccess: false,
 };
 
 export function datePlanInfoReducer(state = initState, action = {}) {
@@ -69,6 +74,36 @@ export function datePlanInfoReducer(state = initState, action = {}) {
         ...state,
         loading: false,
         addDatePlanSuccess: false,
+        errorMsg: action.error && action.error.error_msg,
+        tip: action.tip
+      };
+
+
+    case MODIFY_DATEPLAN_BY_SCHEDULEID:
+      return {
+        ...state,
+        loading: true,
+        modifyScheduleSuccess: false
+      };
+
+    case MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS:
+      console.log('modify success action');
+      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        modifyScheduleSuccess: true,
+        successMsg: action.result && action.result.success_msg,
+        tip: action.tip,
+      };
+
+    case MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL:
+      console.log('modify fail action');
+      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        modifyScheduleSuccess: false,
         errorMsg: action.error && action.error.error_msg,
         tip: action.tip
       };
@@ -131,6 +166,22 @@ export function addDatePlan(tempObject) {
     types: [ADD_DATEPLAN, ADD_DATEPLAN_SUCCESS, ADD_DATEPLAN_FAIL],
     promise: (client) => client.post('/schedule/', {
       data: tempObject
+    })
+  };
+}
+
+
+/**
+ * action: modify datePlan by schedule id
+ * @param text String
+ * @returns {{types: *[], promise: promise}}
+ */
+export function modifyScheduleById(id, scheduleObject) {
+  console.log('active modify');
+  return {
+    types: [MODIFY_DATEPLAN_BY_SCHEDULEID, MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS, MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL],
+    promise: (client) => client.put('/schedule/' + id, {
+      data: scheduleObject
     })
   };
 }

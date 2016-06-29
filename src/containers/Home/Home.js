@@ -50,7 +50,6 @@ export default class Home extends Component {
     const zhibanPng = require('../../images/homeZhiban.png');
     const shoushuPng = require('../../images/homeShoushu.png');
     const nowDate = this.getNowFormatDate();
-    console.log(this.props.schedules);
     const schedules = this.props.schedules && this.props.schedules.list || [];
     const scheduleItems = schedules && schedules.filter((item) => item.date === nowDate);
     return (
@@ -124,7 +123,7 @@ class ScdItems extends Component {
     }else if (itemTimePeriod.type.value === '值班') {
       itemIcon = <i className={'left ' + styles.duty}>值</i>;
     }else {
-      itemIcon = <i className="left">其</i>;
+      itemIcon = <i className={'left ' + styles.zidingyi}>其</i>;
     }
     return itemIcon;
   }
