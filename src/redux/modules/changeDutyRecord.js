@@ -72,11 +72,16 @@ const initState = {
   loading: false,
   tip: null,
   cDutyRecords: [],
-  cDutySuccess: false,
+  cDutyAcceptSuccess: false,
+  cDutyDenySuccess: false,
+  successMsg: null,
+  errorMsg: null,
 };
 
 
 export function changeDutyRecordsReducer(state = initState, action = {}) {
+  state.successMsg = null;
+  state.errorMsg = null;
   switch (action.type) {
 
     case LOAD_CHANGE_DUTY_RECORDS:
@@ -106,16 +111,16 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
     case CHANGE_DUTY_RECORD_ACCEPT:
       return {
         ...state,
-        loading: true
+        loading: true,
+        cDutyAcceptSuccess: false,
       };
 
     case CHANGE_DUTY_RECORD_ACCEPT_SUCCESS:
-      console.log('点击同意');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
-        cDutySuccess: true,
+        cDutyAcceptSuccess: true,
+        successMsg: action.result && action.result.success_msg,
         tip: action.tip
       };
 
@@ -123,6 +128,8 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: false,
+        cDutyAcceptSuccess: false,
+        errorMsg: action.error && action.error.error_msg,
         tip: action.tip
       };
 
@@ -130,16 +137,16 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
     case CHANGE_DUTY_RECORD_DENY:
       return {
         ...state,
+        cDutyDenySuccess: false,
         loading: true
       };
 
     case CHANGE_DUTY_RECORD_DENY_SUCCESS:
-      console.log('点击拒绝');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
-        cDutySuccess: true,
+        cDutyDenySuccess: true,
+        successMsg: action.result && action.result.success_msg,
         tip: action.tip
       };
 
@@ -147,6 +154,8 @@ export function changeDutyRecordsReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: false,
+        cDutyDenySuccess: false,
+        errorMsg: action.error && action.error.error_msg,
         tip: action.tip
       };
 
