@@ -92,7 +92,7 @@ export default function reducer(state = initialState, action = {}) {
     case SEND_WX_CODE_SUCCESS:
       return {
         ...state,
-        user: {...user, avatar: action.result && action.result.avatar}
+        user: {...state.auth.user, avatar: action.result && action.result.avatar}
       };
     case SEND_WX_CODE_FAIL:
       return {
