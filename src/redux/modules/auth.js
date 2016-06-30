@@ -85,20 +85,19 @@ export default function reducer(state = initialState, action = {}) {
         user: null,
         errMsg: action.error && action.error.error_msg
       };
-
-      case SEND_WX_CODE:
-        return {
-          ...state
-        };
-      case SEND_WX_CODE_SUCCESS:
-        return {
-          ...state,
-          user: {...user, avatar: action.result && action.result.avatar}
-        };
-      case SEND_WX_CODE_FAIL:
-        return {
-          ...state
-        };
+    case SEND_WX_CODE:
+      return {
+        ...state
+      };
+    case SEND_WX_CODE_SUCCESS:
+      return {
+        ...state,
+        user: {...user, avatar: action.result && action.result.avatar}
+      };
+    case SEND_WX_CODE_FAIL:
+      return {
+        ...state
+      };
     case LOGOUT:
       return {
         ...state,
