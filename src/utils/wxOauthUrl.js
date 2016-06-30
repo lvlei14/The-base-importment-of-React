@@ -18,7 +18,7 @@ export default function(redirect, state, scope) {
     appid: config.wechatAppId,
     redirect_uri: redirect || config.wxRedirectUrl,
     response_type: 'code',
-    scope: scope || 'snsapi_base',
+    scope: scope || 'snsapi_userinfo',
     state: state || ''
   };
 
