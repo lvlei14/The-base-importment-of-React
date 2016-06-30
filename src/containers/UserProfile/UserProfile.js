@@ -57,7 +57,7 @@ export default class UserProfile extends Component {
           <div className={styles.userPTop}>
             <img className={styles.userPTopBg} src={userProfileBg} alt="" />
             <section>
-              <p><img src={headPortrait} alt="" /></p>
+              <p><img src={user.avatar} alt="" /></p>
               <h3>{user.name}</h3>
             </section>
           </div>
