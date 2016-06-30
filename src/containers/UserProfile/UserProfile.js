@@ -48,11 +48,7 @@ export default class UserProfile extends Component {
 
   render() {
     const userProfileBg = require('../../images/userProfileBg.png');
-    const headPortrait = require('../../images/userHeadPortrait.png');
     const {user} = this.props;
-    if (user && user.avatar) {
-      alert(user.avatar);
-    }
     return (
       <div className={styles.userprofile}>
         <HeadNaviBar>个人中心</HeadNaviBar>
