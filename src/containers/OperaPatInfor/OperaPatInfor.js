@@ -152,11 +152,11 @@ class UserArrangementedSurgery extends Component {
                 return (
                   <CardBg key={planedOpePatien.id}>
                     <dl className={'clearfix ' + styles.patItemTitle}>
-                      <dt className="left">{planedOpePatien.patient.name} （
-                        {planedOpePatien.patient.gender === 'female' ? '女' : '男'}，{planedOpePatien.patient.age}&nbsp;
-                        {planedOpePatien.operatingRoom.name})
+                      <dt className="left">{planedOpePatien.patient && planedOpePatien.patient.name} （
+                        {planedOpePatien.patient && planedOpePatien.patient.gender === 'female' ? '女' : '男'}，{planedOpePatien.patient && planedOpePatien.patient.age}&nbsp;
+                        {planedOpePatien.operatingRoom && planedOpePatien.operatingRoom.name})
                       </dt>
-                      <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien.surgery.id, planedOpePatien.name)}>
+                      <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien.surgery && planedOpePatien.surgery.id, planedOpePatien.name)}>
                         <i className="left"></i>
                         <span className="left">
                           {
@@ -168,7 +168,7 @@ class UserArrangementedSurgery extends Component {
                       {planedOpePatien ?
                         <ul>
                           <li>手术名称：{planedOpePatien.name}</li>
-                          <li>术&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：{planedOpePatien.doctor.name}</li>
+                          <li>术&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：{planedOpePatien.doctor && planedOpePatien.doctor.name}</li>
                           <li>接台信息：{planedOpePatien.date}&nbsp;&nbsp;
                                        {planedOpePatien.operatingRoom && planedOpePatien.operatingRoom.name}
                                        </li>
