@@ -57,6 +57,7 @@ export default class DatePlan extends Component {
     };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
+    this.clickHandleDay(new Date());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -217,10 +218,10 @@ export default class DatePlan extends Component {
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.state.schedules.calendar;
+    const dayItems = this.state.schedules && this.state.schedules.calendar;
     return (
       <div>
-        {date}
+        <span className="dayPickerDate">{date}</span>
         <div className={styles.dayItemOut}>
           {dayItems && dayItems[date] && this.showSingleDayItem(dayItems[date])}
         </div>
@@ -232,11 +233,11 @@ export default class DatePlan extends Component {
     const {schedules} = this.props;
     const showTab = localStorage.getItem('datePlanTabList');
     let scheduleItems;
-    if (showTab) {
+    if (!showTab) {
       scheduleItems = this.state.selectedDayItems;
     }
-    if (!showTab) {
-      scheduleItems = schedules.list || [];
+    if (showTab) {
+      scheduleItems = schedules && schedules.list || [];
     }
 
     return (
@@ -258,7 +259,7 @@ export default class DatePlan extends Component {
             {
               !showTab ?
                 <div>
-                  <span className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
+                  <span style={{display: 'none'}} className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
                   <DayPicker
                     ref="daypicker"
                     initialMonth={this.state.selNoFormatDay}

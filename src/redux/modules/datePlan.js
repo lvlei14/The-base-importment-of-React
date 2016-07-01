@@ -60,8 +60,6 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_SUCCESS:
-      console.log('加载列表 Action');
-      console.log(action.result.result);
       return {
         ...state,
         loading: false,
@@ -135,8 +133,6 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
  * @returns {{types: *[], promise: promise}}
  */
 export function loadschedules(requires) {
-  console.log('请求地址');
-  console.log('/schedule/' + requires);
   return {
     types: [LOAD_SCHEDULE, LOAD_SCHEDULE_SUCCESS, LOAD_SCHEDULE_FAIL],
     promise: (client) => client.get('/schedule/' + requires)

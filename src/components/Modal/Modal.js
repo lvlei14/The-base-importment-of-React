@@ -11,8 +11,8 @@ export default class Modal extends Component {
     clickCancel: PropTypes.func,
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
-    hideHideModalBtn: PropTypes.boolean,
-    hideModalFooter: PropTypes.boolean,
+    hideHideModalBtn: PropTypes.bool,
+    hideModalFooter: PropTypes.bool,
   }
 
   constructor(props) {

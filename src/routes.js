@@ -30,8 +30,8 @@ export default (store) => {
   const requireLogin = (nextState, replace, cb) => {
     function checkAuth() {
       const { auth: { user }} = store.getState();
-      console.log('当前用户信息:');
-      console.log(user);
+      // console.log('当前用户信息:');
+      // console.log(user);
       if (!user) {
         // oops, not logged in, so can't be here!
         replace('/login-or-register');
@@ -62,6 +62,7 @@ export default (store) => {
         <Route path="date-plan" component={DatePlan} onEnter={requireLogin} />
         <Route path="add-date-plan/:id" component={AddDatePlan} onEnter={requireLogin} />
         <Route path="date-plan-detail/:id/:type" component={DatePlanDetail} onEnter={requireLogin} />
+        <Route path="modify-date-plan/:id/:tempId" component={ModifyDatePlan} onEnter={requireLogin} />
         <Route path="duty/:pageType" component={Duty} onEnter={requireLogin} />
         <Route path="change-duty-record" component={ChangeDutyRecord} onEnter={requireLogin} />
         <Route path="opera" component={Opera} onEnter={requireLogin} />
@@ -76,7 +77,6 @@ export default (store) => {
         <Route path="createSurgery" component={AddSurgery} onEnter={requireLogin} />
         <Route path="modify-surgery" component={ModifySurgery} onEnter={requireLogin} />
         <Route path="surgery/:id" component={SurgeryInfor} onEnter={requireLogin} />
-        <Route path="modify-date-plan" component={ModifyDatePlan} onEnter={requireLogin} />
         <Route path="my-profile" component={UserProfile} onEnter={requireLogin} />
         <Route path="group-list" component={GroupList} />
         { /* Routes requiring login */ }

@@ -37,6 +37,9 @@
         .spanFail{
           color: #D31E1E;
         }
+        .spanOverdue{
+          color: #999;
+        }
       }
       li:first-child{
         border-top: 1px solid #fff;
@@ -44,3 +47,6 @@
     }
   }
 }  
+.mainColorFont{
+  color: $mainColor;
+}

@@ -49,6 +49,8 @@ export default function reducer(state = initialState, action = {}) {
       };
     case LOGIN_SUCCESS:
       cookie.set('__token', action.result.token, {expires: 7});
+      console.log('action');
+      console.log(action);
       return {
         ...state,
         loading: false,
