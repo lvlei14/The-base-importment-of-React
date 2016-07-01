@@ -11,7 +11,7 @@ import widgets from './widgets';
 import { diaglogReducer } from './diaglog';
 import { popUpReducer } from './popUp';
 import { datePlanSchedulesReducer } from './datePlan';
-import { addDatePlanReducer } from './addDatePlan';
+import { datePlanInfoReducer } from './datePlanInfo';
 import { dutyReducer } from './duty';
 import { changeDutyRecordsReducer } from './changeDutyRecord';
 import { operaReducer } from './opera';
@@ -42,7 +42,7 @@ export default combineReducers({
   diaglog: diaglogReducer,
   popUp: popUpReducer,
   schedules: datePlanSchedulesReducer,
-  addDatePlan: addDatePlanReducer,
+  datePlanInfo: datePlanInfoReducer,
   dutys: dutyReducer,
   changeDutyRecords: changeDutyRecordsReducer,
   operas: operaReducer,

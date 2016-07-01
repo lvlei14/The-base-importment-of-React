@@ -85,11 +85,11 @@ label{
 .mainBtn{
   background-color: $mainColor;
   color: #fff;
-  font-size: .16rem;
-  height: .4rem;
-  line-height: .4rem;
+  font-size: $jzjzfontSize;
+  height: .44rem;
+  line-height: .44rem;
   border-radius: 30px;
-  margin:.2rem 0 0;
+  margin:.12rem 0 0;
   border: 0px solid $mainColor;
   width: 100%;
   padding:0;
@@ -101,11 +101,11 @@ label{
 .delBtn{
   background-color: $delBtnColor;
   color: #fff;
-  font-size: .16rem;
-  height: .4rem;
-  line-height: .4rem;
+  font-size: $jzjzfontSize;
+  height: .44rem;
+  line-height: .44rem;
   border-radius: 30px;
-  margin:.2rem 0 0;
+  margin:.12rem 0 0;
   border: 0px solid $delBtnColor;
   width: 100%;
   padding:0;
@@ -313,7 +313,14 @@ textarea{
 /* Default modifiers */
 
 .DayPicker-Day--today {
-  color: $mainColor;
+  .dayPickerDate{
+    color: #fff;
+    background: $mainColor;
+    border-radius: 50%;
+    width: .24rem;
+    height: .24rem;
+    line-height: .24rem;
+  }
 }
 
 .DayPicker-Day--disabled {
@@ -362,5 +369,36 @@ textarea{
   }
   .DayPicker-Day:focus{
     outline: none !important;
+  }
+}
+
+
+
+/*over bootstrap*/
+.input-group-addon{
+  padding: 0 !important;
+  font-size: 16px;
+  text-align: right;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 100;
+  background: #fff;
+  border: 0px solid #fff;
+  width: 40px;
+}
+.dropdown-menu{
+  top: .36rem !important;
+  left: 0 !important;
+}
+.table-condensed{
+  width: 100% !important;
+  text-align: center !important;
+  a{
+    color: $mainColor;
+  }
+  .btn-primary{
+    background: $mainColor;
+    border-color: $mainColor;
   }
 }

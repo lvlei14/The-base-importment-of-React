@@ -27,7 +27,10 @@ export default class ChangeDutyRecord extends Component {
     acceptCDuty: PropTypes.func,
     denyCDuty: PropTypes.func,
     user: PropTypes.object,
-    cDutySuccess: PropTypes.boolen,
+    cDutyAcceptSuccess: PropTypes.bool,
+    cDutyDenySuccess: PropTypes.bool,
+    successMsg: PropTypes.string,
+    errorMsg: PropTypes.string,
     showDiaglog: PropTypes.func,
   };
 
@@ -41,15 +44,26 @@ export default class ChangeDutyRecord extends Component {
   }
 
   componentDidMount() {
-    // TODO 完善接口地址
     const uid = this.props.user && this.props.user._id;
-    // const uid = '01';
     this.props.loadCDutyRecords(uid, 'sent');
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.cDutySuccess && nextProps.cDutySuccess) {
-      this.props.showDiaglog('发送成功。跳转中。。。', '/duty/self');
+    if (!this.props.successMsg && nextProps.successMsg) {
+      if (!this.props.cDutyAcceptSuccess && nextProps.cDutyAcceptSuccess) {
+        this.props.showDiaglog(nextProps.successMsg, '/duty/self');
+      }
+      if (!this.props.cDutyDenySuccess && nextProps.cDutyDenySuccess) {
+        this.props.showDiaglog(nextProps.successMsg, '/duty/self');
+      }
+    }
+    if (!this.props.errorMsg && nextProps.errorMsg) {
+      if (!this.props.cDutyAcceptSuccess && !nextProps.cDutyAcceptSuccess) {
+        this.props.showDiaglog(nextProps.errorMsg);
+      }
+      if (!this.props.cDutyDenySuccess && !nextProps.cDutyDenySuccess) {
+        this.props.showDiaglog(nextProps.errorMsg);
+      }
     }
   }
 
@@ -65,6 +79,10 @@ export default class ChangeDutyRecord extends Component {
     } else if (recordState === 'denied') {
       return (
         <span>换班<span className={styles.spanFail}>失败</span></span>
+      );
+    } else if (recordState === 'overdued') {
+      return (
+        <span>换班<span className={styles.spanOverdue}>过期</span></span>
       );
     }
   }
@@ -121,6 +139,16 @@ export default class ChangeDutyRecord extends Component {
     const cDutyRecords = this.props.cDutyRecords;
     const unHandleRecords = cDutyRecords && cDutyRecords.filter((item) => item.status === 'send');
     const HandledRecords = cDutyRecords && cDutyRecords.filter((item) => item.status !== 'send');
+    let ikey = 0;
+    for (const unHandlesKey in unHandleRecords) {
+      if (unHandleRecords[unHandlesKey].toAttendance) {
+        if (new Date(unHandleRecords[unHandlesKey].toAttendance.date).getTime() < new Date().getTime()) {
+          unHandleRecords[unHandlesKey].status = 'overdued';
+          HandledRecords.push(unHandleRecords[unHandlesKey]);
+          unHandleRecords.splice(unHandlesKey, 1);
+        }
+      }
+    }
     return (
       <div>
         <HeadNaviBar>换班日志</HeadNaviBar>
@@ -138,19 +166,20 @@ export default class ChangeDutyRecord extends Component {
             {
               ['待处理', '已完成'].map((item) => {
                 const records = item === '待处理' ? unHandleRecords : HandledRecords;
+                ikey = ikey + 1;
                 return (
-                  <section key={records}>
-                    <header>{item}</header>
+                  <section key={ikey}>
+                    <header>{item}<span className={styles.mainColorFont} style={{display: item === '待处理' ? 'inline-block' : 'none'}}>{unHandleRecords.length}条</span></header>
                     <ul>
                       {
                         records && records.length ?
                           records.map((record) => {
                             return (
                               <li key={record._id} onClick={() => this.clickShowModal(record)}>
-                                <article>{this.formatDate(record.fromAttendance.created)}</article>
-                                <p>{record.fromDoctor.name} {record.fromAttendance.date}申请：</p>
+                                <article>{this.formatDate(record.fromAttendance && record.fromAttendance.created)}</article>
+                                <p>{record.fromDoctor && record.fromDoctor.name} {record.fromAttendance && record.fromAttendance.date}申请：</p>
                                 <p>
-                                  与{record.toDoctor.name} {record.toAttendance.date}换班，
+                                  与{record.toDoctor && record.toDoctor.name} {record.toAttendance && record.toAttendance.date}换班，
                                   {this.handleState(record.status)}
                                 </p>
                               </li>
