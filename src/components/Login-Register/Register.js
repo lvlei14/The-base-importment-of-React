@@ -4,7 +4,7 @@ import { showDiaglog } from '../../redux/modules/diaglog';
 import { Diaglog } from '../../components';
 
 const styles = require('./Login-Register.scss');
-const usernameIcon = require('../../images/login-register/login_user@3x.png');
+const usernameIcon = require('../../images/login-register/login_user.png');
 const msgCodeIcon = require('../../images/login-register/login_num@3x.png');
 const passwordIcon = require('../../images/login-register/login_key@3x.png');
 const showPasswordIcon = require('../../images/login-register/login_can@3x.png');

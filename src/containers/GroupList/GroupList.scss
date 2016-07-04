@@ -17,6 +17,27 @@
 }
 
 .groutList{
+  margin-top: $tbmargin;
+  ul{
+    padding: .16rem .16rem;
+    border-top: 1px solid $borderColor;
+    li{
+      img{
+        width: .5rem;
+        height: .5rem;
+        margin-right: .12rem;
+      }
+      dl{
+        dt{
+          color: $jzfontColor;
+          font-size: $jzfontSize;
+          // margin-bottom: .12rem;
+          height: .5rem;
+          line-height: .5rem;
+        }
+      }
+    }
+  }
 }
 
 .addGroupListBg{

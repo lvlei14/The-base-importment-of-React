@@ -5,8 +5,10 @@ import { showDiaglog } from '../../redux/modules/diaglog';
 import { Diaglog } from '../../components';
 
 const styles = require('./Login-Register.scss');
-const usernameBtn = require('../../images/login-register/login_user@3x.png');
+const usernameBtn = require('../../images/login-register/login_user.png');
 const passwordBtn = require('../../images/login-register/login_key@3x.png');
+const forgetPasswordBtn = require('../../images/login-register/forget_pass.png');
+
 
 @connect(
   state => ({
@@ -82,8 +84,9 @@ export default class Login extends Component {
             <img src={passwordBtn} className={styles.imgLeft} alt="密码"/>
             <input type="password" onChange={this.inputPassword.bind(this)} value={this.state.password} placeholder="请输入您的密码"/>
           </div>
-          <div className={styles.forgetPasswordContainer}>
-            <Link to="/forget-password" className={styles.forgetPassword}>忘记密码?</Link>
+          <div className={styles.forgetPasswordContainer + ' clearfix'}>
+            <Link to="/forget-password" className={styles.forgetPassword + ' right'}>忘记密码?</Link>
+            <img src={forgetPasswordBtn} className="right" />
           </div>
           <div className={styles.loginBtnContainer}>
             <button className="mainBtn" type="button" onClick={this.loginHandler.bind(this)}>登录</button>

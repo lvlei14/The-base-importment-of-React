@@ -36,8 +36,6 @@ export function datePlanInfoReducer(state = initState, action = {}) {
       };
 
     case LOAD_TEMPLATE_ITEM_SUCCESS:
-      console.log('--加载模板消息返回结果');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -87,8 +85,6 @@ export function datePlanInfoReducer(state = initState, action = {}) {
       };
 
     case MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS:
-      console.log('modify success action');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -98,8 +94,6 @@ export function datePlanInfoReducer(state = initState, action = {}) {
       };
 
     case MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL:
-      console.log('modify fail action');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -117,8 +111,6 @@ export function datePlanInfoReducer(state = initState, action = {}) {
       };
 
     case DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS:
-      console.log('del success action');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -128,8 +120,6 @@ export function datePlanInfoReducer(state = initState, action = {}) {
       };
 
     case DETELE_DATEPLAN_BY_SCHEDULEID_FAIL:
-      console.log('del fail action');
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -177,7 +167,6 @@ export function addDatePlan(tempObject) {
  * @returns {{types: *[], promise: promise}}
  */
 export function modifyScheduleById(id, scheduleObject) {
-  console.log('active modify');
   return {
     types: [MODIFY_DATEPLAN_BY_SCHEDULEID, MODIFY_DATEPLAN_BY_SCHEDULEID_SUCCESS, MODIFY_DATEPLAN_BY_SCHEDULEID_FAIL],
     promise: (client) => client.put('/schedule/' + id, {
@@ -192,7 +181,6 @@ export function modifyScheduleById(id, scheduleObject) {
  * @returns {{types: *[], promise: promise}}
  */
 export function deleteScheduleById(id) {
-  console.log('访问删除接口');
   return {
     types: [DETELE_DATEPLAN_BY_SCHEDULEID, DETELE_DATEPLAN_BY_SCHEDULEID_SUCCESS, DETELE_DATEPLAN_BY_SCHEDULEID_FAIL],
     promise: (client) => client.del('schedule/' + id)

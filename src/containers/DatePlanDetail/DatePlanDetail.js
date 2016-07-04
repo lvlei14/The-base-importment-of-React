@@ -6,15 +6,19 @@ import { Modal } from '../../components';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { loadschedules } from '../../redux/modules/datePlan';
+import { loadGroupInfoById } from '../../redux/modules/groupInfo';
+import { deleteGroupInfoById } from '../../redux/modules/groupInfo';
 import { deleteScheduleById } from '../../redux/modules/datePlanInfo';
 
 const styles = require('./DatePlanDetail.scss');
 @connect(
-  state => ({...state.schedules, ...state.datePlanInfo}), {
+  state => ({...state.schedules, ...state.datePlanInfo, ...state.groupInfo}), {
     loadschedules,
     pushState: push,
     deleteScheduleById,
-    showDiaglog
+    showDiaglog,
+    loadGroupInfoById,
+    deleteGroupInfoById
   }
 )
 export default class DatePlanDetail extends Component {
@@ -28,6 +32,13 @@ export default class DatePlanDetail extends Component {
     showDiaglog: PropTypes.func,
     successMsg: PropTypes.string,
     errorMsg: PropTypes.string,
+    location: PropTypes.object,
+    loadGroupInfoById: PropTypes.func,
+    deleteGroupInfoById: PropTypes.func,
+    deleteGroupNoticeSuccess: PropTypes.bool,
+    groupInfoItem: PropTypes.array,
+    groupSuccessMsg: PropTypes.string,
+    groupErrorMsg: PropTypes.string,
   };
 
   constructor(props) {
@@ -42,7 +53,12 @@ export default class DatePlanDetail extends Component {
     const requires = {
       _id: id
     };
-    this.props.loadschedules(JSON.stringify(requires));
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      this.props.loadGroupInfoById(id);
+    } else {
+      this.props.loadschedules(JSON.stringify(requires));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,6 +72,17 @@ export default class DatePlanDetail extends Component {
         this.props.showDiaglog(nextProps.errorMsg);
       }
     }
+    const {groupAppartId} = this.props.location.query;
+    if (!this.props.deleteGroupNoticeSuccess && nextProps.deleteGroupNoticeSuccess) {
+      if (!this.props.groupSuccessMsg && nextProps.groupSuccessMsg) {
+        this.props.showDiaglog(nextProps.groupSuccessMsg, '/group-msg-list/' + groupAppartId);
+      }
+    }
+    if (!this.props.deleteGroupNoticeSuccess && !nextProps.deleteGroupNoticeSuccess) {
+      if (!this.props.groupErrorMsg && nextProps.groupErrorMsg) {
+        this.props.showDiaglog(nextProps.groupErrorMsg);
+      }
+    }
   }
 
   getFormatDate(day) {
@@ -66,8 +93,15 @@ export default class DatePlanDetail extends Component {
 
   goModifyPatient() {
     const {id} = this.props.routeParams;
-    const {template} = this.props.schedules && this.props.schedules[0] || {};
-    this.props.pushState('/modify-date-plan/' + id + '/' + template);
+    let template;
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      template = this.props.groupInfoItem && this.props.groupInfoItem[0] && this.props.groupInfoItem[0].contentId && this.props.groupInfoItem[0].contentId.template || {};
+      this.props.pushState('/modify-date-plan/' + id + '/' + template + '?groupAppartId=' + groupAppartId);
+    } else {
+      template = this.props.schedules && this.props.schedules[0] && this.props.schedules[0].template;
+      this.props.pushState('/modify-date-plan/' + id + '/' + template);
+    }
   }
 
   clickShowModal() {
@@ -84,12 +118,23 @@ export default class DatePlanDetail extends Component {
 
   deleteSchedule() {
     const {id} = this.props.routeParams;
-    this.props.deleteScheduleById(id);
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      this.props.deleteGroupInfoById(id);
+    } else {
+      this.props.deleteScheduleById(id);
+    }
     this.clickHideModal();
   }
 
   render() {
-    const datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
+    const {groupAppartId} = this.props.location.query;
+    let datePlanDetail;
+    if (groupAppartId) {
+      datePlanDetail = this.props.groupInfoItem && this.props.groupInfoItem[0] && this.props.groupInfoItem[0].contentId || {};
+    } else {
+      datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
+    }
     const {type} = this.props.routeParams;
     return (
       <div className={styles.datePlanDetail}>

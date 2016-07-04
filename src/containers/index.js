@@ -18,3 +18,4 @@ export ModifyDatePlan from './ModifyDatePlan/ModifyDatePlan';
 export AddSurgery from './AddSurgery/AddSurgery';
 export UserProfile from './UserProfile/UserProfile';
 export GroupList from './GroupList/GroupList';
+export GroupMsgList from './GroupMsgList/GroupMsgList';
