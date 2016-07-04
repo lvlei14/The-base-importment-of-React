@@ -48,3 +48,21 @@
     }
   }
 }
+.loginBg{
+  background: url(../../images/loginBg.png);
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: 4.2rem;
+}
+.logoBg{
+  margin: 20% auto 10%;
+  position: relative;
+  text-align: center;
+  img{
+    width: 1.5rem;
+  }
+}

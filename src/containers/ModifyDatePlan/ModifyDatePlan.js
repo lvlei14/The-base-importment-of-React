@@ -2,19 +2,23 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
-import DateTimeField from 'react-bootstrap-datetimepicker';
+import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
 import '../AddDatePlan/DateTimePicker.scss';
 
 import { loadTemplateItem, modifyScheduleById } from '../../redux/modules/datePlanInfo';
 import { loadschedules } from '../../redux/modules/datePlan';
+import { loadGroupInfoById, modifyGroupInfoById} from '../../redux/modules/groupInfo';
+
 
 const styles = require('../AddDatePlan/AddDatePlan.scss');
 @connect(
-  state => ({...state.schedules, ...state.datePlanInfo}), {
+  state => ({...state.schedules, ...state.datePlanInfo, ...state.groupInfo}), {
     loadschedules,
     loadTemplateItem,
     modifyScheduleById,
-    showDiaglog
+    showDiaglog,
+    loadGroupInfoById,
+    modifyGroupInfoById
   }
 )
 export default class ModifyDatePlan extends Component {
@@ -27,16 +31,30 @@ export default class ModifyDatePlan extends Component {
     errorMsg: PropTypes.string,
     routeParams: PropTypes.object,
     template: PropTypes.array,
-    modifyScheduleById: PropTypes.bool,
+    modifyScheduleById: PropTypes.func,
     showDiaglog: PropTypes.func,
+    groupInfoItem: PropTypes.array,
+    location: PropTypes.object,
+    loadGroupInfoById: PropTypes.func,
+    modifyGroupInfoById: PropTypes.func,
+    modifyGroupNoticeSuccess: PropTypes.bool,
+    groupSuccessMsg: PropTypes.string,
+    groupErrorMsg: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
+    const {groupAppartId} = this.props.location.query;
+    let datePlanDetail;
+    if (groupAppartId) {
+      datePlanDetail = this.props.groupInfoItem && this.props.groupInfoItem[0] && this.props.groupInfoItem[0].contentId || {};
+    } else {
+      datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
+    }
     this.state = {
       inputFormat: 'YYYY-MM-DD h:mm A',
-      startTime: new Date(this.props.schedules && this.props.schedules[0] && this.props.schedules[0].start_time).getTime(),
-      endTime: new Date(this.props.schedules && this.props.schedules[0] && this.props.schedules[0].end_time).getTime(),
+      startTime: new Date(datePlanDetail.start_time).getTime(),
+      endTime: new Date(datePlanDetail.end_time).getTime(),
     };
   }
 
@@ -45,7 +63,12 @@ export default class ModifyDatePlan extends Component {
     const requires = {
       _id: id
     };
-    this.props.loadschedules(JSON.stringify(requires));
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      this.props.loadGroupInfoById(id);
+    } else {
+      this.props.loadschedules(JSON.stringify(requires));
+    }
     this.props.loadTemplateItem(tempId);
   }
 
@@ -58,6 +81,17 @@ export default class ModifyDatePlan extends Component {
     if (!this.props.modifyScheduleSuccess && !nextProps.modifyScheduleSuccess) {
       if (!this.props.errorMsg && nextProps.errorMsg) {
         this.props.showDiaglog(nextProps.errorMsg);
+      }
+    }
+    const {groupAppartId} = this.props.location.query;
+    if (!this.props.modifyGroupNoticeSuccess && nextProps.modifyGroupNoticeSuccess) {
+      if (!this.props.groupSuccessMsg && nextProps.groupSuccessMsg) {
+        this.props.showDiaglog(nextProps.groupSuccessMsg, '/group-msg-list/' + groupAppartId);
+      }
+    }
+    if (!this.props.modifyGroupNoticeSuccess && !nextProps.modifyGroupNoticeSuccess) {
+      if (!this.props.groupErrorMsg && nextProps.groupErrorMsg) {
+        this.props.showDiaglog(nextProps.groupErrorMsg);
       }
     }
   }
@@ -76,7 +110,13 @@ export default class ModifyDatePlan extends Component {
   mergeScheduleValueToTemDate() {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
-    const datePlanDetail = this.props.schedules && this.props.schedules[0] && this.props.schedules[0].content || {};
+    const {groupAppartId} = this.props.location.query;
+    let datePlanDetail;
+    if (groupAppartId) {
+      datePlanDetail = this.props.groupInfoItem && this.props.groupInfoItem[0] && this.props.groupInfoItem[0].contentId && this.props.groupInfoItem[0].contentId.content || {};
+    } else {
+      datePlanDetail = this.props.schedules && this.props.schedules[0] && this.props.schedules[0].content || {};
+    }
     for (const scheduKey in datePlanDetail) {
       if (scheduKey) {
         for (const temPlateKey in templateCon) {
@@ -127,7 +167,6 @@ export default class ModifyDatePlan extends Component {
     };
     result.remind = remind;
     result.template = template && template[0]._id;
-    console.log(result);
     if (result.start_time === result.end_time) {
       this.props.showDiaglog('开始时间与结束时间不能相同');
       return;
@@ -136,8 +175,14 @@ export default class ModifyDatePlan extends Component {
       this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }
-    const scheduleId = this.props.schedules && this.props.schedules[0] && this.props.schedules[0]._id;
-    this.props.modifyScheduleById(scheduleId, result);
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      const {id} = this.props.routeParams;
+      this.props.modifyGroupInfoById(id, result);
+    } else {
+      const scheduleId = this.props.schedules && this.props.schedules[0] && this.props.schedules[0]._id;
+      this.props.modifyScheduleById(scheduleId, result);
+    }
   }
 
   handleChange = (newDate) => {
@@ -191,7 +236,13 @@ export default class ModifyDatePlan extends Component {
   render() {
     const template = this.props.template;
     const templateType = template && template[0] && template[0].name;
-    const datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
+    const {groupAppartId} = this.props.location.query;
+    let datePlanDetail;
+    if (groupAppartId) {
+      datePlanDetail = this.props.groupInfoItem && this.props.groupInfoItem[0] && this.props.groupInfoItem[0].contentId || {};
+    } else {
+      datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
+    }
     const {inputFormat, startTime, endTime} = this.state;
     const newData = this.mergeScheduleValueToTemDate();
     return (

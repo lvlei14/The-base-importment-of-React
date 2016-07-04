@@ -21,16 +21,30 @@
       height: .35rem;
       padding-left: .45rem;
       border: 0;
-      border-bottom: 1px solid #d8d8d8;
+      border-bottom: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+    }::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      color:    #fff;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+       color:    #fff;
+       opacity:  1;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+       color:    #fff;
+       opacity:  1;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+       color:    #fff;
     }
 
     .imgLeft {
       position: absolute;
-      top: 0;
+      top: .06rem;
       left: .07rem;
-      bottom: .05rem;
-      width: .3rem;
-      height: .3rem;
+      width: .18rem;
+      height: .18rem;
     }
 
     .inputContainer {
@@ -57,12 +71,15 @@
 
     .forgetPasswordContainer {
       position: relative;
-
+      img{
+        width: .14rem;
+        margin-right: .04rem;
+        margin-top: .116rem;
+      }
       .forgetPassword {
-        position: absolute;
-        right: .07rem;
         font-size: $xsfontSize;
-        color: #f3a946;
+        color: #fff;
+        margin-top: .1rem;
       }
     }
 

@@ -7,7 +7,6 @@ import { login, register, selectTab, getMsgCode } from '../../redux/modules/auth
 
 
 const styles = require('./LoginOrRegister.scss');
-const bgPic = require('../../images/login-register/bg.jpg');
 
 @connect(
   state => ({...state.auth}),
@@ -38,13 +37,12 @@ export default class LoginOrRegister extends Component {
 
   render() {
     const selectTabKey = this.props.selectedTabName;
+    const logo = require('../../images/logo_whiteBg.png');
     const self = this;
     return (
       <div className={'bodyBgWhiteZindex ' + styles.container}>
-        <p className="bodyBgWhite"></p>
-        <div className={styles.bgContainer}>
-          <img src={bgPic} alt="背景图" className={styles.bgImg}/>
-          <p>医程</p>
+        <p className={styles.loginBg}></p>
+        <div className={styles.bgContainer} style={{display: 'none'}}>
           <ul>
             <li onClick={() => self.props.selectTab(1)} className={ selectTabKey === 1 ? styles.bottomBorder : ''}>
               登录
@@ -54,6 +52,7 @@ export default class LoginOrRegister extends Component {
             </li>
           </ul>
         </div>
+        <div className={styles.logoBg}><img src={logo} alt="" /></div>
         <div style={{display: selectTabKey === 1 ? 'block' : 'none'}}>
           <Login login={this.props.login}
                  defaultLoginUser={this.props.defaultLoginUser}

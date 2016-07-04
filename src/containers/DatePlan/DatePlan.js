@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
-import { showPopUp } from '../../redux/modules/popUp';
 import { loadschedules } from '../../redux/modules/datePlan';
 import { loadtypes } from '../../redux/modules/datePlan';
 import { loadTemplates } from '../../redux/modules/datePlan';
@@ -52,6 +51,7 @@ export default class DatePlan extends Component {
 
   componentDidMount() {
     const date = this.state.selectedYear + '-' + this.state.selectedMonth;
+    console.log('----页面加载');
     const requires = {
       date: date
     };
@@ -81,9 +81,11 @@ export default class DatePlan extends Component {
   }
 
   clickHandleDay(day) {
+    console.log('------点击每天事件');
     const date = new Date(day);
     const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     const schedules = this.state.schedules.list || [];
+    console.log(schedules);
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
       selNoFormatDay: day,
@@ -323,7 +325,7 @@ class ScdItems extends Component {
   handleTime(time) {
     const date = new Date(time);
     const newTimeHour = date.getHours();
-    const newTimeMinute = date.getMinutes();
+    const newTimeMinute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     const newTime = newTimeHour + ':' + newTimeMinute;
     return newTime;
   }
@@ -348,8 +350,7 @@ class ScdItems extends Component {
                             <div>
                               <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)}</span>
                               {this.itemTimeIcon(itemTimePeriod)}
-                              <span className="left">{itemTimePeriod.type.value}</span>
-                              <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.start_time)} － {this.handleTime(itemTimePeriod.end_time)}</span>
+                              <span className={styles.timeRange + ' left'}>{itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value}</span>
                               <span style={{display: itemTimePeriod.is_inner.value ? 'none' : 'block'}}
                                 className={styles.outside + ' left'}>院外</span>
                               <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
@@ -576,7 +577,6 @@ class FilterScheduleItem extends Component {
   state => ({templates: state.schedules.templates}),
   {
     pushState: push,
-    showPopUp,
     loadTemplates,
   }
 )
@@ -634,7 +634,7 @@ class AddPlan extends Component {
     const templates = this.props.templates.result;
     return (
       <div>
-        <div className={styles.addBigBtn} onClick={this.addPlan.bind(this)}></div>
+        <div className="addBigBtn" onClick={this.addPlan.bind(this)}></div>
         <div style = {{display: this.state.showModal ? 'block' : 'none'}}>
           <Modal
               title = {'添加日程'}

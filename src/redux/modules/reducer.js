@@ -27,6 +27,8 @@ import surgeryType from './surgeryType';
 import surgery from './surgery';
 import doctor from './doctor';
 import forgetPassword from './forgetPassword';
+import { groupListReducer } from './groupList';
+import { groupInfoReducer } from './groupInfo';
 
 export default combineReducers({
   routing: routerReducer,
@@ -58,5 +60,7 @@ export default combineReducers({
   patientSurgeryInfor: userSurgeryInforReducer,
   hospitalOperationRoom,
   surgeryType,
-  forgetPassword
+  forgetPassword,
+  groupList: groupListReducer,
+  groupInfo: groupInfoReducer
 });
