@@ -3,7 +3,6 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import {push} from 'react-router-redux';
 import CardBg from '../../components/CardBg/Card';
-import { loadNotPlanPatient } from '../../redux/modules/operaInfor';
 import {getPatientsNotSurgery} from '../../redux/modules/patient';
 
 
@@ -11,7 +10,6 @@ const styles = require('./PatientsCanSurgery.scss');
 @connect(state => ({...state.planedOpePatiens,
   contact: state.form.contact,
   patients: state.patient.patients}), {
-    loadNotPlanPatient,
     getPatientsNotSurgery,
     push
   }
