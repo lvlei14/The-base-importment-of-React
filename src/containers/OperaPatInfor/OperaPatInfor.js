@@ -172,7 +172,7 @@ class UserArrangementedSurgery extends Component {
                         <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien._id, planedOpePatien.name)}>
                           <i className="left"></i>
                           <span className="left">
-                            未开始
+                            待手术
                           </span>
                         </dd>
                         :

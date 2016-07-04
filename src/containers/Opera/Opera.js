@@ -81,10 +81,6 @@ export default class Opera extends Component {
 
   render() {
     const {surgeries} = this.props;
-    console.log(surgeries);
-    // console.log(initOperas);
-    // const operas = initOperas && initOperas.filter((item) => item.date === this.state.selectDay);
-    // console.log(this.state.selectDay);
     return (
       <div>
         <HeadNaviBar>心外科手术安排</HeadNaviBar>
@@ -112,7 +108,6 @@ export default class Opera extends Component {
           </header>
           {
             surgeries && surgeries.length ? surgeries.map((opear) => {
-              console.log(opear);
               return (
                 <section className="topCardBg" key={opear.operatingRoom._id}>
                   <header className="clearfix">
@@ -124,13 +119,14 @@ export default class Opera extends Component {
                   <ul style={{display: this.state[opear.operatingRoom._id] ? 'none' : 'block'}}>
                     {
                       opear && opear.surgeries && opear.surgeries.map((surgery) => {
+                        console.log(surgery);
                         return (
                           <li className="clearfix" key={surgery._id} onClick={() => this.goSurgeryDetail(surgery._id)}>
                             <i className="left">{surgery.seq}.</i>
                             <p className="left">
                               {surgery.patient && surgery.patient.name}（{
-                                surgery.patient.gender === 'female' ? '女' : '男'
-                              }）{surgery.patient && surgery.patient.age} {surgery.patient.name}
+                                surgery.patient && surgery.patient.gender === 'female' ? '女' : '男'
+                              }）{surgery.patient && surgery.patient.age} {surgery.patient && surgery.patient.name}
                             </p>
                             <article className="right">{surgery.doctor.name}</article>
                           </li>

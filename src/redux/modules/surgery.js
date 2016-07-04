@@ -236,7 +236,7 @@ export function setSurgeryStatus(id, status) {
 export function loadSurgeryByDateAndRoom(date) {
   return {
     types: [LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM, LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM_SUCCESS, LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM_FAIL],
-    promise: (client) => client.put(`/surgery/date/${date}/roomFormat`)
+    promise: (client) => client.get(`/surgery/date/${date}/roomFormat`)
   };
 }
 
