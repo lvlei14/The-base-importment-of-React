@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Modal } from '../../components';
 
-import {getPatients} from '../../redux/modules/patient';
-import {getSurgeries} from '../../redux/modules/surgery';
+import {getPatientsNotSurgery} from '../../redux/modules/patient';
+import {getSurgeries, setSurgeryStatus} from '../../redux/modules/surgery';
 
 const styles = require('./OperaPatInfor.scss');
 @connect(
@@ -14,17 +14,19 @@ const styles = require('./OperaPatInfor.scss');
     patients: state.patient.patients,
     surgeries: state.surgery.surgeries}), {
       pushState: push,
-      getPatients,
-      getSurgeries
+      getPatientsNotSurgery,
+      getSurgeries,
+      setSurgeryStatus
     }
 )
 export default class OperaPatInfor extends Component {
   static propTypes = {
     pushState: PropTypes.func,
-    getPatients: PropTypes.func,
+    getPatientsNotSurgery: PropTypes.func,
     patients: PropTypes.array,
     surgeries: PropTypes.array,
-    getSurgeries: PropTypes.func
+    getSurgeries: PropTypes.func,
+    setSurgeryStatus: PropTypes.func,
   };
 
   constructor(props) {
@@ -36,7 +38,7 @@ export default class OperaPatInfor extends Component {
   }
 
   componentDidMount() {
-    this.props.getPatients();
+    this.props.getPatientsNotSurgery();
     this.props.getSurgeries();
   }
 
@@ -80,10 +82,10 @@ export default class OperaPatInfor extends Component {
         <section className={styles.patInforSection}>
           <ul className={'clearfix topCardBg ' + styles.patInforTab}>
             <li className="left" onClick={this.selectUnArrSurgery.bind(this)}>
-              <span className={showTab ? styles.liCur : ''}>未安排</span>
+              <span className={showTab ? styles.liCur : ''}>未安排手术</span>
             </li>
             <li className="left" onClick={this.selectArrSurgery.bind(this)}>
-              <span className={!showTab ? styles.liCur : ''}>手术</span>
+              <span className={!showTab ? styles.liCur : ''}>已安排手术</span>
             </li>
           </ul>
           {!showTab ?
@@ -103,13 +105,14 @@ export default class OperaPatInfor extends Component {
   */
 @connect(
   state => ({...state}), {
-
+    setSurgeryStatus
   }
 )
 class UserArrangementedSurgery extends Component {
   static propTypes = {
     planedOpePatiens: PropTypes.array,
-    patients: PropTypes.array
+    patients: PropTypes.array,
+    setSurgeryStatus: PropTypes.func
   };
 
   constructor(props) {
@@ -127,6 +130,7 @@ class UserArrangementedSurgery extends Component {
   }
 
   clickShowModal(surgeryId, name) {
+    console.log(surgeryId);
     this.setState({
       showModal: true,
       selectedPatienName: name,
@@ -135,6 +139,13 @@ class UserArrangementedSurgery extends Component {
   }
 
   clickConfirm() {
+    this.setState({
+      showModal: false
+    });
+    this.props.setSurgeryStatus(this.state.selectedSurgeryId, 'done');
+  }
+
+  clickCancle() {
     this.setState({
       showModal: false
     });
@@ -156,14 +167,22 @@ class UserArrangementedSurgery extends Component {
                         {planedOpePatien.patient && planedOpePatien.patient.gender === 'female' ? '女' : '男'}，{planedOpePatien.patient && planedOpePatien.patient.age}&nbsp;
                         {planedOpePatien.operatingRoom && planedOpePatien.operatingRoom.name})
                       </dt>
-                      <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien.surgery && planedOpePatien.surgery.id, planedOpePatien.name)}>
-                        <i className="left"></i>
-                        <span className="left">
-                          {
-                            planedOpePatien.status === 'ready' ? '未开始' : '已结束'
-                          }
-                        </span>
-                      </dd>
+                      {
+                        planedOpePatien.status === 'ready' ?
+                        <dd className="right clearfix" onClick={() => this.clickShowModal(planedOpePatien._id, planedOpePatien.name)}>
+                          <i className="left"></i>
+                          <span className="left">
+                            未开始
+                          </span>
+                        </dd>
+                        :
+                        <dd className="right clearfix">
+                          <span className="left">
+                            已结束
+                          </span>
+                        </dd>
+                      }
+
                     </dl>
                       {planedOpePatien ?
                         <ul>
@@ -185,8 +204,14 @@ class UserArrangementedSurgery extends Component {
         </div>
         {
           this.state.showModal ?
-            <Modal title = {'操作确认'} clickConfirm = {this.clickConfirm.bind(this)} >
-               是否确认患者<span className={styles.patientName}>{this.state.selectedPatienName}</span>已手术？
+            <Modal title = {'操作确认'}
+                   clickConfirm={this.clickConfirm.bind(this)}
+                   clickCancel={this.clickCancle.bind(this)}>
+               是否确认患者
+               <span className={styles.patientName}>
+                 {this.state.selectedPatienName}
+               </span>
+               已手术？
              </Modal>
            : ''
         }

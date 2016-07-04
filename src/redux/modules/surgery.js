@@ -22,11 +22,16 @@ const LOAD_SURGERYS = 'LOAD_SURGERYS';
 const LOAD_SURGERYS_SUCCESS = 'LOAD_SURGERYS_SUCCESS';
 const LOAD_SURGERYS_FAIL = 'LOAD_SURGERYS_FAIL';
 
+const SET_SURGERY_STATUS = 'SET_SURGERY_STATUS';
+const SET_SURGERY_STATUS_SUCCESS = 'SET_SURGERY_STATUS_SUCCESS';
+const SET_SURGERY_STATUS_FAIL = 'SET_SURGERY_STATUS_FAIL';
+
 const CLEAR_SURGERYS_FAIL = 'CLEAR_SURGERYS_FAIL';
 
 const initState = {
   addSurgerySuccess: false,
   modifySurgerySuccess: false,
+  setSurgeryStatusSuccess: false,
   newCreateSurgeryId: '',
   deleteSurgerySuccess: false,
   loading: false,
@@ -49,7 +54,6 @@ export default function surgeryReducer(state = initState, action = {}) {
         newCreateSurgeryId: ''
       };
     case ADD_SURGERY_SUCCESS:
-      console.log(action);
       return {
         ...state,
         loading: false,
@@ -138,6 +142,31 @@ export default function surgeryReducer(state = initState, action = {}) {
         loading: false,
         error: action.error.error_msg
       };
+    case SET_SURGERY_STATUS:
+      return {
+        ...state,
+        setSurgeryStatusSuccess: false,
+        loading: true
+      };
+    case SET_SURGERY_STATUS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        setSurgeryStatusSuccess: true,
+        surgeries: state.surgeries.map((surgery) =>
+                                        surgery._id === action.id
+                                        ? {...surgery, status: 'done'}
+                                        : surgery
+                                        ),
+        successMsg: action.result.success_msg
+      };
+    case SET_SURGERY_STATUS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        setSurgeryStatusSuccess: false,
+        error: action.error.error_msg
+      };
     default:
       return state;
   }
@@ -194,12 +223,23 @@ export function getSurgeries() {
   };
 }
 
+export function setSurgeryStatus(id, status) {
+  return {
+    types: [SET_SURGERY_STATUS, SET_SURGERY_STATUS_SUCCESS, SET_SURGERY_STATUS_FAIL],
+    id: id,
+    promise: (client) => client.put(`/surgery/${id}/status`, {
+      data: {status: status}
+    })
+  };
+}
+
 export function loadSurgeryByDateAndRoom(date) {
   return {
     types: [LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM, LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM_SUCCESS, LOAD_SURGERY_BY_DATE_FORMATED_BY_ROOM_FAIL],
-    promise: (client) => client.get(`/surgery/date/${date}/roomFormat`)
+    promise: (client) => client.put(`/surgery/date/${date}/roomFormat`)
   };
 }
+
 
 export function clearInitSurgery() {
   return {
