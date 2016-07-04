@@ -1,0 +1,73 @@
+@import '../../theme/variables.scss';
+.groutMsgList{
+  padding: 0 $lrmargin;
+  .groupMsgItem{
+    border-radius: .02rem;
+    padding: .15rem .14rem 0;
+    margin-top: $tbmargin;
+    position: relative;
+    .groupMsgItemLeft{
+      position: absolute;
+      top: .15rem;
+      left: .14rem;
+      img{
+        width: .4rem;
+        height: .4rem;
+        border-radius: 50%;
+      }
+      p{
+        font-size: $xsfontSize;
+        text-align: center;
+      }
+    }
+    .groupMsgItemRight{
+      margin-left: .6rem;
+      header{
+        margin-bottom: .14rem;
+        h3{
+          font-size: $jzfontSize;
+          color: $jzfontColor;
+        }
+        article{
+          color: $xsfontColor;
+          font-size: $xsfontSize;
+        }
+      }
+      p{
+      }
+    }
+    footer{
+      margin-top: .1rem;
+      height: .4rem;
+      line-height: .4rem;
+      border-top: 1px solid $borderColor;
+      color: $xsfontColor;
+      i{
+        transform: rotate(180deg);
+        margin-top: .1rem;
+        margin-left: .1rem;
+        font-size: $jzjzfontSize;
+      }
+    }
+  }
+}
+
+.templateBtn{
+  width: .56rem;
+  text-align: center;
+  display: inline-block;
+  margin-left: .2rem;
+  dt{
+    img{
+      width: .56rem;
+    }
+  }
+  dd{
+    line-height: .3rem;
+    font-size: $jzfontSize;
+    color: $jzfontColor;
+  }
+}
+.templateBtn:first-child{
+  margin-left: 0;
+}

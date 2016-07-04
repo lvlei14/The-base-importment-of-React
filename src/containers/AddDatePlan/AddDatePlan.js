@@ -2,17 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
-import DateTimeField from 'react-bootstrap-datetimepicker';
+import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
 // import moment from 'moment';
 import './DateTimePicker.scss';
 import { addDatePlan, loadTemplateItem } from '../../redux/modules/datePlanInfo';
+import { addGroupNotice } from '../../redux/modules/groupInfo';
 
 const styles = require('./AddDatePlan.scss');
 @connect(
-  state => ({...state.datePlanInfo}), {
+  state => ({...state.datePlanInfo, ...state.groupInfo}), {
     loadTemplateItem,
     addDatePlan,
     showDiaglog,
+    addGroupNotice
   }
 )
 export default class AddDatePlan extends Component {
@@ -25,6 +27,11 @@ export default class AddDatePlan extends Component {
     addDatePlanSuccess: PropTypes.bool,
     successMsg: PropTypes.string,
     errorMsg: PropTypes.string,
+    location: PropTypes.object,
+    addGroupNotice: PropTypes.func,
+    addGroupNoticeSuccess: PropTypes.bool,
+    groupSuccessMsg: PropTypes.string,
+    groupErrorMsg: PropTypes.string,
   };
 
   constructor(props) {
@@ -50,6 +57,17 @@ export default class AddDatePlan extends Component {
     if (!this.props.addDatePlanSuccess && !nextProps.addDatePlanSuccess) {
       if (!this.props.errorMsg && nextProps.errorMsg) {
         this.props.showDiaglog(nextProps.errorMsg);
+      }
+    }
+    const {groupAppartId} = this.props.location.query;
+    if (!this.props.addGroupNoticeSuccess && nextProps.addGroupNoticeSuccess) {
+      if (!this.props.groupSuccessMsg && nextProps.groupSuccessMsg) {
+        this.props.showDiaglog(nextProps.groupSuccessMsg, '/group-msg-list/' + groupAppartId);
+      }
+    }
+    if (!this.props.addGroupNoticeSuccess && !nextProps.addGroupNoticeSuccess) {
+      if (!this.props.groupErrorMsg && nextProps.groupErrorMsg) {
+        this.props.showDiaglog(nextProps.groupErrorMsg);
       }
     }
   }
@@ -103,7 +121,6 @@ export default class AddDatePlan extends Component {
     };
     result.remind = remind;
     result.template = template && template[0]._id;
-    console.log(result);
     if (result.start_time === result.end_time) {
       this.props.showDiaglog('开始时间与结束时间不能相同');
       return;
@@ -112,7 +129,12 @@ export default class AddDatePlan extends Component {
       this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }
-    this.props.addDatePlan(result);
+    const {groupAppartId} = this.props.location.query;
+    if (groupAppartId) {
+      this.props.addGroupNotice(result);
+    } else {
+      this.props.addDatePlan(result);
+    }
   }
 
   handleChange = (newDate) => {
