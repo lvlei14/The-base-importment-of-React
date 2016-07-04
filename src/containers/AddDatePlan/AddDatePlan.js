@@ -3,7 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
 import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
-// import moment from 'moment';
+import moment from 'moment';
 import './DateTimePicker.scss';
 import { addDatePlan, loadTemplateItem } from '../../redux/modules/datePlanInfo';
 import { addGroupNotice } from '../../redux/modules/groupInfo';
@@ -73,13 +73,7 @@ export default class AddDatePlan extends Component {
   }
 
   getNowFormatDate(day) {
-    const date = new Date(day);
-    const seperator1 = '-';
-    const seperator2 = ':';
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    const currentdate = year + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+    const currentdate = moment(day).format('YYYY-MM-DD HH:mm:ss');
     return currentdate;
   }
   clickAddBtn() {
@@ -126,6 +120,8 @@ export default class AddDatePlan extends Component {
       return;
     }
     if (result.start_time > result.end_time) {
+      console.log(result.start_time);
+      console.log(result.end_time);
       this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }

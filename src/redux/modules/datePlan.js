@@ -60,8 +60,6 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_SUCCESS:
-      console.log('lie');
-      console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -84,8 +82,6 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_TYPE_SUCCESS:
-      // console.log('加载type Action');
-      // console.log(action);
       return {
         ...state,
         loading: false,
@@ -107,8 +103,6 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_TEMPLATE_SUCCESS:
-      // console.log('action取模板信息');
-      // console.log(action.result);
       return {
         ...state,
         loading: false,

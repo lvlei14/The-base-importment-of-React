@@ -46,7 +46,7 @@ export default class Modal extends Component {
             <div className={'bodyBgWhiteZindex ' + styles.modalSection}>
               <header className={'clearfix ' + styles.modalTitle}>
                 <h3>{this.props.title}</h3>
-                <span style={{display: this.props.hideHideModalBtn ? 'none' : 'block'}} onClick={this.props.clickHideModal}>x</span>
+                <span style={{display: this.props.hideHideModalBtn ? 'none' : 'block'}} onClick={this.props.clickHideModal}></span>
               </header>
               <section className={styles.modalSectionSection}>{this.props.children}</section>
               <footer style={{display: this.props.hideModalFooter ? 'none' : 'block'}} className={styles.modalButton + ' clearfix'}>

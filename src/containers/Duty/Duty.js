@@ -165,19 +165,19 @@ class Calendar extends Component {
     }
   }
 
-  navbar({ previousMonth, onPreviousClick, onNextClick, className}) {
+  navbar({ previousMonth, onPreviousClick, onNextClick}) {
     let prevMonth = previousMonth.getMonth();
     if (prevMonth === 11) {
       prevMonth = -1;
     }
     const curMonth = prevMonth + 2;
     return (
-      <div className={className} style={{ fontSize: '.75em' }}>
-        <span style={{ float: 'left', cursor: 'pointer' }} onClick={() => onPreviousClick()}>
-          <span onClick={() => this.previousClickHandler(curMonth)}>《</span>
+      <div className="DayPicker-NavBar">
+        <span className="DayPicker-NavButton DayPicker-NavButton--prev" style={{ float: 'left', cursor: 'pointer'}} onClick={() => onPreviousClick()}>
+          <span onClick={() => this.previousClickHandler(curMonth)}></span>
         </span>
-        <span style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
-          <span onClick={() => this.nextClickHandle(curMonth)}>》</span>
+        <span className="DayPicker-NavButton DayPicker-NavButton--next" style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
+          <span onClick={() => this.nextClickHandle(curMonth)}></span>
         </span>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import {getCaptcha,
         next2ResetPassword,
         setMobile
@@ -85,12 +86,17 @@ export default class ForgetPassword extends Component {
     });
   }
   render() {
+    const styles = require('./ForgetPassword.scss');
     return (
       <div>
-        <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.mobile } placeholder="请输入您的手机号"/>
-        <input type="text" onChange = { this.inputCaptcha.bind(this) } value = { this.state.captcha } placeholder="请输入您的验证码"/>
-        <button type="button" onClick = { this.getCaptcha.bind(this) }>获取验证码</button>
-        <button type="button" onClick = { this.next2ResetPassword.bind(this) }>下一步</button>
+        <HeadNaviBar>找回密码</HeadNaviBar>
+        <div className={styles.forgetPass}>
+          <p className="tip">请输入您绑定的手机号</p>
+          <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.mobile } placeholder="请输入您的手机号"/>
+          <input type="text" onChange = { this.inputCaptcha.bind(this) } value = { this.state.captcha } placeholder="请输入您的验证码"/>
+          <button type="button" onClick = { this.getCaptcha.bind(this) }>获取验证码</button>
+          <button type="button" onClick = { this.next2ResetPassword.bind(this) }>下一步</button>
+        </div>
       </div>
     );
   }

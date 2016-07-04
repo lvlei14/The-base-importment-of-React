@@ -3,6 +3,7 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Modal } from '../../components';
+import moment from 'moment';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { loadschedules } from '../../redux/modules/datePlan';
@@ -86,8 +87,7 @@ export default class DatePlanDetail extends Component {
   }
 
   getFormatDate(day) {
-    const date = new Date(day);
-    const datenow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    const datenow = moment(day).format('YYYY-MM-DD HH:mm');
     return datenow;
   }
 
