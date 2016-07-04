@@ -140,7 +140,7 @@ class ScdItems extends Component {
   handleTime(time) {
     const date = new Date(time);
     const newTimeHour = date.getHours();
-    const newTimeMinute = date.getMinutes();
+    const newTimeMinute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     const newTime = newTimeHour + ':' + newTimeMinute;
     return newTime;
   }
@@ -179,7 +179,7 @@ class ScdItems extends Component {
                 </ul>
               );
             })
-          : <p className="noResult">没有日程安排</p>
+          : <p className="noResult">当天日程安排</p>
         }
       </div>
     );

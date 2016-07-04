@@ -140,19 +140,19 @@ export default class DatePlan extends Component {
     }
   }
 
-  navbar({ previousMonth, onPreviousClick, onNextClick, className}) {
+  navbar({ previousMonth, onPreviousClick, onNextClick}) {
     let prevMonth = previousMonth.getMonth();
     if (prevMonth === 11) {
       prevMonth = -1;
     }
     const curMonth = prevMonth + 2;
     return (
-      <div className={className} style={{ fontSize: '.75em' }}>
-        <span style={{ float: 'left', cursor: 'pointer' }} onClick={() => onPreviousClick()}>
-          <span onClick={() => this.previousClickHandler(curMonth)}>《</span>
+      <div className="DayPicker-NavBar">
+        <span className="DayPicker-NavButton DayPicker-NavButton--prev" style={{ float: 'left', cursor: 'pointer'}} onClick={() => onPreviousClick()}>
+          <span onClick={() => this.previousClickHandler(curMonth)}></span>
         </span>
-        <span style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
-          <span onClick={() => this.nextClickHandle(curMonth)}>》</span>
+        <span className="DayPicker-NavButton DayPicker-NavButton--next" style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
+          <span onClick={() => this.nextClickHandle(curMonth)}></span>
         </span>
       </div>
     );
@@ -167,8 +167,6 @@ export default class DatePlan extends Component {
     }
     const selectedMonth = curMonth - 1;
     const selYearMon = selectedYear + '-' + selectedMonth;
-    // const date = selYearMon + '-1';
-    // const day = (new Date(date)).toDateString() + ' ' + (new Date(date)).toTimeString();
     const value = selYearMon + '-1';
     const day = moment(value, 'L').toDate();
     this.setState({
@@ -304,13 +302,14 @@ class ScdItems extends Component {
 
   itemTimeIcon(itemTimePeriod) {
     let itemIcon;
-    if (itemTimePeriod.type.value === '查房') {
+    const itemTimetype = itemTimePeriod.type || {};
+    if (itemTimetype.value === '查房') {
       itemIcon = <i className={'left ' + styles.checkPlan}>查</i>;
-    }else if (itemTimePeriod.type.value === '会议') {
+    }else if (itemTimetype.value === '会议') {
       itemIcon = <i className={'left ' + styles.metting}>会</i>;
-    }else if (itemTimePeriod.type.value === '手术') {
+    }else if (itemTimetype.value === '手术') {
       itemIcon = <i className={'left ' + styles.opera}>术</i>;
-    }else if (itemTimePeriod.type.value === '值班') {
+    }else if (itemTimetype.value === '值班') {
       itemIcon = <i className={'left ' + styles.duty}>值</i>;
     }else {
       itemIcon = <i className={'left ' + styles.zidingyi}>其</i>;
@@ -323,10 +322,7 @@ class ScdItems extends Component {
   }
 
   handleTime(time) {
-    const date = new Date(time);
-    const newTimeHour = date.getHours();
-    const newTimeMinute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    const newTime = newTimeHour + ':' + newTimeMinute;
+    const newTime = moment(time).format('HH:mm');
     return newTime;
   }
 
@@ -348,9 +344,16 @@ class ScdItems extends Component {
                         return (
                           <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
                             <div>
-                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)}</span>
+                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)} - {this.handleTime(itemTimePeriod.end_time)}</span>
                               {this.itemTimeIcon(itemTimePeriod)}
-                              <span className={styles.timeRange + ' left'}>{itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value}</span>
+                              <span className={styles.timeRange + ' left'}>
+                                {
+                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
+                                ?
+                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
+                                : itemTimePeriod.type && itemTimePeriod.type.value
+                                }
+                              </span>
                               <span style={{display: itemTimePeriod.is_inner.value ? 'none' : 'block'}}
                                 className={styles.outside + ' left'}>院外</span>
                               <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
@@ -364,7 +367,9 @@ class ScdItems extends Component {
                 </CardBg>
               );
             })
-          : <p className="noResult">没有日程安排</p>
+          : <CardBg>
+              <p className="noResult">没有日程安排</p>
+            </CardBg>
         }
       </div>
     );
@@ -397,8 +402,6 @@ class FilterScheduleItem extends Component {
       showFilterRequires: false,
       showFirstDayPicker: false,
       showSecondDayPicker: false,
-      firstDateYear: (new Date()).getFullYear(),
-      firstDateMonth: (new Date()).getMonth() + 1,
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
@@ -431,18 +434,16 @@ class FilterScheduleItem extends Component {
   clickShowFirstDayPicker() {
     const filterDayPickerStatus = this.state.showFirstDayPicker;
     this.setState({
+      showSecondDayPicker: false,
       showFirstDayPicker: !filterDayPickerStatus,
     });
   }
 
   clickFilterFirstDate(day) {
-    const date = new Date(day);
-    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const datetow = moment(day).format('YYYY-M-D');
     this.setState(
       {
         showFirstDayPicker: false,
-        firstDateYear: date.getFullYear(),
-        firstDateMonth: (date.getMonth() + 1),
         filterRequires: Object.assign({}, this.state.filterRequires, { startDate: datetow})
       }
     );
@@ -451,13 +452,13 @@ class FilterScheduleItem extends Component {
   clickShowSecondDayPicker() {
     const filterDayPickerStatus = this.state.showSecondDayPicker;
     this.setState({
+      showFirstDayPicker: false,
       showSecondDayPicker: !filterDayPickerStatus,
     });
   }
 
   changeFilterSecondDate(day) {
-    const date = new Date(day);
-    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const datetow = moment(day).format('YYYY-M-D');
     this.setState(
       {
         showSecondDayPicker: false,
@@ -514,12 +515,12 @@ class FilterScheduleItem extends Component {
           <div className="clearfix">
             <i className="left">日期</i>
             <section className={'left clearfix ' + styles.selectDateFilter}>
-              <div className={'left ' + styles.filterDate}>
+              <div className={this.state.showFirstDayPicker ? styles.filterDateOn + ' left ' + styles.filterDate : 'left ' + styles.filterDate}>
                 <div onClick={this.clickShowFirstDayPicker.bind(this)} className="select">
                   <span>{this.state.filterRequires.startDate}</span>
                   <p className="sanjiao-bt"></p>
                 </div>
-                <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
+                <div className={styles.filterFirstPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showFirstDayPicker ? 'block' : 'none'}}>
                   <DayPicker
                       onDayClick={(event, day) => this.clickFilterFirstDate(day)}
@@ -528,13 +529,13 @@ class FilterScheduleItem extends Component {
                 </div>
               </div>
               <p className={styles.dateSpan + ' left'}>至</p>
-              <div className={'right ' + styles.filterDate}>
+              <div className={this.state.showSecondDayPicker ? styles.filterDateOn + ' right ' + styles.filterDate : 'right ' + styles.filterDate}>
                 <div
                   onClick={this.clickShowSecondDayPicker.bind(this)} className="select">
                   <span>{this.state.filterRequires.endDate === null ? '不限' : this.state.filterRequires.endDate}</span>
                   <p className="sanjiao-bt"></p>
                 </div>
-                <div className={styles.datePlanFilterPicker + ' datePlanFilterPicker'}
+                <div className={styles.filterSecondPicker + ' datePlanFilterPicker'}
                   style={{display: this.state.showSecondDayPicker ? 'block' : 'none'}}>
                   <DayPicker
                       onDayClick={(event, day) => this.changeFilterSecondDate(day)}
@@ -544,9 +545,9 @@ class FilterScheduleItem extends Component {
               </div>
             </section>
           </div>
-          <div className="clearfix">
+          <div className={'clearfix ' + styles.filterType}>
             <i className="left">类型</i>
-            <section className={'left ' + styles.filterType}>
+            <section className="left">
               {
                 scheduleTypes && scheduleTypes.map((scheduleType) => {
                   return (

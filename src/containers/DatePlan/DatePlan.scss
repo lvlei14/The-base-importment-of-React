@@ -5,7 +5,7 @@
   font-size: $jzfontSize;
   position: relative;
   text-align: center;
-  min-height: 230px;
+  min-height: 450px;
   .dateTitle{
     position: relative;
     li.curTab {
@@ -26,11 +26,14 @@
       border-bottom: 1px solid $borderColor;
     }
     .curDayContact{
-      padding:12px $lrmargin 2px;
+      padding:12px $lrmargin;
       color: $jzfontColor;
       li{
         div{
           height: 32px;
+          line-height: 32px;
+          padding: .06rem 0;
+          box-sizing: content-box;
           i{
             font-size: 12px;
             border-radius: 50%;
@@ -40,6 +43,7 @@
             line-height: 19px;
             text-align: center;
             margin-right: 12px;
+            margin-top: 6px;
           }
           .timeStart{
             color: $xsfontColor;
@@ -52,6 +56,8 @@
             font-size: 12px;
             background-color: #ececec;
             padding:2px 10px;
+            line-height: normal;
+            margin-top: 8px;
           }
           .conflict{
             font-size: 12px;
@@ -154,14 +160,23 @@
             top: .08rem !important;
             right: 0 !important;
           }
-          .datePlanFilterPicker{
-            position: fixed;
-            top: 152px;
-            left: 0;
-            width: 100%;
+          .filterFirstPicker, .filterSecondPicker{
+            position: absolute;
+            top: .32rem;
+            width: 240%;
             z-index: 10000;
             background: #fff;
           }
+          .filterFirstPicker{
+            left: 0;
+          }
+          .filterSecondPicker{
+            right: 0;
+          }
+        }
+        .filterDate.filterDateOn{
+          box-shadow: 0 0 8px rgba(65,194,153,0.5);
+          border: 1px solid $mainColor;
         }
         .dateSpan{
           width: 12%;
@@ -170,22 +185,35 @@
           margin-bottom: .1rem;
         }
       }
-      .filterType{
-        header span{
-          color: $mainColor;
-        }
-        span{
-          display: inline-block;
-          padding: 2px 0px;
-          border-radius: 14px;
-          margin:0;
-          width: 33.3%;
-          text-align: center;
-        }
-        span.curSpan{
-          background-color: $mainColor;
-          color: #fff;
-        }
+    }
+    .filterType{
+      i{
+        margin-top: .08rem;
+      }
+      header span{
+        color: $mainColor;
+      }
+      span{
+        display: inline-block;
+        padding: 2px 0px;
+        border-radius: 14px;
+        margin:.08rem 0;
+        width: 33.3%;
+        text-align: center;
+      }
+      span.curSpan{
+        background-color: $mainColor;
+        color: #fff;
+      }
+    }
+    .filterBtn{
+      margin-top: .3rem;
+      h3{
+        border: 1px solid $borderColor;
+        border-radius: .2rem;
+        padding: 0rem .2rem;
+        height: .3rem;
+        line-height: .3rem;
       }
     }
   }
@@ -243,13 +271,8 @@
   margin-left: 0;
 }
 
-.filterBtn{
-  margin-top: .3rem;
-  h3{
-    border: 1px solid $borderColor;
-    border-radius: .2rem;
-    padding: 0rem .2rem;
-    height: .3rem;
-    line-height: .3rem;
-  }
+
+.changeMonthBtn:active{
+  color: $mainColor !important;
+  opacity: 0.5;
 }
