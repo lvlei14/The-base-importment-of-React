@@ -27,6 +27,7 @@ const CLEAR_SURGERYS_FAIL = 'CLEAR_SURGERYS_FAIL';
 const initState = {
   addSurgerySuccess: false,
   modifySurgerySuccess: false,
+  newCreateSurgeryId: '',
   deleteSurgerySuccess: false,
   loading: false,
   surgery: {},
@@ -44,7 +45,8 @@ export default function surgeryReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: true,
-        addSurgerySuccess: false
+        addSurgerySuccess: false,
+        newCreateSurgeryId: ''
       };
     case ADD_SURGERY_SUCCESS:
       console.log(action);
@@ -53,7 +55,7 @@ export default function surgeryReducer(state = initState, action = {}) {
         loading: false,
         addSurgerySuccess: true,
         successMsg: action.result.success_msg,
-        // surgery: action.result.surgery
+        newCreateSurgeryId: action.result.id
       };
     case ADD_SURGERY_FAIL:
       return {

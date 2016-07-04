@@ -57,6 +57,7 @@ export default class AddSurgery extends Component {
     doctors: PropTypes.array,
     successMsg: PropTypes.string,
     addSurgerySuccess: PropTypes.bool,
+    newCreateSurgeryId: PropTypes.string,
     modifySurgerySuccess: PropTypes.bool,
     modifySurgeryById: PropTypes.func
   };
@@ -84,9 +85,9 @@ export default class AddSurgery extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.addSurgerySuccess && nextProps.addSurgerySuccess) {
-      const {_id} = nextProps.surgery;
+      const {newCreateSurgeryId} = nextProps;
       alert(nextProps.successMsg);
-      this.props.push(`/surgery/${_id}`);
+      this.props.push(`/surgery/${newCreateSurgeryId}`);
     }
     if (!this.props.modifySurgerySuccess && nextProps.modifySurgerySuccess) {
       const {id} = this.props.location.query;

@@ -18,7 +18,6 @@ import { operaReducer } from './opera';
 import { operaPatientListReducer } from './operaInfor';
 import patient from './patient';
 import { patientInforReducer } from './modifyPatient';
-import { addSurgeryInforReducer } from './addSurgery';
 import { loadSurgeryInforReducer } from './surgeryInfor';
 import { accountReducer } from './account';
 import { userSurgeryInforReducer } from './modifySurgery';
@@ -54,7 +53,6 @@ export default combineReducers({
   surgery,
   doctor,
   patientInfor: patientInforReducer,
-  addSurgeryInforReducer,
   surgeryInfor: loadSurgeryInforReducer,
   account: accountReducer,
   patientSurgeryInfor: userSurgeryInforReducer,
