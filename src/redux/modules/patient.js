@@ -24,6 +24,7 @@ const initState = {
   addPatientSuccess: false,
   modifyPatientSuccess: false,
   deletePatientSuccess: false,
+  newCreatePatientId: '',
   loading: false,
   patient: {},
   successMsg: '',
@@ -44,12 +45,14 @@ export default function addPatientInforReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: true,
+        newCreatePatientId: '',
         addPatientSuccess: false
       };
     case ADD_PATIENT_SUCCESS:
       return {
         ...state,
         loading: false,
+        newCreatePatientId: action.result.id,
         addPatientSuccess: true,
         successMsg: action.result.success_msg
       };

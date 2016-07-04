@@ -74,7 +74,7 @@ export default class PatientInfo extends Component {
         <HeadNaviBar>患者信息</HeadNaviBar>
         <section className="cardBgRadius">
           <div className={styles.addPatientLi + ' ' + styles.addPatientLiFirst}>
-            <label className={ styles.leftPlaceholder}>患者姓名</label>
+            <label className={ styles.leftPlaceholder}>姓名</label>
             <div>
               {patient.name}
             </div>
@@ -83,6 +83,12 @@ export default class PatientInfo extends Component {
             <label className={ styles.leftPlaceholder}>性别</label>
             <div>
               {patient.gender === 'female' ? '女' : '男'}
+            </div>
+          </div>
+          <div className={styles.addPatientLi}>
+            <label className={ styles.leftPlaceholder}>电话</label>
+            <div>
+              {patient.mobile}
             </div>
           </div>
           <div className={styles.addPatientLi}>

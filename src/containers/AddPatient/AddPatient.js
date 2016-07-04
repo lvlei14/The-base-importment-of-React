@@ -30,6 +30,7 @@ export default class AddPatient extends Component {
     createPatient: PropTypes.func,
     addPatientSuccess: PropTypes.bool,
     modifyPatientSuccess: PropTypes.bool,
+    newCreatePatientId: PropTypes.string,
     loading: PropTypes.bool,
     location: PropTypes.object,
     successMsg: PropTypes.string,
@@ -57,11 +58,12 @@ export default class AddPatient extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.addPatientSuccess && nextProps.addPatientSuccess) {
-      this.props.push('/opera-patient');
+      this.props.push('/patient/' + nextProps.newCreatePatientId);
       alert(nextProps.successMsg);
     }
     if (!this.props.modifyPatientSuccess && nextProps.modifyPatientSuccess) {
-      this.props.push('/opera-patient');
+      const {id} = this.props.location.query;
+      this.props.push('/patient/' + id);
       this.props.clearInitPatient();
       alert(nextProps.successMsg);
     }
