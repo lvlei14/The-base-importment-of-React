@@ -8,6 +8,7 @@ import './DateTimePicker.scss';
 import { addDatePlan, loadTemplateItem } from '../../redux/modules/datePlanInfo';
 import { addGroupNotice } from '../../redux/modules/groupInfo';
 
+let startTimeNum;
 const styles = require('./AddDatePlan.scss');
 @connect(
   state => ({...state.datePlanInfo, ...state.groupInfo}), {
@@ -18,6 +19,7 @@ const styles = require('./AddDatePlan.scss');
   }
 )
 export default class AddDatePlan extends Component {
+
   static propTypes = {
     template: PropTypes.array,
     routeParams: PropTypes.object,
@@ -37,15 +39,16 @@ export default class AddDatePlan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputFormat: 'YYYY-MM-DD h:mm A',
-      startTime: new Date(),
-      endTime: new Date(),
+      inputFormat: 'YYYY-MM-DD HH:mm',
+      startTime: startTimeNum || '',
+      endTime: '',
     };
   }
 
   componentDidMount() {
     const templateId = this.props.routeParams.id;
     this.props.loadTemplateItem(templateId);
+    startTimeNum = new Date().getTime();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -73,7 +76,8 @@ export default class AddDatePlan extends Component {
   }
 
   getNowFormatDate(day) {
-    const currentdate = moment(day).format('YYYY-MM-DD HH:mm:ss');
+    const newDateNew = new Date(parseInt(day, 10));
+    const currentdate = moment(newDateNew).format('YYYY-MM-DD HH:mm:ss');
     return currentdate;
   }
   clickAddBtn() {
@@ -102,7 +106,7 @@ export default class AddDatePlan extends Component {
     result.content = temItem;
     result.type = type;
     result.is_inner = isInner;
-    result.start_time = this.getNowFormatDate(this.state.startTime);
+    result.start_time = !this.state.startTime ? this.getNowFormatDate(startTimeNum) : this.getNowFormatDate(this.state.startTime);
     result.end_time = this.getNowFormatDate(this.state.endTime);
     const repeat = {
       label: '重复',
@@ -115,13 +119,15 @@ export default class AddDatePlan extends Component {
     };
     result.remind = remind;
     result.template = template && template[0]._id;
-    if (result.start_time === result.end_time) {
+    if (!this.state.endTime) {
+      this.props.showDiaglog('请选择结束时间');
+      return;
+    }
+    if (this.state.startTime === this.state.endTime) {
       this.props.showDiaglog('开始时间与结束时间不能相同');
       return;
     }
-    if (result.start_time > result.end_time) {
-      console.log(result.start_time);
-      console.log(result.end_time);
+    if (this.state.startTime > this.state.endTime) {
       this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }
@@ -134,16 +140,14 @@ export default class AddDatePlan extends Component {
   }
 
   handleChange = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
-      startTime: newDateNew
+      startTime: newDate
     });
   }
 
   handleChangeEndTime = (newDate) => {
-    const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
-      endTime: newDateNew
+      endTime: newDate
     });
   }
 
@@ -185,7 +189,7 @@ export default class AddDatePlan extends Component {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
     const templateType = template && template[0] && template[0].name;
-    const {inputFormat} = this.state;
+    const {inputFormat, startTime} = this.state;
     return (
       <div>
         <HeadNaviBar>添加日程</HeadNaviBar>
@@ -213,6 +217,8 @@ export default class AddDatePlan extends Component {
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
                     <DateTimeField
+                      dateTime={!startTime ? this.getNowFormatDate(startTimeNum) : this.getNowFormatDate(startTime)}
+                      format={'YYYY-MM-DD HH:mm:ss'}
                       inputFormat={inputFormat}
                       onChange={this.handleChange} />
                   </section>
@@ -223,6 +229,7 @@ export default class AddDatePlan extends Component {
                 <div className={styles.scheduleType}>
                   <section className={styles.dateTimePicker}>
                     <DateTimeField
+                      defaultText="请选择结束时间"
                       inputFormat={inputFormat}
                       onChange={this.handleChangeEndTime} />
                   </section>

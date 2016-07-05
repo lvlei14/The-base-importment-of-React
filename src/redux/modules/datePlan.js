@@ -60,6 +60,8 @@ export function datePlanSchedulesReducer(state = initState, action = {}) {
       };
 
     case LOAD_SCHEDULE_SUCCESS:
+      console.log('列表');
+      console.log(action.result.result);
       return {
         ...state,
         loading: false,

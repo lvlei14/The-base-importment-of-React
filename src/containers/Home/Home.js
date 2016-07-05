@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { sendWxCode } from '../../redux/modules/auth';
 
 import { push } from 'react-router-redux';
@@ -138,10 +139,7 @@ class ScdItems extends Component {
   }
 
   handleTime(time) {
-    const date = new Date(time);
-    const newTimeHour = date.getHours();
-    const newTimeMinute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    const newTime = newTimeHour + ':' + newTimeMinute;
+    const newTime = moment(time).format('HH:mm');
     return newTime;
   }
 
@@ -163,15 +161,21 @@ class ScdItems extends Component {
                       return (
                         <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
                           <div>
-                            <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)}</span>
-                            {this.itemTimeIcon(itemTimePeriod)}
-                            <span className="left">{itemTimePeriod.type.value}</span>
-                            <span className={styles.timeRange + ' left'}>{this.handleTime(itemTimePeriod.start_time)} － {this.handleTime(itemTimePeriod.end_time)}</span>
-                            <span style={{display: itemTimePeriod.is_inner.value === '院外' ? 'boock' : 'none'}}
-                              className={styles.outside + ' left'}>院外</span>
-                            <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
-                             className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-                          </div>
+                            <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)} - {this.handleTime(itemTimePeriod.end_time)}</span>
+                              {this.itemTimeIcon(itemTimePeriod)}
+                              <span className={styles.timeRange + ' left'}>
+                                {
+                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
+                                ?
+                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
+                                : itemTimePeriod.type && itemTimePeriod.type.value
+                                }
+                              </span>
+                              <span style={{display: itemTimePeriod.is_inner.value ? 'none' : 'block'}}
+                                className={styles.outside + ' left'}>院外</span>
+                              <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
+                               className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+                            </div>
                         </li>
                       );
                     })
