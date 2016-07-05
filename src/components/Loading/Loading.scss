@@ -1,0 +1,25 @@
+@import '../../theme/variables';
+.loadingFa{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+.loading {
+  position: absolute;
+  width: .9rem;
+  height: .8rem;
+  top: 2rem;
+  left: 50%;
+  font-size: .27rem;
+  color: #337ab7;
+  text-align: center;
+  line-height: .77rem;
+  margin: 0 auto;
+  margin-left: -.45rem;
+  background-color: hsla(0, 0%, 0%, 0.27);
+  border-radius: .07rem;
+}
