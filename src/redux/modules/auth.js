@@ -200,7 +200,7 @@ export function register(options) {
 export function login(name, password) {
   return {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-    promise: (client) => client.post('/auth/local', {
+    promise: (client) => client.post('/auth/local?source=wechat', {
       data: {
         loginId: name,
         password: password
