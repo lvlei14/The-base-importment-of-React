@@ -24,7 +24,8 @@ import {
     GroupList,
     ForgetPassword,
     ResetPassword,
-    GroupMsgList
+    GroupMsgList,
+    NeedApartment
   } from 'containers';
 
 export default (store) => {
@@ -82,6 +83,7 @@ export default (store) => {
         <Route path="group-list" component={GroupList} />
         <Route path="group-msg-list/:id" component={GroupMsgList} />
         { /* Routes requiring login */ }
+        <Route path="appart-my-need" component={NeedApartment} />
         <Route onEnter={requireLogin} />
       </Route>
     </Route>
