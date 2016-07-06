@@ -139,10 +139,12 @@ input, select{
   outline: none !important;
 }
 textarea{
+  width: 100%;
   padding: 0 .06rem;
   border-radius: 2px;
   border: 1px solid $borderColor;
   background: #fff;
+  min-height: 1rem;
 }
 .select{
   position: relative;
@@ -158,6 +160,49 @@ textarea{
     top: .14rem;
     right: .1rem;
     border-top:.06rem solid $mainColor;
+  }
+}
+.addPage{
+  padding: $lrmargin;
+  header{
+    color: $mainColor;
+    font-size: $jzfontSize;
+    margin-bottom: .1rem;
+    margin-top: $tbmargin;
+  }
+  ul{
+    padding:.08rem .14rem .08rem .06rem;
+    li{
+      position: relative;
+      line-height: .36rem;
+      margin:.14rem 0;
+      div{
+        margin-left:.9rem;
+      }
+    }
+    li.dateTimeFLiFirst{
+      margin-bottom: 0;
+    }
+    li.dateTimeFLiEnd{
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+  }
+  .leftPlaceholder{
+    font-style: normal;
+    width: .7rem;
+    text-align: right;
+    position: absolute;
+    top:0;
+    left:0;
+  }
+  .mainIcon{
+    color: #f00;
+    position: absolute;
+    top:0;
+    left:.72rem;
+    font-size: $jzfontSize;
+    line-height: .35rem;
   }
 }
 
@@ -422,6 +467,10 @@ textarea{
     background: $mainColor;
     border-color: $mainColor;
   }
+}
+.AddappartNeed .input-group{
+  position: absolute;
+  top: 0 !important;
 }
 
 

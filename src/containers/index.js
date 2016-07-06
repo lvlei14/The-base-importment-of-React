@@ -22,3 +22,4 @@ export ForgetPassword from './ForgetPassword/ForgetPassword';
 export ResetPassword from './ResetPassword/ResetPassword';
 export GroupMsgList from './GroupMsgList/GroupMsgList';
 export NeedApartment from './NeedApartment/NeedApartment';
+export NeedApartAdd from './NeedApartAdd/NeedApartAdd';
