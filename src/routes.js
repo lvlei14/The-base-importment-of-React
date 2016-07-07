@@ -27,7 +27,8 @@ import {
     GroupMsgList,
     RateDoctor,
     NeedApartment,
-    NeedApartAdd
+    NeedApartAdd,
+    NeedApartment
   } from 'containers';
 
 export default (store) => {
