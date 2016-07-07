@@ -24,3 +24,5 @@ export GroupMsgList from './GroupMsgList/GroupMsgList';
 export MyNeeds from './MyNeeds/MyNeeds';
 export NeedsDetail from './NeedsDetail/NeedsDetail';
 
+export RateDoctor from './RateDoctor/RateDoctor';
+export NeedApartment from './NeedApartment/NeedApartment';
