@@ -28,6 +28,7 @@ import {
     MyNeeds,
     NeedsDetail,
     RateDoctor,
+    NeedApartAdd,
     NeedApartment
   } from 'containers';
 
@@ -48,11 +49,11 @@ export default (store) => {
       replace('/login-or-register');
     }
 
-    // if (!isAuthLoaded(store.getState())) {
-    //   store.dispatch(loadAuth()).then(checkAuth, authError);
-    // } else {
-    //   checkAuth();
-    // }
+    if (!isAuthLoaded(store.getState())) {
+      store.dispatch(loadAuth()).then(checkAuth, authError);
+    } else {
+      checkAuth();
+    }
   };
 
   /**
@@ -90,8 +91,10 @@ export default (store) => {
         { /* Routes requiring login */ }
 
         <Route path="my-needs" component={MyNeeds}/>
-        <Route path="needs-detail" component={NeedsDetail}/>
+        <Route path="needs-detail/:id" component={NeedsDetail}/>
         <Route path="appart-my-need" component={NeedApartment} />
+        <Route path="add-appart-need" component={NeedApartAdd} />
+        { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>
     </Route>

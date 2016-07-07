@@ -1,21 +1,40 @@
 import React, {Component, PropTypes} from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import {connect} from 'react-redux';
-
+import { push } from 'react-router-redux';
 
 const styles = require('./NeedsDetail.scss');
+import { loadExpertDetail } from '../../redux/modules/needsdetail';
 
-export default class NeedsDetail extends Component {
-  // static propTypes = {
-  //
-  // };
+
+@connect(
+  state => ({
+    todo: state.needsdetail.todo,
+    completed: state.needsdetail.completed,
+
+  }), {
+    pushState: push,
+    loadExpertDetail,
+  }
+)
+
+export default class needsdetail extends Component {
+  static propTypes = {
+    pushState: PropTypes.func,
+    loadExpertDetail: PropTypes.func,
+    routeParams: PropTypes.object,
+
+  };
 
   constructor(props) {
     super(props);
-
+    this.state = {
+    };
   }
-
   componentDidMount() {
+    console.log('传进来了');
+    const id = this.props.routeParams.id;
+    this.props.loadExpertDetail(id);
   }
 
   componentWillReceiveProps() {

@@ -26,3 +26,4 @@ export NeedsDetail from './NeedsDetail/NeedsDetail';
 
 export RateDoctor from './RateDoctor/RateDoctor';
 export NeedApartment from './NeedApartment/NeedApartment';
+export NeedApartAdd from './NeedApartAdd/NeedApartAdd';
