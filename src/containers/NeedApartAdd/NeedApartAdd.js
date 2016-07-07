@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 // import { push } from 'react-router-redux';
-// import Modal from '../../components/Modal/Modal';
+import Modal from '../../components/Modal/Modal';
 import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
 import '../AddDatePlan/DateTimePicker.scss';
 import moment from 'moment';
@@ -36,7 +36,9 @@ export default class NeedApartAdd extends Component {
     this.state = {
       startTime: '',
       endTime: '',
-      inputFormat: 'YYYY-MM-DD HH:mm'
+      inputFormat: 'YYYY-MM-DD HH:mm',
+      showModal: true,
+      selectDoctors: '',
     };
   }
 
@@ -67,7 +69,8 @@ export default class NeedApartAdd extends Component {
     const {values} = this.props;
     values.start_time = this.state.startTime ? this.formatDate(this.state.startTime) : this.formatDate(loadPageCurTime);
     values.end_time = this.state.endTime;
-    if (values && !values.doctor) {
+    values.doctor = this.state.selectDoctors;
+    if (!this.state.selectDoctors) {
       this.props.showDiaglog('请选择医生');
       return;
     }
@@ -86,9 +89,26 @@ export default class NeedApartAdd extends Component {
     console.log(this.props.values);
   }
 
+  clickShowModal() {
+    this.setState({
+      showModal: true,
+    });
+  }
+
+  clickHideModal() {
+    this.setState({
+      showModal: false,
+    });
+  }
+
+  clickConfrimDoctor() {
+    console.log('点击确定');
+    console.log(this.refs.aaa1.value);
+  }
+
   render() {
     const {inputFormat} = this.state;
-    const {fields: {doctor, type, telNum, address, tripWay, mark}} = this.props;
+    const {fields: {type, telNum, address, tripWay, mark}} = this.props;
     return (
       <div className={styles.addNeed}>
         <HeadNaviBar>发布需求</HeadNaviBar>
@@ -98,13 +118,8 @@ export default class NeedApartAdd extends Component {
             <li>
               <label className="leftPlaceholder">专家</label>
               <span className="mainIcon">*</span>
-              <div className="select">
-                <select {...doctor}>
-                  <option value="in">请选择</option>
-                  <option value="in">院内</option>
-                  <option value="out">院外</option>
-                </select>
-                <p className="sanjiao-bt"></p>
+              <div className="select" onClick={this.clickShowModal.bind(this)}>
+                <input value={this.state.selectDoctors} />
               </div>
             </li>
             <li>
@@ -171,9 +186,75 @@ export default class NeedApartAdd extends Component {
           <header>备注信息</header>
           <textarea {...mark}></textarea>
         </div>
-        <footer><button className="mainBtn" onClick={this.clickAddNeed.bind(this)}>发布需求</button></footer>
+        <footer style={{margin: '0 .15rem'}}><button className="mainBtn" onClick={this.clickAddNeed.bind(this)}>发布需求</button></footer>
+        <div style={{display: this.state.showModal ? 'block' : 'none'}}>
+          <DoctorsModal
+            clickHideModal = {this.clickHideModal.bind(this)}
+            clickAddNeed = {this.clickAddNeed.bind(this)} />
+        </div>
       </div>
     );
   }
 }
 
+
+/**
+  * component: select doctors modal
+  */
+class DoctorsModal extends Component {
+  static propTypes = {
+    clickHideModal: PropTypes.func,
+    clickAddNeed: PropTypes.func
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectDoctors: [],
+    };
+  }
+
+  componentDidMount() {
+  }
+
+  changeSelectDoctor(id, value) {
+    console.log('-----changeSelectDoctor');
+    const selectDoctorItem = {id: id, value: value};
+    console.log(selectDoctorItem);
+    this.setState({
+      selectDoctors: this.state.selectDoctors.push(selectDoctorItem)
+    });
+  }
+
+  render() {
+    console.log('00000');
+    console.log(this.state.selectDoctors);
+    return (
+      <div>
+        <Modal
+            title = {'选择医生'}
+            clickHideModal = {this.props.clickHideModal}
+            clickConfirm = {this.props.clickAddNeed}
+            clickCancel = {this.props.clickHideModal}
+          >
+          <div className={styles.baseList + ' clearfix'}>
+            <header>wangwu</header>
+            <p>beijing</p>
+            <div className={'checkbox ' + styles.checkbox}>
+              <input type="checkbox" value="1" id="checkboxOneInput" name="" onChange={() => this.changeSelectDoctor('000', 'input0')} />
+              <label htmlFor="checkboxOneInput"></label>
+            </div>
+          </div>
+          <div className={styles.baseList + ' clearfix'}>
+            <header>wangwu</header>
+            <p>beijing</p>
+            <div className={'checkbox ' + styles.checkbox}>
+              <input type="checkbox" value="2" id="checkboxOneInput2" name="" onChange={() => this.changeSelectDoctor('001', 'input1')} />
+              <label htmlFor="checkboxOneInput2"></label>
+            </div>
+          </div>
+        </Modal>
+      </div>
+    );
+  }
+}

@@ -1,7 +1,4 @@
 @import '../../theme/variables.scss';
-.addNeed footer{
-  margin: 0 $lrmargin;
-}
 .dateTimePicker{
   width: 100%;
   position: relative;
@@ -49,4 +46,20 @@
 }
 textarea{
   border-radius: .06rem;
+}
+
+.baseList{
+  color: $xsfontColor;
+  border-bottom: 1px solid $borderColor;
+  padding: .08rem $lrmargin;
+  position: relative;
+  header{
+    font-size: $jzfontSize;
+    color: $jzfontColor;
+  }
+  .checkbox{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }

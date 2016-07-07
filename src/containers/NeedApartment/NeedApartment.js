@@ -39,14 +39,19 @@ export default class NeedApartment extends Component {
       <div className={'duty ' + styles.duty}>
         <HeadNaviBar>我的需求</HeadNaviBar>
         <Tabs className="tabs" onSelect={this.changeTab}>
-          <TabList className="tabList tabList3" activeTabClassName="tabListOn">
+          <TabList style={{marginBottom: 0}} className="tabList tabList3" activeTabClassName="tabListOn">
             <Tab>待接受</Tab>
             <Tab>已接受</Tab>
             <Tab>已完成</Tab>
           </TabList>
 
           <TabPanel>
-            待接受内容
+            <div className="topCardBg">
+              <div className={'list ' + styles.needApartListCon}>
+                <header>王五</header>
+                <p>2222</p>
+              </div>
+            </div>
           </TabPanel>
           <TabPanel>
             已接受内容

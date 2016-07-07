@@ -162,6 +162,53 @@ textarea{
     border-top:.06rem solid $mainColor;
   }
 }
+//checkbox
+.checkbox {
+  width: .24rem;
+  height: .24rem;
+  position: relative;
+  input{
+    width: .24rem;
+    height: .24rem;
+    margin:0;
+    right: 0;
+  }
+}
+.checkbox label {
+  cursor: pointer;
+  position: absolute;
+  width: .24rem;
+  height: .24rem;
+  top: 0;
+  left: 0;
+  background: #41C299;
+}
+/*duihao*/
+.checkbox label:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: .16rem;
+  height: .08rem;
+  background: transparent;
+  top: .06rem;
+  left: .04rem;
+  border: 3px solid #fff;
+  border-top: none;
+  border-right: none;
+   
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+/*creat checked state style*/
+.checkbox input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+
+
 .addPage{
   padding: $lrmargin;
   header{
@@ -249,6 +296,17 @@ textarea{
 .topCardBg{
   background-color: #fff;
   border-bottom:1px solid #d8d8d8;
+}
+
+
+//list con
+.list{
+  header{
+    font-size: $jzjzfontSize;
+    color: $jzfontColor;
+  }
+  p{
+  }
 }
 
 
