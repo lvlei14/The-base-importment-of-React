@@ -26,6 +26,7 @@ import {
     ResetPassword,
     GroupMsgList,
     RateDoctor,
+    NeedApartment
   } from 'containers';
 
 export default (store) => {
@@ -85,6 +86,7 @@ export default (store) => {
         {/* rate doctor, :id 邀约Id */}
         <Route path="rate/:id" component={RateDoctor} />
         { /* Routes requiring login */ }
+        <Route path="appart-my-need" component={NeedApartment} />
         <Route onEnter={requireLogin} />
       </Route>
     </Route>
