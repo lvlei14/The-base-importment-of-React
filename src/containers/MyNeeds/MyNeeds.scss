@@ -1,0 +1,108 @@
+@import '../../theme/variables.scss';
+
+div, span, p, ul, li, dl, a, input, img, b, button {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/***underView*/
+.bigUnderView {
+  margin-bottom: 50px;
+  overflow: hidden;
+  background-color: white;
+  font-size: 14px;
+  color: rgba(121, 121, 121, 1);
+  text-overflow: ellipsis;
+
+  .underView {
+    width: 100%;
+    height: 151px;
+    border-bottom: 12px solid rgba(216, 216, 216, 1);
+    img {
+      margin: 25px 0 0 10px;
+      width: 50px;
+      height: 50px;
+      float: left;
+    }
+
+    .rightText {
+      float: left;
+      margin: 25px 0 16px 18px;
+      line-height: 18px;
+      width: 200px;
+      height: 108px;
+      .doctorName {
+        margin-left: 0;
+        margin-top: 0;
+        width: 100%;
+        height: 24px;
+        line-height: 24px;
+        .name {
+          color: rgba(80, 80, 80, 1);
+          font-size: 17px;
+          display: inline-block;
+          margin-left: 0;
+        }
+      }
+      .hospital {
+        background-color: white;
+        margin-left: 0;
+        margin-top: 16px;
+        height: 20px;
+        line-height: 20px;
+      }
+      .jobTitle {
+        margin-left: 0;
+        margin-top: 2px;
+        height: 20px;
+        line-height: 20px;
+      }
+      .phoneNum {
+        margin-left: 0;
+        margin-top: 2px;
+        height: 20px;
+        line-height: 20px;
+
+        .Num {
+          margin-left: 0;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          float: left;
+          height: 20px;
+          line-height: 20px;
+        }
+
+        .dial {
+          margin: 2px 0 0 10px;
+          background-color: rgba(65, 194, 153, 1);
+          color: white;
+          font-size: 10px;
+          height: 18px;
+          width: 60px;
+          text-align: center;
+          border-radius: 2px;
+          line-height: 18px;
+          float: left;
+        }
+      }
+    }
+    .rightMore {
+      margin: 68px 15px 53px 0;
+      float: right;
+      width: 7px;
+      height: 15px;
+    }
+  }
+}
+
+
+
+
+

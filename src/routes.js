@@ -24,7 +24,9 @@ import {
     GroupList,
     ForgetPassword,
     ResetPassword,
-    GroupMsgList
+    GroupMsgList,
+    MyNeeds,
+    NeedsDetail
   } from 'containers';
 
 export default (store) => {
@@ -44,11 +46,11 @@ export default (store) => {
       replace('/login-or-register');
     }
 
-    if (!isAuthLoaded(store.getState())) {
-      store.dispatch(loadAuth()).then(checkAuth, authError);
-    } else {
-      checkAuth();
-    }
+    // if (!isAuthLoaded(store.getState())) {
+    //   store.dispatch(loadAuth()).then(checkAuth, authError);
+    // } else {
+    //   checkAuth();
+    // }
   };
 
   /**
@@ -82,6 +84,9 @@ export default (store) => {
         <Route path="group-list" component={GroupList} />
         <Route path="group-msg-list/:id" component={GroupMsgList} />
         { /* Routes requiring login */ }
+
+        <Route path="my-needs" component={MyNeeds}/>
+        <Route path="needs-detail" component={NeedsDetail}/>
         <Route onEnter={requireLogin} />
       </Route>
     </Route>

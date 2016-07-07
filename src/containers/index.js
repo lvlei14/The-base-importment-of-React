@@ -21,3 +21,6 @@ export GroupList from './GroupList/GroupList';
 export ForgetPassword from './ForgetPassword/ForgetPassword';
 export ResetPassword from './ResetPassword/ResetPassword';
 export GroupMsgList from './GroupMsgList/GroupMsgList';
+export MyNeeds from './MyNeeds/MyNeeds';
+export NeedsDetail from './NeedsDetail/NeedsDetail';
+
