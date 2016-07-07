@@ -139,10 +139,12 @@ input, select{
   outline: none !important;
 }
 textarea{
+  width: 100%;
   padding: 0 .06rem;
   border-radius: 2px;
   border: 1px solid $borderColor;
   background: #fff;
+  min-height: 1rem;
 }
 .select{
   position: relative;
@@ -158,6 +160,96 @@ textarea{
     top: .14rem;
     right: .1rem;
     border-top:.06rem solid $mainColor;
+  }
+}
+//checkbox
+.checkbox {
+  width: .24rem;
+  height: .24rem;
+  position: relative;
+  input{
+    width: .24rem;
+    height: .24rem;
+    margin:0;
+    right: 0;
+  }
+}
+.checkbox label {
+  cursor: pointer;
+  position: absolute;
+  width: .24rem;
+  height: .24rem;
+  top: 0;
+  left: 0;
+  background: #41C299;
+}
+/*duihao*/
+.checkbox label:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: .16rem;
+  height: .08rem;
+  background: transparent;
+  top: .06rem;
+  left: .04rem;
+  border: 3px solid #fff;
+  border-top: none;
+  border-right: none;
+
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+/*creat checked state style*/
+.checkbox input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+
+
+.addPage{
+  padding: $lrmargin;
+  header{
+    color: $mainColor;
+    font-size: $jzfontSize;
+    margin-bottom: .1rem;
+    margin-top: $tbmargin;
+  }
+  ul{
+    padding:.08rem .14rem .08rem .06rem;
+    li{
+      position: relative;
+      line-height: .36rem;
+      margin:.14rem 0;
+      div{
+        margin-left:.9rem;
+      }
+    }
+    li.dateTimeFLiFirst{
+      margin-bottom: 0;
+    }
+    li.dateTimeFLiEnd{
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+  }
+  .leftPlaceholder{
+    font-style: normal;
+    width: .7rem;
+    text-align: right;
+    position: absolute;
+    top:0;
+    left:0;
+  }
+  .mainIcon{
+    color: #f00;
+    position: absolute;
+    top:0;
+    left:.72rem;
+    font-size: $jzfontSize;
+    line-height: .35rem;
   }
 }
 
@@ -204,6 +296,17 @@ textarea{
 .topCardBg{
   background-color: #fff;
   border-bottom:1px solid #d8d8d8;
+}
+
+
+//list con
+.list{
+  header{
+    font-size: $jzjzfontSize;
+    color: $jzfontColor;
+  }
+  p{
+  }
 }
 
 
@@ -429,7 +532,6 @@ textarea{
 }
 
 
-
 // =============================评论五角星的css=============================
 @font-face {
   font-family: 'anticon';
@@ -499,4 +601,49 @@ textarea{
 .rc-rate-star-full:hover:before {
   color: tint($mainColor, 30%);
 }
+
+
 // =============================评论五角星的css=============================
+.AddappartNeed .input-group{
+  position: absolute;
+  top: 0 !important;
+}
+
+
+
+/*tabs*/
+.tabs{
+
+}
+.tabList{
+  height: .5rem;
+  line-height: .5rem;
+  background: #fff;
+  .ReactTabs__Tab{
+    padding: 0;
+    text-align: center;
+  }
+  .ReactTabs__Tab:focus{
+    box-shadow: 0 0 0 transparent;
+    border-color: transparent;
+  }
+}
+.tabList2 .ReactTabs__Tab{
+  width: 50%;
+}
+.tabList3 .ReactTabs__Tab{
+  width: 33.33%;
+}
+.tabList4 .ReactTabs__Tab{
+  width: 25%;
+}
+.tabListOn, .tabListOn:focus{
+  border-radius: 0 !important;
+  border: 0px solid transparent !important;
+  border-bottom: 2px solid $mainColor !important;
+  color: $mainColor !important;
+  height: .48rem;
+}
+.tabListOn:after{
+  height: 0px !important;
+}

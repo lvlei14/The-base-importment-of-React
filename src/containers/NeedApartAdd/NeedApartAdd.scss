@@ -1,0 +1,65 @@
+@import '../../theme/variables.scss';
+.dateTimePicker{
+  width: 100%;
+  position: relative;
+  min-height: .36rem;
+  div{
+    width: 100% !important;
+    margin-left: 0 !important;
+    span{
+      height: 0px !important;
+    }
+    ul{
+      padding: 0 !important;
+      li{
+        margin: 0;
+        span{
+          padding: 0 !important;
+          span{
+            font-size: 20px !important;
+          }
+        }
+      }
+      li:first-child{
+        margin: 0;
+        line-height: .2rem;
+        table{
+          width: 96%;
+          margin: 0 auto;
+          th{
+            font-weight: normal !important;
+            text-align: center !important;
+          }
+        }
+      }
+    }
+    input{
+      border-radius: 2px !important;
+      border: 1px solid $borderColor !important;
+      box-shadow: 0 0 0 #fff !important;
+      padding: 0 .06rem !important;
+      height: .36rem;
+      line-height: .36rem;
+      color: $text-color;
+    }
+  }
+}
+textarea{
+  border-radius: .06rem;
+}
+
+.baseList{
+  color: $xsfontColor;
+  border-bottom: 1px solid $borderColor;
+  padding: .08rem $lrmargin;
+  position: relative;
+  header{
+    font-size: $jzfontSize;
+    color: $jzfontColor;
+  }
+  .checkbox{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
