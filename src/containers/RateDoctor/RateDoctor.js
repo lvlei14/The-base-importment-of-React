@@ -38,7 +38,7 @@ class RateDoctor extends React.Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
