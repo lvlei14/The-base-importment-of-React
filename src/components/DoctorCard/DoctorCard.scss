@@ -1,0 +1,95 @@
+@import "../../theme/variables";
+
+.doctorIntroCardContainer {
+  background-color: #FFFFFF;
+  border: 0.01rem solid #D8D8D8;
+  border-radius: 0.03rem;
+  padding: 0.1rem 0.1rem 0.1rem 0.9rem;
+  position: relative;
+  margin-bottom: 0.1rem;
+
+  img {
+    width: 0.6rem;
+    position: absolute;
+    height: 0.6rem;
+    top: 0.12rem;
+    left: 0.2rem;
+  }
+
+  .doctorName {
+    font-weight: bold;
+    color: #505050;
+  }
+  .doctorTitle {
+    margin-top: 0.08rem;
+    color: #797979;
+  }
+  .doctorTitle, .doctorBelong {
+    font-size: 0.1rem;
+  }
+}
+
+.DoctorDescContainer {
+  background-color: #FFFFFF;
+  border: 0.01rem solid #D8D8D8;
+  border-radius: 0.03rem;
+  position: relative;
+  padding: 0.1rem;
+
+  div {
+    margin-bottom: 0.07rem !important;
+    color: #797979;
+
+    label {
+      display: inline-block;
+    }
+    label::after {
+      content: ":";
+      margin-left: 0.01rem;
+      margin-right: 0.07rem;
+    }
+    p {
+      display: inline-block;
+    }
+
+    .completeStatus {
+      color: $mainColor;
+    }
+  }
+}
+
+
+.doctorCardDetailContainer {
+  background-color: #FFFFFF;
+  border: 0.01rem solid #D8D8D8;
+  border-radius: 0.03rem;
+  // padding: 0.1rem;
+  position: relative;
+  margin-bottom: 0.1rem;
+
+  .doctorIntroCardContainer {
+    border: none !important;
+    // padding: 0.1rem 0.1rem 0.1rem 0.9rem !important;
+  }
+
+  .DoctorDescContainer {
+    border: none !important;
+  }
+}
+
+.dividerContainer {
+  position: relative;
+  height: 30px;
+
+  .divider {
+    border-bottom: 0.01rem solid #e2e2e2;
+  }
+
+  .text {
+    position: absolute;
+    right: 17px;
+    top: -10px;
+    color: #D8D8D8;
+    background-color: #ffffff;
+  }
+}

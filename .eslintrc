@@ -17,6 +17,7 @@
     "no-console": 0,
     "no-alert": 0,
     "no-nested-ternary": 0,
+    "camelcase": 0,
   },
   "plugins": [
     "react", "import"

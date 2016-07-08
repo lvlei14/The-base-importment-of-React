@@ -7,7 +7,9 @@ const styles = require('./RateDoctor.scss');
 import {createComment}from '../../redux/modules/comment';
 import { showDiaglog } from '../../redux/modules/diaglog';
 import { loadAppartNeedById } from '../../redux/modules/invitation';
+import {DoctorCardWithIcon, DoctorDetailCard} from '../../components';
 
+// DoctorCardWithDetail
 
 @connect((state) => ({
   ...state.comment,
@@ -96,31 +98,25 @@ class RateDoctor extends React.Component {
   }
 
   render() {
+    const {recipient, start_time, medicalCategory} = this.props.invitation;
+    console.log(this.props.invitation);
+    console.log(recipient);
     return (
       <div>
         <HeadNaviBar>评价</HeadNaviBar>
         <div className={styles.container}>
-          <div className={styles.doctorIntroCardContainer}>
-            <div className={styles.doctorName}>
-              王红
-            </div>
-            <div className={styles.doctorTitle}>
-              主治医师；副教授；博士研究生；
-            </div>
-            <div className={styles.doctorBelong}>
-              北大人民医院；神经内科
-            </div>
-            <img src="http://wx.qlogo.cn/mmopen/ZvwXw6l6MvicibiaAwEdfqxETJj9mnKvn4icXEVj3oeA960e1qV3WicCTAF8B4ZuBYgsqtCtvS7TRWd36cia1t3EAcicNhPm6feiaxYN/0"/>
-          </div>
+          {/* 医生卡片式介绍 */}
+          <DoctorCardWithIcon doctor={recipient} />
+          <DoctorDetailCard doctor={recipient} />
 
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>
-              <p>{this.props.invitation && this.props.invitation.start_time}</p>
+              <p>{start_time}</p>
             </div>
             <div>
               <label>医疗类型</label>
-              <p>{this.props.invitation && this.props.invitation.medicalCategory}</p>
+              <p>{medicalCategory}</p>
             </div>
             <div>
               <label>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态</label>

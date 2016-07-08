@@ -17,3 +17,4 @@ export Diaglog from './Diaglog/Diaglog';
 export Modal from './Modal/Modal';
 export Loading from './Loading/Loading';
 export SearchBar from './SearchBar/SearchBar';
+export {DoctorCardWithDetail, DoctorCardWithIcon, DoctorDetailCard, DividerLine, InvitationDetail} from './DoctorCard/DoctorCard';
