@@ -94,9 +94,6 @@ label{
   width: 100%;
   padding:0;
 }
-.mainBtn:active{
-  opacity: 0.5;
-}
 
 .delBtn{
   background-color: $delBtnColor;
@@ -110,10 +107,19 @@ label{
   width: 100%;
   padding:0;
 }
-.delBtn:active{
-  opacity: 0.5;
-}
 
+.cancelBtn, .mainXsBtn{
+  color: $mainColor;
+  border: 1px solid $mainColor;
+  border-radius: 2px;
+  padding: .05rem .26rem;
+  background: #fff;
+}
+.mainXsBtn{
+  color: #fff;
+  background: $mainColor;
+  border: 1px solid transparent;
+}
 
 .addBigBtn{
   position: fixed;
@@ -126,6 +132,9 @@ label{
   background-size: .8rem;
 }
 
+.mainBtn:active, .cancelBtn:active, .mainXsBtn:active, .delBtn:active{
+  opacity: 0.5;
+}
 
 //input
 input, select{
@@ -301,11 +310,23 @@ textarea{
 
 //list con
 .list{
+  display: table;
+  width: 100%;
   header{
     font-size: $jzjzfontSize;
     color: $jzfontColor;
+    margin-bottom: .1rem;
   }
   p{
+    margin: .06rem 0;
+  }
+  .listNextIcon{
+    display: table-cell;
+    vertical-align: middle;
+    float: none;
+    font-size: .24rem;
+    color: $xsfontColor;
+    text-align: right;
   }
 }
 
