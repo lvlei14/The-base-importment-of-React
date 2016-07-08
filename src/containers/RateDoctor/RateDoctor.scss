@@ -4,35 +4,6 @@
   padding: 0.1rem;
 }
 
-.doctorIntroCardContainer {
-  background-color: #FFFFFF;
-  border: 0.01rem solid #D8D8D8;
-  border-radius: 0.03rem;
-  padding: 0.1rem 0.1rem 0.1rem 0.9rem;
-  position: relative;
-  margin-bottom: 0.1rem;
-
-  img {
-    width: 0.6rem;
-    position: absolute;
-    height: 0.6rem;
-    top: 0.12rem;
-    left: 0.2rem;
-  }
-
-  .doctorName {
-    font-weight: bold;
-    color: #505050;
-  }
-  .doctorTitle {
-    margin-top: 0.08rem;
-    color: #797979;
-  }
-  .doctorTitle, .doctorBelong {
-    font-size: 0.1rem;
-  }
-}
-
 
 .invitationDescContainer {
   background-color: #FFFFFF;
