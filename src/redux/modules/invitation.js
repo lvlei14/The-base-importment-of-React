@@ -2,6 +2,10 @@ const LOAD_NEED_APPART_LISTS = 'LOAD_NEED_APPART_LISTS';
 const LOAD_NEED_APPART_LISTS_SUCCESS = 'LOAD_NEED_APPART_LISTS_SUCCESS';
 const LOAD_NEED_APPART_LISTS_FAIL = 'LOAD_NEED_APPART_LISTS_FAIL';
 
+const LOAD_NEED_APPART_BY_ID = 'LOAD_NEED_APPART_BY_ID';
+const LOAD_NEED_APPART_BY_ID_SUCCESS = 'LOAD_NEED_APPART_BY_ID_SUCCESS';
+const LOAD_NEED_APPART_BY_ID_FAIL = 'LOAD_NEED_APPART_BY_ID_FAIL';
+
 const CANCEL_NEED_APPART_BY_NEEDID = 'CANCEL_NEED_APPART_BY_NEEDID';
 const CANCEL_NEED_APPART_BY_NEEDID_SUCCESS = 'CANCEL_NEED_APPART_BY_NEEDID_SUCCESS';
 const CANCEL_NEED_APPART_BY_NEEDID_FAIL = 'CANCEL_NEED_APPART_BY_NEEDID_FAIL';
@@ -11,12 +15,13 @@ const initState = {
   tip: null,
   loading: false,
   needAppartLists: {},
+  invitation: {},
   cancelNeedAppartSuccess: false,
   successMsg: null,
   errorMsg: null,
 };
 
-export function needAppartListReducer(state = initState, action = {}) {
+export default function invitation(state = initState, action = {}) {
   state.successMsg = null;
   state.errorMsg = null;
   switch (action.type) {
@@ -71,6 +76,26 @@ export function needAppartListReducer(state = initState, action = {}) {
         tip: action.tip
       };
 
+    case LOAD_NEED_APPART_BY_ID:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case LOAD_NEED_APPART_BY_ID_SUCCESS:
+      console.log(action);
+      return {
+        ...state,
+        loading: false,
+        invitation: action.result
+      };
+
+    case LOAD_NEED_APPART_BY_ID_FAIL:
+      return {
+        ...state,
+        loading: false
+      };
+
     default:
       return state;
   }
@@ -107,5 +132,12 @@ export function cancelAppartNeed(needId, operationCon, cancelNeedText) {
     promise: (client) => client.put('/invitation/' + needId, {
       data: newData
     })
+  };
+}
+
+export function loadAppartNeedById(id) {
+  return {
+    types: [LOAD_NEED_APPART_BY_ID, LOAD_NEED_APPART_BY_ID_SUCCESS, LOAD_NEED_APPART_BY_ID_FAIL],
+    promise: (client) => client.get('/invitation/' + id)
   };
 }

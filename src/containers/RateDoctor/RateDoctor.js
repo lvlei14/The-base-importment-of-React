@@ -6,13 +6,16 @@ const Rate = require('rc-rate');
 const styles = require('./RateDoctor.scss');
 import {createComment}from '../../redux/modules/comment';
 import { showDiaglog } from '../../redux/modules/diaglog';
+import { loadAppartNeedById } from '../../redux/modules/invitation';
 
 
 @connect((state) => ({
-  ...state.comment}), {
+  ...state.comment,
+  invitation: state.invitation && state.invitation.invitation}), {
     push,
     showDiaglog,
-    createComment
+    createComment,
+    loadAppartNeedById
   }
 )
 class RateDoctor extends React.Component {
@@ -22,6 +25,8 @@ class RateDoctor extends React.Component {
     routeParams: PropTypes.object,
     addCommentSuccess: PropTypes.bool,
     successMsg: PropTypes.string,
+    invitation: PropTypes.object,
+    loadAppartNeedById: PropTypes.func,
     showDiaglog: PropTypes.func
   };
 
@@ -38,7 +43,8 @@ class RateDoctor extends React.Component {
   }
 
   componentDidMount() {
-
+    const {id} = this.props.routeParams;
+    this.props.loadAppartNeedById(id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,11 +116,11 @@ class RateDoctor extends React.Component {
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>
-              <p>2016-06-04 16:00</p>
+              <p>{this.props.invitation && this.props.invitation.start_time}</p>
             </div>
             <div>
               <label>医疗类型</label>
-              <p>门诊</p>
+              <p>{this.props.invitation && this.props.invitation.medicalCategory}</p>
             </div>
             <div>
               <label>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态</label>

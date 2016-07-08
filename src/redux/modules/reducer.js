@@ -28,7 +28,7 @@ import doctor from './doctor';
 import forgetPassword from './forgetPassword';
 import { groupListReducer } from './groupList';
 import { groupInfoReducer } from './groupInfo';
-import { needAppartListReducer } from './needAppartList';
+import invitation from './invitation';
 import { needAppartInfoReducer } from './needAppartInfo';
 import comment from './comment';
 
@@ -65,6 +65,6 @@ export default combineReducers({
   comment,
   groupList: groupListReducer,
   groupInfo: groupInfoReducer,
-  needAppartLists: needAppartListReducer,
+  invitation,
   needAppartInfo: needAppartInfoReducer,
 });
