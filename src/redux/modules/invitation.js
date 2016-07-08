@@ -6,10 +6,6 @@ const LOAD_NEED_APPART_BY_ID = 'LOAD_NEED_APPART_BY_ID';
 const LOAD_NEED_APPART_BY_ID_SUCCESS = 'LOAD_NEED_APPART_BY_ID_SUCCESS';
 const LOAD_NEED_APPART_BY_ID_FAIL = 'LOAD_NEED_APPART_BY_ID_FAIL';
 
-const CANCEL_NEED_APPART_BY_NEEDID = 'CANCEL_NEED_APPART_BY_NEEDID';
-const CANCEL_NEED_APPART_BY_NEEDID_SUCCESS = 'CANCEL_NEED_APPART_BY_NEEDID_SUCCESS';
-const CANCEL_NEED_APPART_BY_NEEDID_FAIL = 'CANCEL_NEED_APPART_BY_NEEDID_FAIL';
-
 const CHANGE_NEED_APPART_STATUS = 'CHANGE_NEED_APPART_STATUS';
 const CHANGE_NEED_APPART_STATUS_SUCCESS = 'CHANGE_NEED_APPART_STATUS_SUCCESS';
 const CHANGE_NEED_APPART_STATUS_FAIL = 'CHANGE_NEED_APPART_STATUS_FAIL';
@@ -88,7 +84,8 @@ export default function invitation(state = initState, action = {}) {
       };
 
     case LOAD_NEED_APPART_BY_ID_SUCCESS:
-      console.log(action);
+      console.log('detatil action');
+      console.log(action.result);
       return {
         ...state,
         loading: false,
@@ -125,12 +122,12 @@ export function loadNeedAppartLists() {
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function changeNeedAppartStatus(needId, operationCon, CHANGENeedText) {
+export function changeNeedAppartStatus(needId, operationCon, CHANGENeedText, status) {
   const newData = {
     operation: operationCon,
-    reason: CHANGENeedText
+    reason: CHANGENeedText,
+    status: status
   };
-  console.log('-----');
   console.log(newData);
   return {
     types: [CHANGE_NEED_APPART_STATUS, CHANGE_NEED_APPART_STATUS_SUCCESS, CHANGE_NEED_APPART_STATUS_FAIL],

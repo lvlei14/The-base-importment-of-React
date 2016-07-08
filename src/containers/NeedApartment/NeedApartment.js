@@ -9,7 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
 
 const styles = require('./NeedApartment.scss');
-let cancelNeedId;
+let cancelNeedItem;
 
 @connect(
   state => ({...state.invitation}), {
@@ -51,6 +51,7 @@ export default class NeedApartment extends Component {
   }
 
   changeTab(index) {
+    // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
     localStorage.setItem('needAppartTab', index);
   }
 
@@ -65,7 +66,7 @@ export default class NeedApartment extends Component {
   }
 
   clickShowModal(item, modalTabIndex) {
-    cancelNeedId = item._id;
+    cancelNeedItem = item;
     this.setState({
       showModal: true,
       modalTabIndex: modalTabIndex
@@ -84,17 +85,21 @@ export default class NeedApartment extends Component {
       operation = '取消';
       cancelNeedText = this.refs.cancelNeedText.value;
     }
-    this.props.changeNeedAppartStatus(cancelNeedId, operation, cancelNeedText);
+    this.props.changeNeedAppartStatus(cancelNeedItem._id, operation, cancelNeedText, cancelNeedItem.status);
     this.clickHideModal();
+  }
+
+  goNeedAppartDetail(item) {
+    this.props.pushState('/appart-need-detail/' + item._id + '?status=' + item.status + '?operation=' + item.operation);
   }
 
   needListItem(item) {
     return (
-      <section>
+      <section onClick={() => this.goNeedAppartDetail(item)}>
         <header>
         {
           item.doctors && item.doctors.map((doctor) => {
-            return (<span>{doctor.name}、</span>);
+            return (<span>{doctor && doctor.name}、</span>);
           })
         }
         </header>
@@ -188,7 +193,7 @@ export default class NeedApartment extends Component {
             clickCancel = {this.clickHideModal.bind(this)}>
             {
               this.state.modalTabIndex === 0 ?
-                <textarea ref="cancelNeedText" placeholder="请输入内容"></textarea>
+                <textarea className={styles.cancelNeedText} ref="cancelNeedText" placeholder="请输入内容"></textarea>
               : <div>您确定要取消此需求吗？</div>
             }
           </Modal>
