@@ -27,8 +27,7 @@ import {
     GroupMsgList,
     RateDoctor,
     NeedApartment,
-    NeedApartAdd,
-    NeedApartment
+    NeedApartAdd
   } from 'containers';
 
 export default (store) => {
@@ -85,13 +84,10 @@ export default (store) => {
         <Route path="my-profile" component={UserProfile} onEnter={requireLogin} />
         <Route path="group-list" component={GroupList} />
         <Route path="group-msg-list/:id" component={GroupMsgList} />
-<<<<<<< HEAD
         {/* rate doctor, :id 邀约Id */}
-        <Route path="rate/:id" component={RateDoctor} />
-=======
+        <Route path="rate/:id" component={RateDoctor} onEnter={requireLogin} />
         <Route path="appart-my-need" component={NeedApartment} />
         <Route path="add-appart-need" component={NeedApartAdd} />
->>>>>>> acacd7abe3657592956a97a5960bc89923555b07
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>

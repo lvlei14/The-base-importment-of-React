@@ -1,34 +1,50 @@
 import React, { PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
-// import { connect } from 'react-redux';
-// import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 const Rate = require('rc-rate');
 const styles = require('./RateDoctor.scss');
+import {createComment}from '../../redux/modules/comment';
+import { showDiaglog } from '../../redux/modules/diaglog';
 
+
+@connect((state) => ({
+  ...state.comment}), {
+    push,
+    showDiaglog,
+    createComment
+  }
+)
 class RateDoctor extends React.Component {
   static propTypes = {
-    xx: PropTypes.func,
+    push: PropTypes.func,
+    createComment: PropTypes.func,
+    routeParams: PropTypes.object,
+    addCommentSuccess: PropTypes.bool,
+    successMsg: PropTypes.string,
+    showDiaglog: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     this.state = {
       rates: [
-        {
-          name: '医学水平',
-          score: 0,
-        },
-        {
-          name: '服务态度',
-          score: 0,
-        },
-        {
-          name: '时间保障',
-          score: 0,
-        },
+        {name: '医学水平', field: 'skill', score: 0},
+        {name: '服务态度', field: 'attitude', score: 0},
+        {name: '时间保障', field: 'timeEffort', score: 0},
       ],
       comment: ''
     };
+  }
+
+  componentDidMount() {
+    
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.addCommentSuccess && nextProps.addCommentSuccess) {
+      this.props.showDiaglog(nextProps.successMsg);
+    }
   }
 
   clickRateStar(score, index) {
@@ -51,13 +67,20 @@ class RateDoctor extends React.Component {
   }
 
   submitRate() {
-    // TODO 提交comment
     const {rates} = this.state;
-    if (rates.reduce((sum, rate) => sum + rate.score, 0) < 3) {
-      alert('请评价');
+    // 检查是否有未评价的栏目
+    if (rates.reduce((sum, rate) => sum + rate.score, 0) < rates.length) {
+      this.props.showDiaglog('请评价');
       return;
     }
-    console.log(this.state);
+    const comment = this.state.rates.reduce((obj, rate) => {
+      obj[rate.field] = rate.score;
+      return obj;
+    }, {});
+    comment.desc = this.state.comment;
+    comment.invitation = this.props.routeParams && this.props.routeParams.id;
+    console.log(comment);
+    this.props.createComment(comment);
   }
 
   handleCommentInput(event) {
