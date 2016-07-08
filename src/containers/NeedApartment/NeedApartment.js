@@ -83,6 +83,22 @@ export default class NeedApartment extends Component {
     this.clickHideModal();
   }
 
+  needListItem(item) {
+    return (
+      <section>
+        <header>
+        {
+          item.doctors && item.doctors.map((doctor) => {
+            return (<span>{doctor.name}、</span>);
+          })
+        }
+        </header>
+        <p>医疗类别：{item.medicalCategory}</p>
+        <p>需求时间：{item.start_time}</p>
+      </section>
+    );
+  }
+
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
     const needAppartTabIndex = parseInt(localStorage.getItem('needAppartTab'), 10);
@@ -102,15 +118,9 @@ export default class NeedApartment extends Component {
                 return (
                   <div key={receptionWaitItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
                     <div className="left">
-                      <header>
                       {
-                        receptionWaitItem.doctors && receptionWaitItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
+                        this.needListItem(receptionWaitItem)
                       }
-                      </header>
-                      <p>医疗类别：{receptionWaitItem.medicalCategory}</p>
-                      <p>需求时间：{receptionWaitItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
                         <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
                       </footer>
@@ -127,15 +137,9 @@ export default class NeedApartment extends Component {
                 return (
                   <div key={receptionItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
                     <div className="left">
-                      <header>
                       {
-                        receptionItem.doctors && receptionItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
+                        this.needListItem(receptionItem)
                       }
-                      </header>
-                      <p>医疗类别：{receptionItem.medicalCategory}</p>
-                      <p>需求时间：{receptionItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
                         <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
                         <button className="mainXsBtn">拨打电话</button>
@@ -153,15 +157,9 @@ export default class NeedApartment extends Component {
                 return (
                   <div key={completedItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
                     <div className="left">
-                      <header>
                       {
-                        completedItem.doctors && completedItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
+                        this.needListItem(completedItem)
                       }
-                      </header>
-                      <p>医疗类别：{completedItem.medicalCategory}</p>
-                      <p>需求时间：{completedItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
                         <button className="cancelBtn" style={{marginRight: '10px'}}>再次邀请</button>
                         <button className="mainXsBtn">去评价</button>
