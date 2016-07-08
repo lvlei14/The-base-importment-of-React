@@ -10,6 +10,10 @@ const CANCEL_NEED_APPART_BY_NEEDID = 'CANCEL_NEED_APPART_BY_NEEDID';
 const CANCEL_NEED_APPART_BY_NEEDID_SUCCESS = 'CANCEL_NEED_APPART_BY_NEEDID_SUCCESS';
 const CANCEL_NEED_APPART_BY_NEEDID_FAIL = 'CANCEL_NEED_APPART_BY_NEEDID_FAIL';
 
+const CHANGE_NEED_APPART_STATUS = 'CHANGE_NEED_APPART_STATUS';
+const CHANGE_NEED_APPART_STATUS_SUCCESS = 'CHANGE_NEED_APPART_STATUS_SUCCESS';
+const CHANGE_NEED_APPART_STATUS_FAIL = 'CHANGE_NEED_APPART_STATUS_FAIL';
+
 const initState = {
   error: null,
   tip: null,
@@ -17,6 +21,7 @@ const initState = {
   needAppartLists: {},
   invitation: {},
   cancelNeedAppartSuccess: false,
+  changeNeedAppartStatusSuccess: false,
   successMsg: null,
   errorMsg: null,
 };
@@ -49,29 +54,29 @@ export default function invitation(state = initState, action = {}) {
       };
 
 
-    case CANCEL_NEED_APPART_BY_NEEDID:
+    case CHANGE_NEED_APPART_STATUS:
       return {
         ...state,
         loading: true,
-        cancelNeedAppartSuccess: false,
+        changeNeedAppartStatusSuccess: false,
       };
 
-    case CANCEL_NEED_APPART_BY_NEEDID_SUCCESS:
-      console.log('cancel need action');
+    case CHANGE_NEED_APPART_STATUS_SUCCESS:
+      console.log('CHANGE need action');
       console.log(action.result);
       return {
         ...state,
         loading: false,
-        cancelNeedAppartSuccess: true,
+        changeNeedAppartStatusSuccess: true,
         successMsg: action.result && action.result.success_msg,
         tip: action.tip
       };
 
-    case CANCEL_NEED_APPART_BY_NEEDID_FAIL:
+    case CHANGE_NEED_APPART_STATUS_FAIL:
       return {
         ...state,
         loading: false,
-        cancelNeedAppartSuccess: false,
+        changeNeedAppartStatusSuccess: false,
         errorMsg: action.error && action.error.error_msg,
         tip: action.tip
       };
@@ -116,19 +121,19 @@ export function loadNeedAppartLists() {
 
 
 /**
- * action: cancel appart need by needId
+ * action: CHANGE appart need by needId
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function cancelAppartNeed(needId, operationCon, cancelNeedText) {
+export function changeNeedAppartStatus(needId, operationCon, CHANGENeedText) {
   const newData = {
     operation: operationCon,
-    reason: cancelNeedText
+    reason: CHANGENeedText
   };
   console.log('-----');
   console.log(newData);
   return {
-    types: [CANCEL_NEED_APPART_BY_NEEDID, CANCEL_NEED_APPART_BY_NEEDID_SUCCESS, CANCEL_NEED_APPART_BY_NEEDID_FAIL],
+    types: [CHANGE_NEED_APPART_STATUS, CHANGE_NEED_APPART_STATUS_SUCCESS, CHANGE_NEED_APPART_STATUS_FAIL],
     promise: (client) => client.put('/invitation/' + needId, {
       data: newData
     })

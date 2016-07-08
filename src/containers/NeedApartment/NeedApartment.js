@@ -6,7 +6,7 @@ import Modal from '../../components/Modal/Modal';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { loadNeedAppartLists, cancelAppartNeed } from '../../redux/modules/invitation';
+import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
 
 const styles = require('./NeedApartment.scss');
 let cancelNeedId;
@@ -15,7 +15,7 @@ let cancelNeedId;
   state => ({...state.invitation}), {
     pushState: push,
     loadNeedAppartLists,
-    cancelAppartNeed,
+    changeNeedAppartStatus,
     showDiaglog
   }
 )
@@ -24,8 +24,8 @@ export default class NeedApartment extends Component {
     pushState: PropTypes.func,
     loadNeedAppartLists: PropTypes.func,
     needAppartLists: PropTypes.object,
-    cancelAppartNeed: PropTypes.func,
-    cancelNeedAppartSuccess: PropTypes.bool,
+    changeNeedAppartStatus: PropTypes.func,
+    changeNeedAppartStatusSuccess: PropTypes.bool,
     showDiaglog: PropTypes.func,
     successMsg: PropTypes.string,
   };
@@ -34,6 +34,7 @@ export default class NeedApartment extends Component {
     super(props);
     this.state = {
       showModal: false,
+      modalTabIndex: null,
     };
   }
 
@@ -42,7 +43,7 @@ export default class NeedApartment extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.cancelNeedAppartSuccess && nextProps.cancelNeedAppartSuccess) {
+    if (!this.props.changeNeedAppartStatusSuccess && nextProps.changeNeedAppartStatusSuccess) {
       this.props.showDiaglog(nextProps.successMsg, '/appart-my-need');
       this.props.loadNeedAppartLists();
       localStorage.setItem('needAppartTab', 2);
@@ -63,10 +64,11 @@ export default class NeedApartment extends Component {
     });
   }
 
-  clickShowModal(id) {
-    cancelNeedId = id;
+  clickShowModal(item, modalTabIndex) {
+    cancelNeedId = item._id;
     this.setState({
-      showModal: true
+      showModal: true,
+      modalTabIndex: modalTabIndex
     });
   }
 
@@ -76,9 +78,13 @@ export default class NeedApartment extends Component {
   }
 
   clickConfirm() {
-    const cancelNeedText = this.refs.cancelNeedText.value;
-    const operation = '取消';
-    this.props.cancelAppartNeed(cancelNeedId, operation, cancelNeedText);
+    let cancelNeedText = '';
+    let operation = '结束';
+    if (this.state.modalTabIndex === 0) {
+      operation = '取消';
+      cancelNeedText = this.refs.cancelNeedText.value;
+    }
+    this.props.changeNeedAppartStatus(cancelNeedId, operation, cancelNeedText);
     this.clickHideModal();
   }
 
@@ -111,7 +117,7 @@ export default class NeedApartment extends Component {
                       <p>医疗类别：{receptionWaitItem.medicalCategory}</p>
                       <p>需求时间：{receptionWaitItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
-                        <button onClick={() => this.clickShowModal(receptionWaitItem._id)} className="cancelBtn">取消</button>
+                        <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
                       </footer>
                     </div>
                     <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
@@ -135,10 +141,8 @@ export default class NeedApartment extends Component {
                       </header>
                       <p>医疗类别：{receptionItem.medicalCategory}</p>
                       <p>需求时间：{receptionItem.start_time}</p>
-                      <p>医疗类别：{receptionItem.medicalCategory}</p>
-                      <p>需求时间：{receptionItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
-                        <button className="cancelBtn">结束</button>
+                        <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
                         <button className="mainXsBtn">拨打电话</button>
                       </footer>
                     </div>
@@ -163,10 +167,8 @@ export default class NeedApartment extends Component {
                       </header>
                       <p>医疗类别：{completedItem.medicalCategory}</p>
                       <p>需求时间：{completedItem.start_time}</p>
-                      <p>医疗类别：{completedItem.medicalCategory}</p>
-                      <p>需求时间：{completedItem.start_time}</p>
                       <footer style={{marginTop: '16px'}}>
-                        <button className="cancelBtn">再次邀请</button>
+                        <button className="cancelBtn" style={{marginRight: '10px'}}>再次邀请</button>
                         {
                           completedItem.operation === '结束' ? <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button> : ''
                         }
@@ -182,11 +184,15 @@ export default class NeedApartment extends Component {
         <div className="addBigBtn" onClick={this.goAddAppartNeed.bind(this)}></div>
         <div style={{display: this.state.showModal ? 'block' : 'none'}}>
           <Modal
-            title = {"取消需求"}
+            title = {this.state.modalTabIndex === 0 ? '取消需求' : '结束需求'}
             clickHideModal = {this.clickHideModal.bind(this)}
             clickConfirm = {this.clickConfirm.bind(this)}
             clickCancel = {this.clickHideModal.bind(this)}>
-            <textarea ref="cancelNeedText" placeholder="请输入内容"></textarea>
+            {
+              this.state.modalTabIndex === 0 ?
+                <textarea ref="cancelNeedText" placeholder="请输入内容"></textarea>
+              : <div>您确定要取消此需求吗？</div>
+            }
           </Modal>
         </div>
       </div>
