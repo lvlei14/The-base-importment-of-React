@@ -29,7 +29,7 @@ export function needAppartInfoReducer(state = initState, action = {}) {
       return {
         ...state,
         loading: false,
-        doctors: action.result.result,
+        doctors: action.result,
         tip: action.tip
       };
 
@@ -49,6 +49,8 @@ export function needAppartInfoReducer(state = initState, action = {}) {
       };
 
     case ADD_APPART_NEED_SUCCESS:
+      console.log('add success action');
+      console.log(action);
       return {
         ...state,
         loading: false,
@@ -77,10 +79,10 @@ export function needAppartInfoReducer(state = initState, action = {}) {
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function loadDoctors(id) {
+export function loadDoctors() {
   return {
     types: [LOAD_DOCTOR, LOAD_DOCTOR_SUCCESS, LOAD_DOCTOR_FAIL],
-    promise: (client) => client.get('/template/' + id)
+    promise: (client) => client.get('/user/doctor')
   };
 }
 
@@ -89,11 +91,12 @@ export function loadDoctors(id) {
  * @param text String
  * @returns {{types: *[], promise: promise}}
  */
-export function addAppartNeed(tempObject) {
+export function addAppartNeed(needObject) {
+  console.log(needObject);
   return {
     types: [ADD_APPART_NEED, ADD_APPART_NEED_SUCCESS, ADD_APPART_NEED_FAIL],
-    promise: (client) => client.post('/schedule/', {
-      data: tempObject
+    promise: (client) => client.post('/invitation/', {
+      data: needObject
     })
   };
 }

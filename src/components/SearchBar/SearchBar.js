@@ -6,6 +6,10 @@ export default class SearchBar extends Component {
   static propTypes = {
     children: PropTypes.array,
     placeholder: PropTypes.string,
+    changeSearchText: PropTypes.func,
+    clickSearchBtn: PropTypes.func,
+    clickClearSearch: PropTypes.func,
+    searchText: PropTypes.string,
   }
 
   constructor(props) {
@@ -20,12 +24,12 @@ export default class SearchBar extends Component {
   render() {
     return (
       <div>
-        <dl className={styles.SearchBar + ' topCardBg'}>
+        <dl className={styles.SearchBar}>
           <dt className="left">
-            <i></i>
-            <input placeholder={this.props.placeholder} />
+            <i className="fa fa-search"></i>
+            <input placeholder={this.props.placeholder} value={this.props.searchText} onChange={this.props.changeSearchText} />
           </dt>
-          <dd className="right"><button>搜索</button></dd>
+          <dd className="right"><button onClick={this.props.clickSearchBtn}>搜索</button></dd>
         </dl>
       </div>
     );

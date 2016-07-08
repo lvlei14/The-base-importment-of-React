@@ -99,6 +99,7 @@ export default class AddSurgery extends Component {
   clickAddBtn() {
     const patient = this.props.location.query.uid;
     const values = Object.assign(this.props.values, {patient: patient});
+    console.log(this.props.values);
     this.props.createSurgery(values);
   }
 

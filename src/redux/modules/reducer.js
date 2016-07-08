@@ -10,6 +10,7 @@ import info from './info';
 import widgets from './widgets';
 import { diaglogReducer } from './diaglog';
 import { popUpReducer } from './popUp';
+import { searchReducer } from './search';
 import { datePlanSchedulesReducer } from './datePlan';
 import { datePlanInfoReducer } from './datePlanInfo';
 import { dutyReducer } from './duty';
@@ -45,6 +46,7 @@ export default combineReducers({
   widgets,
   diaglog: diaglogReducer,
   popUp: popUpReducer,
+  searchResults: searchReducer,
   schedules: datePlanSchedulesReducer,
   datePlanInfo: datePlanInfoReducer,
   dutys: dutyReducer,
@@ -63,6 +65,6 @@ export default combineReducers({
   forgetPassword,
   groupList: groupListReducer,
   groupInfo: groupInfoReducer,
-  needApartLists: needAppartListReducer,
-  needApartInfo: needAppartInfoReducer,
+  needAppartLists: needAppartListReducer,
+  needAppartInfo: needAppartInfoReducer,
 });

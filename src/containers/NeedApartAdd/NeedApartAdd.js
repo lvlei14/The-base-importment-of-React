@@ -1,34 +1,43 @@
 import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
-// import { push } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import Modal from '../../components/Modal/Modal';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
 import '../AddDatePlan/DateTimePicker.scss';
 import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import { showDiaglog } from '../../redux/modules/diaglog';
-
+import { loadDoctors, addAppartNeed } from '../../redux/modules/needAppartInfo';
+import { search, clearSearchResult } from '../../redux/modules/search';
 
 const styles = require('./NeedApartAdd.scss');
 
 let loadPageCurTime;
 @connect(
-  state => ({contact: state.form.contact}), {
-    // pushState: push,
-    showDiaglog
+  state => ({contact: state.form.contact, ...state.needAppartInfo}), {
+    pushState: push,
+    showDiaglog,
+    loadDoctors,
+    addAppartNeed,
   }
 )
 @reduxForm({
-  form: 'creatApartNeed',                           // a unique name for this form
-  fields: ['doctor', 'type', 'start_time', 'end_time', 'telNum', 'address', 'tripWay', 'mark']
+  form: 'creatApartNeed',
+  fields: ['doctors', 'medicalCategory', 'start_time', 'end_time', 'mobile', 'address', 'transportation', 'remark']
 })
 export default class NeedApartAdd extends Component {
   static propTypes = {
-    // pushState: PropTypes.func,
+    pushState: PropTypes.func,
     values: PropTypes.object,
     fields: PropTypes.object,
     showDiaglog: PropTypes.func,
+    loadDoctors: PropTypes.func,
+    addAppartNeed: PropTypes.func,
+    addAppartNeedSuccess: PropTypes.bool,
+    successMsg: PropTypes.string,
+    errorMsg: PropTypes.string,
   };
 
   constructor(props) {
@@ -37,15 +46,28 @@ export default class NeedApartAdd extends Component {
       startTime: '',
       endTime: '',
       inputFormat: 'YYYY-MM-DD HH:mm',
-      showModal: true,
-      selectDoctors: '',
+      showModal: false,
+      selectDoctors: [],
     };
   }
 
   componentDidMount() {
     loadPageCurTime = new Date().getTime();
+    this.props.loadDoctors();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.addAppartNeedSuccess && nextProps.addAppartNeedSuccess) {
+      if (!this.props.successMsg && nextProps.successMsg) {
+        this.props.showDiaglog(nextProps.successMsg, '/appart-my-need');
+      }
+    }
+    if (!this.props.addAppartNeedSuccess && !nextProps.addAppartNeedSuccess) {
+      if (!this.props.errorMsg && nextProps.errorMsg) {
+        this.props.showDiaglog(nextProps.errorMsg);
+      }
+    }
+  }
 
   handleChange = (newDate) => {
     const newDateNew = new Date(parseInt(newDate, 10));
@@ -65,28 +87,22 @@ export default class NeedApartAdd extends Component {
     return moment(day).format('YYYY-MM-DD HH:mm:ss');
   }
 
+  // click add
   clickAddNeed() {
     const {values} = this.props;
-    values.start_time = this.state.startTime ? this.formatDate(this.state.startTime) : this.formatDate(loadPageCurTime);
-    values.end_time = this.state.endTime;
-    values.doctor = this.state.selectDoctors;
-    if (!this.state.selectDoctors) {
-      this.props.showDiaglog('请选择医生');
-      return;
-    }
-    if (values && !values.type) {
+    const {startTime, endTime, selectDoctors} = this.state;
+    values.start_time = startTime ? this.formatDate(startTime) : this.formatDate(loadPageCurTime);
+    values.end_time = endTime;
+    values.doctors = selectDoctors.map((doctor) => doctor.id);
+    if (values && !values.medicalCategory) {
       this.props.showDiaglog('请选择医疗类别');
       return;
     }
-    if (values && !values.telNum) {
-      this.props.showDiaglog('请选择医疗类');
-      return;
-    }
-    if (values && !values.telNum) {
+    if (values && !values.mobile) {
       this.props.showDiaglog('请输入手机号码');
       return;
     }
-    console.log(this.props.values);
+    this.props.addAppartNeed(values);
   }
 
   clickShowModal() {
@@ -101,14 +117,41 @@ export default class NeedApartAdd extends Component {
     });
   }
 
+  // confrim select doctor
   clickConfrimDoctor() {
-    console.log('点击确定');
-    console.log(this.refs.aaa1.value);
+    const {selectDoctors} = this.state;
+    if (!selectDoctors || selectDoctors.length === 0) {
+      this.props.showDiaglog('请至少选择一名医生');
+      return;
+    }
+    this.clickHideModal();
+  }
+
+  // checkbox text
+  changeSelectDoctor(id, value, event) {
+    const checkboxchecked = event.target.checked;
+    const selectDoctorItem = {id: id, value: value};
+    const nowSelectedDoctors = this.state.selectDoctors;
+    if (!checkboxchecked) {
+      const selectedDoctorsId = this.state.selectDoctors.map((doctor) => doctor.id);
+      if (selectedDoctorsId.indexOf(id) >= 0) {
+        nowSelectedDoctors.splice(selectedDoctorsId.indexOf(id), 1);
+        this.setState({
+          selectDoctors: nowSelectedDoctors
+        });
+      }
+    } else {
+      nowSelectedDoctors.push(selectDoctorItem);
+      this.setState({
+        selectDoctors: nowSelectedDoctors
+      });
+    }
   }
 
   render() {
-    const {inputFormat} = this.state;
-    const {fields: {type, telNum, address, tripWay, mark}} = this.props;
+    const {inputFormat, selectDoctors} = this.state;
+    const {fields: {medicalCategory, mobile, address, transportation, remark}} = this.props;
+    const selectedDoctorsText = selectDoctors && selectDoctors.map((doctor) => doctor.value);
     return (
       <div className={styles.addNeed}>
         <HeadNaviBar>发布需求</HeadNaviBar>
@@ -119,14 +162,25 @@ export default class NeedApartAdd extends Component {
               <label className="leftPlaceholder">专家</label>
               <span className="mainIcon">*</span>
               <div className="select" onClick={this.clickShowModal.bind(this)}>
-                <input value={this.state.selectDoctors} />
+                <articel className={styles.doctorText}>
+                  {
+                    selectedDoctorsText && selectedDoctorsText.map((selectDoctor) => {
+                      return (
+                        <p key={selectDoctor}>
+                          <span>{selectDoctor}</span>
+                          <i>、</i>
+                        </p>
+                      );
+                    })
+                  }
+                </articel>
               </div>
             </li>
             <li>
               <label className="leftPlaceholder">医疗类别</label>
               <span className="mainIcon">*</span>
               <div className="select">
-                <select {...type}>
+                <select {...medicalCategory}>
                   <option value="">请选择</option>
                   <option value="门诊指导">门诊指导</option>
                   <option value="急诊指导">急诊指导</option>
@@ -161,7 +215,7 @@ export default class NeedApartAdd extends Component {
               <label className="leftPlaceholder">联系电话</label>
               <span className="mainIcon">*</span>
               <div className="select">
-                <input type="tel" {...telNum} />
+                <input type="tel" {...mobile} />
               </div>
             </li>
             <li>
@@ -172,9 +226,9 @@ export default class NeedApartAdd extends Component {
             </li>
             <li>
               <label className="leftPlaceholder">出行方式</label>
-              <span className="mainIcon">*</span>
               <div className="select">
-                <select {...tripWay}>
+                <select {...transportation}>
+                  <option value="">请选择</option>
                   <option value="飞机">飞机</option>
                   <option value="火车">火车</option>
                   <option value="其他">其他</option>
@@ -184,13 +238,15 @@ export default class NeedApartAdd extends Component {
             </li>
           </ul>
           <header>备注信息</header>
-          <textarea {...mark}></textarea>
+          <textarea {...remark}></textarea>
         </div>
         <footer style={{margin: '0 .15rem'}}><button className="mainBtn" onClick={this.clickAddNeed.bind(this)}>发布需求</button></footer>
         <div style={{display: this.state.showModal ? 'block' : 'none'}}>
           <DoctorsModal
             clickHideModal = {this.clickHideModal.bind(this)}
-            clickAddNeed = {this.clickAddNeed.bind(this)} />
+            clickConfrimDoctor = {this.clickConfrimDoctor.bind(this)}
+            changeSelectDoctor = {this.changeSelectDoctor.bind(this)}
+            selectDoctors = {this.state.selectDoctors} />
         </div>
       </div>
     );
@@ -201,57 +257,107 @@ export default class NeedApartAdd extends Component {
 /**
   * component: select doctors modal
   */
+@connect(
+  state => ({doctors: state.needAppartInfo.doctors, ...state.searchResults}), {
+    search,
+    clearSearchResult
+  }
+)
 class DoctorsModal extends Component {
   static propTypes = {
     clickHideModal: PropTypes.func,
-    clickAddNeed: PropTypes.func
+    clickConfrimDoctor: PropTypes.func,
+    changeSelectDoctor: PropTypes.func,
+    loadDoctors: PropTypes.func,
+    doctors: PropTypes.array,
+    search: PropTypes.func,
+    searchResults: PropTypes.array,
+    searchBtnClicked: PropTypes.bool,
+    clearSearchResult: PropTypes.func,
+    selectDoctors: PropTypes.array,
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      selectDoctors: [],
+      searchText: '',
     };
   }
 
   componentDidMount() {
   }
 
-  changeSelectDoctor(id, value) {
-    console.log('-----changeSelectDoctor');
-    const selectDoctorItem = {id: id, value: value};
-    console.log(selectDoctorItem);
+  changeSelectDoctor(id, value, event) {
+    this.props.changeSelectDoctor(id, value, event);
+  }
+
+  changeSearchText(event) {
     this.setState({
-      selectDoctors: this.state.selectDoctors.push(selectDoctorItem)
+      searchText: event.target.value
+    });
+  }
+
+  clickSearchBtn() {
+    this.props.search(this.state.searchText);
+  }
+
+  clearSearchResult() {
+    this.props.clearSearchResult();
+    this.setState({
+      searchText: ''
     });
   }
 
   render() {
-    console.log('00000');
-    console.log(this.state.selectDoctors);
+    let doctorResults;
+    const {doctors, searchBtnClicked, searchResults, selectDoctors} = this.props;
+    if (searchBtnClicked) {
+      doctorResults = searchResults;
+    } else {
+      doctorResults = doctors;
+    }
+    const selectedDoctorsId = selectDoctors.map((doctor) => doctor.id);
     return (
       <div>
         <Modal
             title = {'选择医生'}
             clickHideModal = {this.props.clickHideModal}
-            clickConfirm = {this.props.clickAddNeed}
+            clickConfirm = {this.props.clickConfrimDoctor}
             clickCancel = {this.props.clickHideModal}
           >
-          <div className={styles.baseList + ' clearfix'}>
-            <header>wangwu</header>
-            <p>beijing</p>
-            <div className={'checkbox ' + styles.checkbox}>
-              <input type="checkbox" value="1" id="checkboxOneInput" name="" onChange={() => this.changeSelectDoctor('000', 'input0')} />
-              <label htmlFor="checkboxOneInput"></label>
-            </div>
-          </div>
-          <div className={styles.baseList + ' clearfix'}>
-            <header>wangwu</header>
-            <p>beijing</p>
-            <div className={'checkbox ' + styles.checkbox}>
-              <input type="checkbox" value="2" id="checkboxOneInput2" name="" onChange={() => this.changeSelectDoctor('001', 'input1')} />
-              <label htmlFor="checkboxOneInput2"></label>
-            </div>
+          <SearchBar
+            placeholder="请输入医生名称"
+            searchText={this.state.searchText}
+            changeSearchText={this.changeSearchText.bind(this)}
+            clickSearchBtn={this.clickSearchBtn.bind(this)} />
+          <div className={styles.doctorModalCon}>
+            <p style={{display: searchBtnClicked ? 'block' : 'none'}} className={styles.searchUndo} onClick={this.clearSearchResult.bind(this)}>
+              <i className="fa fa-undo"></i>返回
+            </p>
+            {
+              doctorResults && doctorResults.length > 0 ?
+                doctorResults.map((doctor) => {
+                  return (
+                    <div key={doctor._id} className={styles.baseList + ' clearfix'}>
+                      <header>{doctor.name}</header>
+                      <p>{doctor.hospital && doctor.hospital.name}&nbsp;{doctor.apartment && doctor.apartment.name}&nbsp;{doctor.level && doctor.level.name}</p>
+                      <div className={'checkbox ' + styles.checkbox}>
+                        {
+                          selectedDoctorsId.indexOf(doctor._id) >= 0 ?
+                            <input type="checkbox" id={doctor._id}
+                              checked
+                              onChange={(event) => this.changeSelectDoctor(doctor._id, doctor.name, event)} />
+                          :
+                            <input type="checkbox" id={doctor._id}
+                              onChange={(event) => this.changeSelectDoctor(doctor._id, doctor.name, event)} />
+                        }
+                        <label htmlFor={doctor._id}></label>
+                      </div>
+                    </div>
+                  );
+                })
+              : <div className={styles.baseList + ' clearfix'}>无内容</div>
+            }
           </div>
         </Modal>
       </div>
