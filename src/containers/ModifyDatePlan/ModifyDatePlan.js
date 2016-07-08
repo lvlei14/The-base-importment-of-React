@@ -52,7 +52,7 @@ export default class ModifyDatePlan extends Component {
       datePlanDetail = this.props.schedules && this.props.schedules[0] || {};
     }
     this.state = {
-      inputFormat: 'YYYY-MM-DD h:mm A',
+      inputFormat: 'YYYY-MM-DD HH:mm',
       startTime: new Date(datePlanDetail.start_time).getTime(),
       endTime: new Date(datePlanDetail.end_time).getTime(),
     };

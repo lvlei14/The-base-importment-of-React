@@ -5,6 +5,7 @@ require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
 
 import { Modal } from '../../components';
+import { Loading } from '../../components';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import CardBg from '../../components/CardBg/Card';
 import TabOutside from '../../components/TabOutside/TabOutside';
@@ -34,6 +35,7 @@ export default class DatePlan extends Component {
     schedules: PropTypes.object,
     loadschedules: PropTypes.func,
     loadtypes: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   constructor(props) {
@@ -60,12 +62,6 @@ export default class DatePlan extends Component {
     this.clickHandleDay(new Date());
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      schedules: nextProps.schedules,
-    });
-  }
-
   clickMonthTab() {
     this.setState({
       tabType: '1'
@@ -82,27 +78,14 @@ export default class DatePlan extends Component {
 
   clickHandleDay(day) {
     console.log('------点击每天事件');
-    const date = new Date(day);
-    const datetow = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    const schedules = this.state.schedules.list || [];
+    const datetow = moment(day).format('YYYY-M-D');
+    const schedules = this.props.schedules && this.props.schedules.list || [];
     console.log(schedules);
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
       selNoFormatDay: day,
       selectedDayItems: selectedDaySchedule
     });
-  }
-
-  backNowDate() {
-    const selYearMon = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1);
-    const requires = {
-      date: selYearMon
-    };
-    this.props.loadschedules(JSON.stringify(requires));
-    this.setState({
-      selNoFormatDay: new Date(),
-    });
-    this.clickHandleDay(new Date());
   }
 
   showSingleDayItem(scheduleDay) {
@@ -148,11 +131,11 @@ export default class DatePlan extends Component {
     const curMonth = prevMonth + 2;
     return (
       <div className="DayPicker-NavBar">
-        <span className="DayPicker-NavButton DayPicker-NavButton--prev" style={{ float: 'left', cursor: 'pointer'}} onClick={() => onPreviousClick()}>
-          <span onClick={() => this.previousClickHandler(curMonth)}></span>
+        <span style={{ float: 'left', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onPreviousClick()}>
+          <span className="DayPicker-NavButton DayPicker-NavButton--prev" onClick={() => this.previousClickHandler(curMonth)}></span>
         </span>
-        <span className="DayPicker-NavButton DayPicker-NavButton--next" style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
-          <span onClick={() => this.nextClickHandle(curMonth)}></span>
+        <span style={{ float: 'right', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onNextClick()}>
+          <span className="DayPicker-NavButton DayPicker-NavButton--next" onClick={() => this.nextClickHandle(curMonth)}></span>
         </span>
       </div>
     );
@@ -218,7 +201,7 @@ export default class DatePlan extends Component {
 
   renderDay(day) {
     const date = day.getDate().toString();
-    const dayItems = this.state.schedules && this.state.schedules.calendar;
+    const dayItems = this.props.schedules && this.props.schedules.calendar;
     return (
       <div>
         <span className="dayPickerDate">{date}</span>
@@ -243,6 +226,7 @@ export default class DatePlan extends Component {
     return (
       <div className="datePlanPage">
         <HeadNaviBar>日程</HeadNaviBar>
+        <Loading showLoading={this.props.loading} />
         <div className={styles.dateTop + ' datePlan'}>
           <div className={styles.dateTitle + ' topCardBg'}>
             <TabOutside>
@@ -259,7 +243,6 @@ export default class DatePlan extends Component {
             {
               !showTab ?
                 <div>
-                  <span style={{display: 'none'}} className="banckNowDate" onClick={this.backNowDate.bind(this)}>今天</span>
                   <DayPicker
                     ref="daypicker"
                     initialMonth={this.state.selNoFormatDay}

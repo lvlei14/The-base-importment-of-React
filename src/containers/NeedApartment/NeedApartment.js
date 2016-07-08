@@ -6,13 +6,13 @@ import Modal from '../../components/Modal/Modal';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/needAppartList';
+import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
 
 const styles = require('./NeedApartment.scss');
 let cancelNeedId;
 
 @connect(
-  state => ({...state.needAppartLists}), {
+  state => ({...state.invitation}), {
     pushState: push,
     loadNeedAppartLists,
     changeNeedAppartStatus,
@@ -70,6 +70,11 @@ export default class NeedApartment extends Component {
       showModal: true,
       modalTabIndex: modalTabIndex
     });
+  }
+
+  clickGoToComment(id) {
+    console.log(id);
+    this.props.pushState('/rate/' + id);
   }
 
   clickConfirm() {
@@ -162,7 +167,9 @@ export default class NeedApartment extends Component {
                       }
                       <footer style={{marginTop: '16px'}}>
                         <button className="cancelBtn" style={{marginRight: '10px'}}>再次邀请</button>
-                        <button className="mainXsBtn">去评价</button>
+                        {
+                          completedItem.operation === '结束' ? <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button> : ''
+                        }
                       </footer>
                     </div>
                     <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
@@ -190,4 +197,3 @@ export default class NeedApartment extends Component {
     );
   }
 }
-

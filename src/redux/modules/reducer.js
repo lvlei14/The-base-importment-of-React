@@ -6,7 +6,6 @@ import {reducer as reduxAsyncConnect} from 'redux-async-connect';
 import auth from './auth';
 import counter from './counter';
 import {reducer as form} from 'redux-form';
-import info from './info';
 import widgets from './widgets';
 import { diaglogReducer } from './diaglog';
 import { popUpReducer } from './popUp';
@@ -29,8 +28,9 @@ import doctor from './doctor';
 import forgetPassword from './forgetPassword';
 import { groupListReducer } from './groupList';
 import { groupInfoReducer } from './groupInfo';
-import { needAppartListReducer } from './needAppartList';
+import invitation from './invitation';
 import { needAppartInfoReducer } from './needAppartInfo';
+import comment from './comment';
 
 export default combineReducers({
   routing: routerReducer,
@@ -42,7 +42,6 @@ export default combineReducers({
     counter2: counter,
     counter3: counter
   }),
-  info,
   widgets,
   diaglog: diaglogReducer,
   popUp: popUpReducer,
@@ -63,8 +62,9 @@ export default combineReducers({
   hospitalOperationRoom,
   surgeryType,
   forgetPassword,
+  comment,
   groupList: groupListReducer,
   groupInfo: groupInfoReducer,
-  needAppartLists: needAppartListReducer,
+  invitation,
   needAppartInfo: needAppartInfoReducer,
 });

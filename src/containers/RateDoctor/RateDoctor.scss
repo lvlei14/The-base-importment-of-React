@@ -1,0 +1,103 @@
+@import "../../theme/variables";
+
+.container {
+  padding: 0.1rem;
+}
+
+.doctorIntroCardContainer {
+  background-color: #FFFFFF;
+  border: 0.01rem solid #D8D8D8;
+  border-radius: 0.03rem;
+  padding: 0.1rem 0.1rem 0.1rem 0.9rem;
+  position: relative;
+  margin-bottom: 0.1rem;
+
+  img {
+    width: 0.6rem;
+    position: absolute;
+    height: 0.6rem;
+    top: 0.12rem;
+    left: 0.2rem;
+  }
+
+  .doctorName {
+    font-weight: bold;
+    color: #505050;
+  }
+  .doctorTitle {
+    margin-top: 0.08rem;
+    color: #797979;
+  }
+  .doctorTitle, .doctorBelong {
+    font-size: 0.1rem;
+  }
+}
+
+
+.invitationDescContainer {
+  background-color: #FFFFFF;
+  border: 0.01rem solid #D8D8D8;
+  border-radius: 0.03rem;
+  position: relative;
+  padding: 0.1rem;
+
+  div {
+    margin-bottom: 0.07rem !important;
+    color: #797979;
+
+    label {
+      display: inline-block;
+    }
+    label::after {
+      content: ":";
+      margin-left: 0.01rem;
+      margin-right: 0.07rem;
+    }
+    p {
+      display: inline-block;
+    }
+
+    .completeStatus {
+      color: $mainColor;
+    }
+  }
+
+  .divider {
+    margin: 0.17rem 0 !important;
+    border-bottom: 0.01rem solid #efefef;
+  }
+
+  .commentTip {
+    font-size: 0.17rem;
+  }
+
+  .rateContainer {
+    margin: 0.13rem 0;
+    div {
+      margin-bottom: 13px;
+
+      p {
+        border: 0.01rem solid $mainColor;
+        padding: 0.01rem 0.05rem;
+        margin-right: 0.13rem;
+      }
+
+      span {
+        padding-left: 0.1rem;
+        font-size: 0.1rem;
+        color: $mainColor;
+      }
+    }
+  }
+
+  .commentContainer {
+
+    textarea {
+      height: 1rem;
+      resize: none;
+      padding: 7px;
+      overflow: hidden;
+      background-color: #efefef;
+    }
+  }
+}
