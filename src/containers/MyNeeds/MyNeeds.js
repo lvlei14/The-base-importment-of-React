@@ -39,15 +39,34 @@ export default class MyNeeds extends Component {
 
   }
 
-  goExpertNeedsDetail(_id) {
-    this.props.pushState('/needs-detail/' + _id);
+  goExpertNeedsDetail(_id, type, status) {
+    this.props.pushState('/needs-detail/' + _id + '/' + type + '/' + status);
+  }
+
+  setImageByStatus(status) {
+    var needsTypeImage = require('../../images/needsType-1.png');
+
+    if (status === '处理中') {
+      console.log('1');
+      needsTypeImage = require('../../images/needsType-1.png');
+    }else if (status === '已拒绝') {
+      console.log('2');
+      needsTypeImage = require('../../images/needsType-2.png');
+    }else if (status == '已取消') {
+      console.log('3');
+      needsTypeImage = require('../../images/needsType-3.png');
+    }
+    return needsTypeImage;
   }
 
   render() {
     const moreArrow = require('../../images/moreArrow.png');
+    const needsBg = require('../../images/needsBg.png');
+    const todo = this.props.todo || [];
+    const completed = this.props.completed || [];
 
-    const todo = this.props.todo;
-    const completed = this.props.completed;
+
+
 
 
     return (
@@ -61,12 +80,12 @@ export default class MyNeeds extends Component {
           </TabList>
 
           <TabPanel>
-            {
-              todo.map((todoing) => {
+            {todo &&todo.map((todoing) => {
+                console.log(todoing);
                 return (
                   <div id="underView" className={styles.bigUnderView}>
-                    <div className={styles.underView} onClick={() => this.goExpertNeedsDetail(todoing._id)}>
-                      <img src="/mui/images/YCbanner.png"/>
+                    <div className={styles.underView} onClick={() => this.goExpertNeedsDetail(todoing._id, '1', todoing && todoing.status)}>
+                      <img src={needsBg}/>
                       <div className={styles.rightText}>
                         <div className={styles.doctorName}>
                           <p className={styles.name}>{todoing.apartment.name}</p>
@@ -90,12 +109,13 @@ export default class MyNeeds extends Component {
             {
               completed.map((complete) => {
                 return (
-                  <div id="underView" className={styles.bigUnderView}>
+                  <div id="underView" className={styles.bigUnderView} onClick={() => this.goExpertNeedsDetail(complete._id, '2', complete.status)}>
                     <div className={styles.underView}>
-                      <img src="/mui/images/YCbanner.png"/>
+                      <img src={needsBg}/>
                       <div className={styles.rightText}>
                         <div className={styles.doctorName}>
-                          <p className={styles.name}>{todoing.apartment.name}</p>
+                          <p className={styles.name}>{complete.apartment.name}</p>
+                          <img src={this.setImageByStatus(complete && complete.status)}/>
                         </div>
                         <p className={styles.hospital}>医疗类型:&nbsp;&nbsp;{complete.medicalCategory}</p>
                         <p className={styles.jobTitle}>需求时间:&nbsp;&nbsp;{complete.start_time}</p>
@@ -109,7 +129,8 @@ export default class MyNeeds extends Component {
                   </div>
                 );
               })
-            }          </TabPanel>
+            }
+          </TabPanel>
         </Tabs>
 
 

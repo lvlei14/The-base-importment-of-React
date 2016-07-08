@@ -2,26 +2,31 @@ import React, {Component, PropTypes} from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import {connect} from 'react-redux';
 import { push } from 'react-router-redux';
+import Modal from '../../components/Modal/Modal';
+import { showDiaglog } from '../../redux/modules/diaglog';
 
 const styles = require('./NeedsDetail.scss');
-import { loadExpertDetail } from '../../redux/modules/needsdetail';
+import { loadExpertInvitationDetail, acceptAnInvitation, refusetAnInvitation } from '../../redux/modules/needsdetail';
 
 
 @connect(
-  state => ({
-    todo: state.needsdetail.todo,
-    completed: state.needsdetail.completed,
-
+  state => ({...state.needsdetail,
   }), {
     pushState: push,
-    loadExpertDetail,
+    loadExpertInvitationDetail,
+    acceptAnInvitation,
+    refusetAnInvitation,
+    showDiaglog,
   }
 )
 
 export default class needsdetail extends Component {
   static propTypes = {
     pushState: PropTypes.func,
-    loadExpertDetail: PropTypes.func,
+    loadExpertInvitationDetail: PropTypes.func,
+    acceptAnInvitation: PropTypes.func,
+    refusetAnInvitation: PropTypes.func,
+    showDiaglog: PropTypes.func,
     routeParams: PropTypes.object,
 
   };
@@ -29,54 +34,120 @@ export default class needsdetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showModal: false
     };
   }
   componentDidMount() {
-    console.log('传进来了');
     const id = this.props.routeParams.id;
-    this.props.loadExpertDetail(id);
+    this.props.loadExpertInvitationDetail(id);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.refuseSuccess && nextProps.refuseSuccess) {
+      this.props.pushState('/my-needs/');
+      return;
+    }
+
+    if (!this.props.acceptSuccess && nextProps.acceptSuccess) {
+      this.props.pushState('/my-needs/');
+      return;
+    }
+  }
+
+  acceptAnInvitation(id, result, reason, status) {
+    console.log(status + '打印');
+    this.props.acceptAnInvitation(id, result, reason, status);
+  }
+
+  refusetAnInvitation() {
+    this.setState({
+      showModal: true
+    });
+  }
+
+  clickHideModal() {
+    this.setState({
+      showModal: false,
+    });
+  }
+
+  clickdeny() {
+    this.clickHideModal();
+  }
+
+  clickaccept() {
+    console.log(this.props.routeParams.status + '偶尔发武汉');
+    this.clickHideModal();
+    this.props.refusetAnInvitation(this.props.details._id && this.props.details._id, '取消', this.refs.refuseText.value, this.props.routeParams && this.props.routeParams.status);
+  }
+
+  acceptAndRefuseBtn(type, status) {
+    if (type === '1') {
+      return <div className={styles.btnDiv}>
+        <button className={styles.accepd} onClick={() => this.acceptAnInvitation(details && details._id, '接受', 'reason', this.props.routeParams && this.props.routeParams.status)}>接受邀约</button>
+        <button className={styles.refuse} onClick={() => this.acceptAnInvitation(details && details._id, '拒绝', 'reason', this.props.routeParams && this.props.routeParams.status)}>拒绝邀约</button>
+      </div> ;
+
+    }else if (type === '2' && status === '已取消') {
+
+      return <div className={styles.btnDiv}>
+      </div> ;
+    }else {
+      return <div className={styles.btnDiv}><button className={styles.cancel} onClick={() => this.refusetAnInvitation()}>取消需求</button>
+      </div> ;
+    }
   }
 
   render() {
     const star = require('../../images/starNeedsDetail.png');
+    const needsBg = require('../../images/needsBg.png');
+    const details = this.props.details;
 
     return (
-      <div>
-        <HeadNaviBar>我的需求</HeadNaviBar>
-        <div className={styles.bigView}>
-          <div className={styles.smallView}>
+        <div>
+          <HeadNaviBar>我的需求</HeadNaviBar>
+          <div className={styles.bigView}>
+            <div className={styles.smallView}>
 
-            <div className={styles.topView}>
-              <img src="/mui/images/YCbanner.png"/>
-              <p>鲁中医院心外科</p>
-              <div className={styles.star}>
-                <img src={star}/>
-                <p>收藏</p>
+              <div className={styles.topView}>
+                <img src={needsBg}/>
+                <p>{details.apartment && details.apartment.name}</p>
+                <div className={styles.star}>
+                  <img src={star}/>
+                  <p>收藏</p>
+                </div>
+
               </div>
 
+              <div className={styles.middleView}>
+                <p className={styles.timeP}>需求时间:&nbsp;&nbsp;{details && details.start_time}</p>
+                <p className={styles.leiXingP}>医疗类型:&nbsp;&nbsp;{details && details.medicalCategory}</p>
+                <p className={styles.diZhiP}>医院地址:&nbsp;&nbsp;{details && details.address}</p>
+                <p className={styles.diZhiP}>科室简介:&nbsp;&nbsp;{details.apartment && details.apartment.desc}</p>
+
+              </div>
+              {
+                this.acceptAndRefuseBtn(this.props.routeParams && this.props.routeParams.type, this.props.routeParams && this.props.routeParams.status)
+              }
+
             </div>
 
-            <div className={styles.middleView}>
-              <p className={styles.timeP}>需求时间:&nbsp;&nbsp;2016-06-07&nbsp;&nbsp;16:00</p>
-              <p className={styles.leiXingP}>医疗类型:&nbsp;&nbsp;门诊</p>
-              <p className={styles.diZhiP}>医院地址:&nbsp;&nbsp;山东省淄博市某区某街道莫地址莫栋某号</p>
-              <p className={styles.diZhiP}>科室简介:&nbsp;&nbsp;山东大学齐鲁医院心血管外科创建于1959年，是山东省最早创立的该类专业。50余年来，经先后四代人的探索和努力，现已形成具有巨大优势和学术特色的专业科室，医疗水平和工作规模位居全国综合性医院前列，在国内享有较高的知名度，在山东省心血管外科专业中处于绝对领先地位，为山东省及我国的心血管外科事业的发展做出了应有的贡献。</p>
 
-            </div>
-
-            <div className={styles.btnDiv}>
-              <button className={styles.accepd}>接受邀约</button>
-              <button className={styles.refuse}>拒绝邀约</button>
-            </div>
           </div>
 
+          <div style={{display: this.state.showModal ? 'block' : 'none'}}>
+            <Modal
+              title = {'取消需求'}
+              confirmText = {'提交'}
+              cancelText = {'放弃'}
+              clickHideModal = {this.clickHideModal.bind(this)}
+              clickConfirm = {this.clickaccept.bind(this)}
+              clickCancel = {this.clickdeny.bind(this)} >
+              <textarea ref="refuseText"></textarea>
+            </Modal>
+          </div>
 
         </div>
-
-      </div>
     );
   }
 }

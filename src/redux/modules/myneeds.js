@@ -22,11 +22,12 @@ export default function needExpertListReducer(state = initState, action = {}) {
       };
 
     case LOAD_EXPERT_ITEM_SUCCESS:
+      console.log(action);
       return {
         ...state,
         loading: false,
         todo: action.result.todo,
-        completed: action.result.completed,
+        completed: action.result.done,
         tip: action.tip
       };
 

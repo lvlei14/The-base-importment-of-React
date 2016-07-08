@@ -91,7 +91,7 @@ export default (store) => {
         { /* Routes requiring login */ }
 
         <Route path="my-needs" component={MyNeeds}/>
-        <Route path="needs-detail/:id" component={NeedsDetail}/>
+        <Route path="needs-detail/:id/:type/:status" component={NeedsDetail}/>
         <Route path="appart-my-need" component={NeedApartment} />
         <Route path="add-appart-need" component={NeedApartAdd} />
         { /* Routes requiring login */ }

@@ -13,7 +13,6 @@ div, span, p, ul, li, dl, a, input, img, b, button {
 
 /***underView*/
 .bigUnderView {
-  margin-bottom: 50px;
   overflow: hidden;
   background-color: white;
   font-size: 14px;
@@ -35,7 +34,7 @@ div, span, p, ul, li, dl, a, input, img, b, button {
       float: left;
       margin: 25px 0 16px 18px;
       line-height: 18px;
-      width: 200px;
+      width: 68%;
       height: 108px;
       .doctorName {
         margin-left: 0;
@@ -48,6 +47,13 @@ div, span, p, ul, li, dl, a, input, img, b, button {
           font-size: 17px;
           display: inline-block;
           margin-left: 0;
+          float: left;
+        }
+        img {
+          margin: 4px 0 0 4px;
+          float: left;
+          width: 59px;
+          height: 16px;
         }
       }
       .hospital {
