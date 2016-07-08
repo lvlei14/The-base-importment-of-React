@@ -3,23 +3,28 @@
 .SearchBar{
 	height: .4rem;
 	line-height: .4rem;
-	padding: 0.09rem 0 .09rem 0.14rem;
 	box-sizing: content-box;
-	margin: $tbmargin 0;
+	background-color: #fff;
+	border: 1px solid $mainColor;
+	border-radius: .02rem;
 	dt{
 		width: 80%;
-		border: 1px solid $mainColor;
 		height: .4rem;
 		line-height: .4rem;
-		border-radius: .02rem;
+		position: relative;
 		i{
-
+			font-size: .2rem;
+			color: $mainColor;
+			padding: .09rem .06rem;
+			position: absolute;
 		}
 		input{
 			border: 0px solid #fff;
 			background: transparent;
 			height: .4rem;
 			line-height: .4rem;
+			margin-left: .34rem;
+			width: 80%;
 		}
 	}
 	dd{
