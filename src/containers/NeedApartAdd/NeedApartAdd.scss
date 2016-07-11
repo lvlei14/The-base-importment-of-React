@@ -82,6 +82,9 @@ textarea{
   p{
     display: inline-block;
   }
+  p:last-child i{
+    display: none;
+  }
 }
 
 .searchUndo{

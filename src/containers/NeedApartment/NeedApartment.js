@@ -9,7 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
 
 const styles = require('./NeedApartment.scss');
-let cancelNeedId;
+let cancelNeedItem;
 
 @connect(
   state => ({...state.invitation}), {
@@ -51,7 +51,8 @@ export default class NeedApartment extends Component {
   }
 
   changeTab(index) {
-    localStorage.setItem('needAppartTab', index);
+    localStorage.removeItem('addNeedApartTab');
+    localStorage.setItem('needAppartTab', index); // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
   }
 
   goAddAppartNeed() {
@@ -65,7 +66,7 @@ export default class NeedApartment extends Component {
   }
 
   clickShowModal(item, modalTabIndex) {
-    cancelNeedId = item._id;
+    cancelNeedItem = item;
     this.setState({
       showModal: true,
       modalTabIndex: modalTabIndex
@@ -73,7 +74,6 @@ export default class NeedApartment extends Component {
   }
 
   clickGoToComment(id) {
-    console.log(id);
     this.props.pushState('/rate/' + id);
   }
 
@@ -84,13 +84,43 @@ export default class NeedApartment extends Component {
       operation = '取消';
       cancelNeedText = this.refs.cancelNeedText.value;
     }
-    this.props.changeNeedAppartStatus(cancelNeedId, operation, cancelNeedText);
+    this.props.changeNeedAppartStatus(cancelNeedItem._id, operation, cancelNeedText, cancelNeedItem.status);
     this.clickHideModal();
+  }
+
+  goNeedAppartDetail(item) {
+    this.props.pushState('/appart-need-detail/' + item._id + '?status=' + item.status);
+  }
+
+  clickGoToAddNeed(doctors) {
+    localStorage.setItem('doctors', JSON.stringify(doctors));
+    this.props.pushState('/add-appart-need');
+  }
+
+  needListItem(item) {
+    return (
+      <div className="list" onClick={() => this.goNeedAppartDetail(item)}>
+        <section className="left">
+          <header className={styles.listHeader}>
+          {
+            item.doctors && item.doctors.map((doctor) => {
+              return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
+            })
+          }
+          </header>
+          <p>医疗类别：{item.medicalCategory}</p>
+          <p>需求时间：{item.start_time}</p>
+        </section>
+        <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+      </div>
+    );
   }
 
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
-    const needAppartTabIndex = parseInt(localStorage.getItem('needAppartTab'), 10);
+    const needAppartTabIndex = parseInt(localStorage.getItem('addNeedApartTab'), 10) || parseInt(localStorage.getItem('needAppartTab'), 10);
+    console.log(parseInt(localStorage.getItem('addNeedApartTab'), 10));
+    console.log(needAppartTabIndex);
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>
@@ -105,22 +135,13 @@ export default class NeedApartment extends Component {
             {
               receptionWait && receptionWait.map((receptionWaitItem) => {
                 return (
-                  <div key={receptionWaitItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
-                      <header>
-                      {
-                        receptionWaitItem.doctors && receptionWaitItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
-                      }
-                      </header>
-                      <p>医疗类别：{receptionWaitItem.medicalCategory}</p>
-                      <p>需求时间：{receptionWaitItem.start_time}</p>
-                      <footer style={{marginTop: '16px'}}>
-                        <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                  <div key={receptionWaitItem._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
+                    {
+                      this.needListItem(receptionWaitItem)
+                    }
+                    <footer>
+                      <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
+                    </footer>
                   </div>
                 );
               })
@@ -131,22 +152,13 @@ export default class NeedApartment extends Component {
               reception && reception.map((receptionItem) => {
                 return (
                   <div key={receptionItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
-                      <header>
-                      {
-                        receptionItem.doctors && receptionItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
-                      }
-                      </header>
-                      <p>医疗类别：{receptionItem.medicalCategory}</p>
-                      <p>需求时间：{receptionItem.start_time}</p>
-                      <footer style={{marginTop: '16px'}}>
-                        <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
-                        <button className="mainXsBtn">拨打电话</button>
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                    {
+                      this.needListItem(receptionItem)
+                    }
+                    <footer>
+                      <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
+                      <button className="mainXsBtn"><a href="tel:15701609247">拨打电话</a></button>
+                    </footer>
                   </div>
                 );
               })
@@ -157,24 +169,19 @@ export default class NeedApartment extends Component {
               completed && completed.map((completedItem) => {
                 return (
                   <div key={completedItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
-                      <header>
+                    {
+                      this.needListItem(completedItem)
+                    }
+                    <footer>
+                      <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(completedItem.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
                       {
-                        completedItem.doctors && completedItem.doctors.map((doctor) => {
-                          return (<span>{doctor.name}、</span>);
-                        })
+                        completedItem && completedItem.comment ?
+                          <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
+                        : completedItem.operation === '结束' ?
+                          <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button>
+                          : ''
                       }
-                      </header>
-                      <p>医疗类别：{completedItem.medicalCategory}</p>
-                      <p>需求时间：{completedItem.start_time}</p>
-                      <footer style={{marginTop: '16px'}}>
-                        <button className="cancelBtn" style={{marginRight: '10px'}}>再次邀请</button>
-                        {
-                          completedItem.operation === '结束' ? <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button> : ''
-                        }
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                    </footer>
                   </div>
                 );
               })
@@ -190,7 +197,7 @@ export default class NeedApartment extends Component {
             clickCancel = {this.clickHideModal.bind(this)}>
             {
               this.state.modalTabIndex === 0 ?
-                <textarea ref="cancelNeedText" placeholder="请输入内容"></textarea>
+                <textarea className={styles.cancelNeedText} ref="cancelNeedText" placeholder="请输入内容"></textarea>
               : <div>您确定要取消此需求吗？</div>
             }
           </Modal>

@@ -34,7 +34,9 @@
   border: 0.01rem solid #D8D8D8;
   border-radius: 0.03rem;
   position: relative;
-  padding: 0.1rem;
+  padding: 0.1rem .2rem;
+  box-sizing: content-box;
+  min-height: .6rem;
 
   div {
     margin-bottom: 0.07rem !important;
@@ -74,6 +76,7 @@
 
   .DoctorDescContainer {
     border: none !important;
+    padding-top: 0;
   }
 }
 

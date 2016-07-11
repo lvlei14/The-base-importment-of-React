@@ -1,11 +1,34 @@
 @import '../../theme/variables.scss';
-.needApartListCon{
-  padding: .2rem $lrmargin;
+span{
+	display: inline;
 }
-
-textarea{
-	background: #f2f2f2;
+.needAppartDetail {
+	padding: 0rem .2rem;
+}
+.needAppartDetailCard{
+	padding: .14rem 0 .1rem .2rem;
+	background: #fff;
 	border: 1px solid $borderColor;
-	border-radius: 2px;
-	line-height: .3rem;
+	margin-top: .1rem;
+	.conflict{
+	    font-size: $jzfontSize;
+	    color: #E45252;
+	    text-align: center;
+	    margin-bottom: .06rem;
+	    i{
+	      font-size: 14px;
+	      margin-right: 3px;
+	      display: inline-block;
+	      width: 18px;
+	      height: 18px;
+	      text-align: center;
+	      background-color: #eb3b50;
+	      color: #fff;
+	      border-radius: 50%;
+	      font-style: normal;
+	    }
+	}
+}
+.needDetailMargin{
+	margin: .1rem 0;
 }
