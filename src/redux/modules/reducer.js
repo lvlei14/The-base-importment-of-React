@@ -30,6 +30,9 @@ import { groupListReducer } from './groupList';
 import { groupInfoReducer } from './groupInfo';
 import invitation from './invitation';
 import comment from './comment';
+import myneeds from './myneeds';
+import needsdetail from './needsdetail';
+
 
 export default combineReducers({
   routing: routerReducer,
@@ -65,4 +68,6 @@ export default combineReducers({
   groupList: groupListReducer,
   groupInfo: groupInfoReducer,
   invitation,
+  myneeds,
+  needsdetail
 });
