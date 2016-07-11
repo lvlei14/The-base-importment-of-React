@@ -2,6 +2,16 @@
 .needApartListCon{
   padding: .2rem $lrmargin;
   margin-bottom: .1rem;
+  footer{
+  	margin-top: 6px;
+  	a{
+  		color: #fff;
+  	}
+  	a:linked, a:visited, a:hover, a:actived{
+  		color: #fff;
+  		border: none;
+  	}
+  }
 }
 .needAppart{
 	.cancelNeedText{
@@ -10,4 +20,10 @@
 		border-radius: 2px;
 		line-height: .3rem;
 	}
+}
+i{
+	font-style: normal;
+}
+.listHeader span:last-child i{
+	display: none;
 }

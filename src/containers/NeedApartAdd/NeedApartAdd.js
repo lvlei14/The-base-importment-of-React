@@ -1,22 +1,20 @@
 import React, { Component, PropTypes } from 'react';
-import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import Modal from '../../components/Modal/Modal';
-import SearchBar from '../../components/SearchBar/SearchBar';
+import { HeadNaviBar, Modal, SearchBar } from '../../components';
 import DateTimeField from 'react-bootstrap-datetimepicker-hyt';
 import '../AddDatePlan/DateTimePicker.scss';
 import moment from 'moment';
 import { reduxForm } from 'redux-form';
 import { showDiaglog } from '../../redux/modules/diaglog';
-import { loadDoctors, addAppartNeed } from '../../redux/modules/needAppartInfo';
+import { loadDoctors, addAppartNeed } from '../../redux/modules/invitation';
 import { search, clearSearchResult } from '../../redux/modules/search';
 
 const styles = require('./NeedApartAdd.scss');
 
 let loadPageCurTime;
 @connect(
-  state => ({contact: state.form.contact, ...state.needAppartInfo}), {
+  state => ({contact: state.form.contact, ...state.invitation}), {
     pushState: push,
     showDiaglog,
     loadDoctors,
@@ -38,6 +36,7 @@ export default class NeedApartAdd extends Component {
     addAppartNeedSuccess: PropTypes.bool,
     successMsg: PropTypes.string,
     errorMsg: PropTypes.string,
+    localStorage: PropTypes.object
   };
 
   constructor(props) {
@@ -47,7 +46,7 @@ export default class NeedApartAdd extends Component {
       endTime: '',
       inputFormat: 'YYYY-MM-DD HH:mm',
       showModal: false,
-      selectDoctors: [],
+      selectDoctors: JSON.parse(localStorage.getItem('doctors')) || [],
     };
   }
 
@@ -57,8 +56,11 @@ export default class NeedApartAdd extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.addAppartNeedSuccess);
     if (!this.props.addAppartNeedSuccess && nextProps.addAppartNeedSuccess) {
       if (!this.props.successMsg && nextProps.successMsg) {
+        localStorage.removeItem('doctors');
+        localStorage.setItem('addNeedApartTab', 0);
         this.props.showDiaglog(nextProps.successMsg, '/appart-my-need');
       }
     }
@@ -93,7 +95,7 @@ export default class NeedApartAdd extends Component {
     const {startTime, endTime, selectDoctors} = this.state;
     values.start_time = startTime ? this.formatDate(startTime) : this.formatDate(loadPageCurTime);
     values.end_time = endTime;
-    values.doctors = selectDoctors.map((doctor) => doctor.id);
+    values.doctors = selectDoctors.map((doctor) => doctor._id);
     if (values && !values.medicalCategory) {
       this.props.showDiaglog('请选择医疗类别');
       return;
@@ -130,10 +132,10 @@ export default class NeedApartAdd extends Component {
   // checkbox text
   changeSelectDoctor(id, value, event) {
     const checkboxchecked = event.target.checked;
-    const selectDoctorItem = {id: id, value: value};
+    const selectDoctorItem = {_id: id, name: value};
     const nowSelectedDoctors = this.state.selectDoctors;
     if (!checkboxchecked) {
-      const selectedDoctorsId = this.state.selectDoctors.map((doctor) => doctor.id);
+      const selectedDoctorsId = this.state.selectDoctors.map((doctor) => doctor._id);
       if (selectedDoctorsId.indexOf(id) >= 0) {
         nowSelectedDoctors.splice(selectedDoctorsId.indexOf(id), 1);
         this.setState({
@@ -151,7 +153,7 @@ export default class NeedApartAdd extends Component {
   render() {
     const {inputFormat, selectDoctors} = this.state;
     const {fields: {medicalCategory, mobile, address, transportation, remark}} = this.props;
-    const selectedDoctorsText = selectDoctors && selectDoctors.map((doctor) => doctor.value);
+    const selectedDoctorsText = selectDoctors && selectDoctors.map((doctor) => doctor.name);
     return (
       <div className={styles.addNeed}>
         <HeadNaviBar>发布需求</HeadNaviBar>
@@ -258,9 +260,10 @@ export default class NeedApartAdd extends Component {
   * component: select doctors modal
   */
 @connect(
-  state => ({doctors: state.needAppartInfo.doctors, ...state.searchResults}), {
+  state => ({doctors: state.invitation.doctors, ...state.searchResults}), {
     search,
-    clearSearchResult
+    clearSearchResult,
+    showDiaglog
   }
 )
 class DoctorsModal extends Component {
@@ -272,19 +275,17 @@ class DoctorsModal extends Component {
     doctors: PropTypes.array,
     search: PropTypes.func,
     searchResults: PropTypes.array,
-    searchBtnClicked: PropTypes.bool,
     clearSearchResult: PropTypes.func,
     selectDoctors: PropTypes.array,
+    showDiaglog: PropTypes.func,
   }
 
   constructor(props) {
     super(props);
     this.state = {
       searchText: '',
+      searchBtnClicked: false,
     };
-  }
-
-  componentDidMount() {
   }
 
   changeSelectDoctor(id, value, event) {
@@ -298,25 +299,31 @@ class DoctorsModal extends Component {
   }
 
   clickSearchBtn() {
+    if (!this.state.searchText) {
+      this.props.showDiaglog('请输入医生名称');
+      return;
+    }
+    this.setState({searchBtnClicked: true});
     this.props.search(this.state.searchText);
   }
 
   clearSearchResult() {
     this.props.clearSearchResult();
     this.setState({
+      searchBtnClicked: false,
       searchText: ''
     });
   }
 
   render() {
     let doctorResults;
-    const {doctors, searchBtnClicked, searchResults, selectDoctors} = this.props;
-    if (searchBtnClicked) {
+    const {doctors, searchResults, selectDoctors} = this.props;
+    if (this.state.searchBtnClicked) {
       doctorResults = searchResults;
     } else {
       doctorResults = doctors;
     }
-    const selectedDoctorsId = selectDoctors.map((doctor) => doctor.id);
+    const selectedDoctorsId = selectDoctors.map((doctor) => doctor._id);
     return (
       <div>
         <Modal
@@ -331,7 +338,7 @@ class DoctorsModal extends Component {
             changeSearchText={this.changeSearchText.bind(this)}
             clickSearchBtn={this.clickSearchBtn.bind(this)} />
           <div className={styles.doctorModalCon}>
-            <p style={{display: searchBtnClicked ? 'block' : 'none'}} className={styles.searchUndo} onClick={this.clearSearchResult.bind(this)}>
+            <p style={{display: this.state.searchBtnClicked ? 'block' : 'none'}} className={styles.searchUndo} onClick={this.clearSearchResult.bind(this)}>
               <i className="fa fa-undo"></i>返回
             </p>
             {

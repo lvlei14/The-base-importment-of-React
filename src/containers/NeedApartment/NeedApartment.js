@@ -51,8 +51,8 @@ export default class NeedApartment extends Component {
   }
 
   changeTab(index) {
-    // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
-    localStorage.setItem('needAppartTab', index);
+    localStorage.removeItem('addNeedApartTab');
+    localStorage.setItem('needAppartTab', index); // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
   }
 
   goAddAppartNeed() {
@@ -74,7 +74,6 @@ export default class NeedApartment extends Component {
   }
 
   clickGoToComment(id) {
-    console.log(id);
     this.props.pushState('/rate/' + id);
   }
 
@@ -90,28 +89,38 @@ export default class NeedApartment extends Component {
   }
 
   goNeedAppartDetail(item) {
-    this.props.pushState('/appart-need-detail/' + item._id + '?status=' + item.status + '?operation=' + item.operation);
+    this.props.pushState('/appart-need-detail/' + item._id + '?status=' + item.status);
+  }
+
+  clickGoToAddNeed(doctors) {
+    localStorage.setItem('doctors', JSON.stringify(doctors));
+    this.props.pushState('/add-appart-need');
   }
 
   needListItem(item) {
     return (
-      <section onClick={() => this.goNeedAppartDetail(item)}>
-        <header>
-        {
-          item.doctors && item.doctors.map((doctor) => {
-            return (<span>{doctor && doctor.name}、</span>);
-          })
-        }
-        </header>
-        <p>医疗类别：{item.medicalCategory}</p>
-        <p>需求时间：{item.start_time}</p>
-      </section>
+      <div className="list" onClick={() => this.goNeedAppartDetail(item)}>
+        <section className="left">
+          <header className={styles.listHeader}>
+          {
+            item.doctors && item.doctors.map((doctor) => {
+              return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
+            })
+          }
+          </header>
+          <p>医疗类别：{item.medicalCategory}</p>
+          <p>需求时间：{item.start_time}</p>
+        </section>
+        <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+      </div>
     );
   }
 
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
-    const needAppartTabIndex = parseInt(localStorage.getItem('needAppartTab'), 10);
+    const needAppartTabIndex = parseInt(localStorage.getItem('addNeedApartTab'), 10) || parseInt(localStorage.getItem('needAppartTab'), 10);
+    console.log(parseInt(localStorage.getItem('addNeedApartTab'), 10));
+    console.log(needAppartTabIndex);
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>
@@ -126,16 +135,13 @@ export default class NeedApartment extends Component {
             {
               receptionWait && receptionWait.map((receptionWaitItem) => {
                 return (
-                  <div key={receptionWaitItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
-                      {
-                        this.needListItem(receptionWaitItem)
-                      }
-                      <footer style={{marginTop: '16px'}}>
-                        <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                  <div key={receptionWaitItem._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
+                    {
+                      this.needListItem(receptionWaitItem)
+                    }
+                    <footer>
+                      <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
+                    </footer>
                   </div>
                 );
               })
@@ -146,16 +152,13 @@ export default class NeedApartment extends Component {
               reception && reception.map((receptionItem) => {
                 return (
                   <div key={receptionItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
-                      {
-                        this.needListItem(receptionItem)
-                      }
-                      <footer style={{marginTop: '16px'}}>
-                        <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
-                        <button className="mainXsBtn">拨打电话</button>
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                    {
+                      this.needListItem(receptionItem)
+                    }
+                    <footer>
+                      <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
+                      <button className="mainXsBtn"><a href="tel:15701609247">拨打电话</a></button>
+                    </footer>
                   </div>
                 );
               })
@@ -166,18 +169,19 @@ export default class NeedApartment extends Component {
               completed && completed.map((completedItem) => {
                 return (
                   <div key={completedItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    <div className="left">
+                    {
+                      this.needListItem(completedItem)
+                    }
+                    <footer>
+                      <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(completedItem.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
                       {
-                        this.needListItem(completedItem)
+                        completedItem && completedItem.comment ?
+                          <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
+                        : completedItem.operation === '结束' ?
+                          <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button>
+                          : ''
                       }
-                      <footer style={{marginTop: '16px'}}>
-                        <button className="cancelBtn" style={{marginRight: '10px'}}>再次邀请</button>
-                        {
-                          completedItem.operation === '结束' ? <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button> : ''
-                        }
-                      </footer>
-                    </div>
-                    <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+                    </footer>
                   </div>
                 );
               })
