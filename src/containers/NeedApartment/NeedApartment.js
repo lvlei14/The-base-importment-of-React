@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import Modal from '../../components/Modal/Modal';
+import { HeadNaviBar, Modal } from '../../components';
 import { showDiaglog } from '../../redux/modules/diaglog';
-
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
 
@@ -35,6 +33,7 @@ export default class NeedApartment extends Component {
     this.state = {
       showModal: false,
       modalTabIndex: null,
+      tabIndex: 0,
     };
   }
 
@@ -51,6 +50,7 @@ export default class NeedApartment extends Component {
   }
 
   changeTab(index) {
+    this.setState({tabIndex: index});
     localStorage.removeItem('addNeedApartTab');
     localStorage.setItem('needAppartTab', index); // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
   }
@@ -97,34 +97,70 @@ export default class NeedApartment extends Component {
     this.props.pushState('/add-appart-need');
   }
 
-  needListItem(item) {
-    return (
-      <div className="list" onClick={() => this.goNeedAppartDetail(item)}>
-        <section className="left">
-          <header className={styles.listHeader}>
+  showListItemBtn(list) {
+    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
+    let listBtn;
+    if (tabIndexString === '0') {
+      listBtn = (<button onClick={() => this.clickShowModal(list, 0)} className="cancelBtn">取消</button>);
+    } else if (tabIndexString === '1') {
+      listBtn = (
+        <div>
+          <button onClick={() => this.clickShowModal(list, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
+          <button className="mainXsBtn"><a href="tel:15701609247">拨打电话</a></button>
+        </div>
+        );
+    } else if (tabIndexString === '2') {
+      listBtn = (
+        <div>
+          <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(list.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
           {
-            item.doctors && item.doctors.map((doctor) => {
-              return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
-            })
+            list && list.comment ?
+              <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
+            : list.operation === '结束' ?
+              <button className="mainXsBtn" onClick={() => this.clickGoToComment(list._id)}>去评价</button>
+              : ''
           }
-          </header>
-          <p>医疗类别：{item.medicalCategory}</p>
-          <p>需求时间：{item.start_time}</p>
-        </section>
-        <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
-      </div>
-    );
+        </div>
+      );
+    }
+    return listBtn;
+  }
+
+  needLists(lists) {
+    const needLists = lists && lists.map((list) => {
+      return (
+        <div key={list._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
+          <div className="list" onClick={() => this.goNeedAppartDetail(list)}>
+            <section className="left">
+              <header className={styles.listHeader}>
+              {
+                list.doctors && list.doctors.map((doctor) => {
+                  return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
+                })
+              }
+              </header>
+              <p>医疗类别：{list.medicalCategory}</p>
+              <p>需求时间：{list.start_time}</p>
+            </section>
+            <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+          </div>
+          <footer>
+            {this.showListItemBtn(list)}
+          </footer>
+        </div>
+      );
+    });
+    return needLists;
   }
 
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
-    const needAppartTabIndex = parseInt(localStorage.getItem('addNeedApartTab'), 10) || parseInt(localStorage.getItem('needAppartTab'), 10);
-    console.log(parseInt(localStorage.getItem('addNeedApartTab'), 10));
-    console.log(needAppartTabIndex);
+    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
+    const needAppartTabIndex = parseInt(tabIndexString, 10);
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>
-        <Tabs className="tabs" onSelect={this.changeTab} selectedIndex={needAppartTabIndex}>
+        <Tabs className="tabs" onSelect={this.changeTab.bind(this)} selectedIndex={needAppartTabIndex}>
           <TabList style={{marginBottom: 0}} className="tabList tabList3" activeTabClassName="tabListOn">
             <Tab>待接受({receptionWait && receptionWait.length}条)</Tab>
             <Tab>已接受({reception && reception.length}条)</Tab>
@@ -133,58 +169,17 @@ export default class NeedApartment extends Component {
 
           <TabPanel>
             {
-              receptionWait && receptionWait.map((receptionWaitItem) => {
-                return (
-                  <div key={receptionWaitItem._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
-                    {
-                      this.needListItem(receptionWaitItem)
-                    }
-                    <footer>
-                      <button onClick={() => this.clickShowModal(receptionWaitItem, 0)} className="cancelBtn">取消</button>
-                    </footer>
-                  </div>
-                );
-              })
+              this.needLists(receptionWait)
             }
           </TabPanel>
           <TabPanel>
             {
-              reception && reception.map((receptionItem) => {
-                return (
-                  <div key={receptionItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    {
-                      this.needListItem(receptionItem)
-                    }
-                    <footer>
-                      <button onClick={() => this.clickShowModal(receptionItem, 1)} className="cancelBtn" style={{marginRight: '10px'}}>结束</button>
-                      <button className="mainXsBtn"><a href="tel:15701609247">拨打电话</a></button>
-                    </footer>
-                  </div>
-                );
-              })
+              this.needLists(reception)
             }
           </TabPanel>
           <TabPanel>
             {
-              completed && completed.map((completedItem) => {
-                return (
-                  <div key={completedItem._id} className={'topCardBg list clearfix ' + styles.needApartListCon}>
-                    {
-                      this.needListItem(completedItem)
-                    }
-                    <footer>
-                      <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(completedItem.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
-                      {
-                        completedItem && completedItem.comment ?
-                          <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
-                        : completedItem.operation === '结束' ?
-                          <button className="mainXsBtn" onClick={() => this.clickGoToComment(completedItem._id)}>去评价</button>
-                          : ''
-                      }
-                    </footer>
-                  </div>
-                );
-              })
+              this.needLists(completed)
             }
           </TabPanel>
         </Tabs>
