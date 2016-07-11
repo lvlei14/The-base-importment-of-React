@@ -41,34 +41,4 @@
   .commentTip {
     font-size: 0.17rem;
   }
-
-  .rateContainer {
-    margin: 0.13rem 0;
-    div {
-      margin-bottom: 13px;
-
-      p {
-        border: 0.01rem solid $mainColor;
-        padding: 0.01rem 0.05rem;
-        margin-right: 0.13rem;
-      }
-
-      span {
-        padding-left: 0.1rem;
-        font-size: 0.1rem;
-        color: $mainColor;
-      }
-    }
-  }
-
-  .commentContainer {
-
-    textarea {
-      height: 1rem;
-      resize: none;
-      padding: 7px;
-      overflow: hidden;
-      background-color: #efefef;
-    }
-  }
 }

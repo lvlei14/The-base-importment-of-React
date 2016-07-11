@@ -2,12 +2,11 @@ import React, { PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-const Rate = require('rc-rate');
 const styles = require('./RateDoctor.scss');
 import {createComment}from '../../redux/modules/comment';
 import { showDiaglog } from '../../redux/modules/diaglog';
 import { loadAppartNeedById } from '../../redux/modules/invitation';
-import {DoctorCardWithIcon, DoctorDetailCard} from '../../components';
+import {DoctorCardWithIcon, Rate, /* DoctorDetailCard */} from '../../components';
 
 // DoctorCardWithDetail
 
@@ -55,13 +54,6 @@ class RateDoctor extends React.Component {
     }
   }
 
-  clickRateStar(score, index) {
-    const rates = this.state.rates;
-    this.setState({
-      rates: [...rates.slice(0, index), {...rates[index], score: score}, ...rates.slice(index + 1)]
-    });
-  }
-
   showTips(score) {
     let tips = '';
     if (score <= 0) {
@@ -91,9 +83,11 @@ class RateDoctor extends React.Component {
     this.props.createComment(comment);
   }
 
-  handleCommentInput(event) {
+  rateChange(state) {
+    // console.log(state);
     this.setState({
-      comment: event.target.value
+      rates: state.rates,
+      comment: state.comment
     });
   }
 
@@ -107,8 +101,6 @@ class RateDoctor extends React.Component {
         <div className={styles.container}>
           {/* 医生卡片式介绍 */}
           <DoctorCardWithIcon doctor={recipient} />
-          <DoctorDetailCard doctor={recipient} />
-
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>
@@ -126,25 +118,11 @@ class RateDoctor extends React.Component {
             <div className={styles.divider} />
 
             <div className={styles.commentTip}>请为此次调度进行评价:</div>
-            <div className={styles.rateContainer}>
-              {
-                this.state.rates.map((rate, index) => {
-                  return (
-                    <div>
-                      <p>{rate.name}</p>
-                      <Rate value={rate.score} onChange={(score) => this.clickRateStar(score, index)}/>
-                      <span>{this.showTips(rate.score)}</span>
-                    </div>
-                  );
-                })
-              }
-            </div>
-
-            <div className={styles.commentContainer}>
-              <textarea placeholder="请输入您对本次调度的建议或意见，最多200个字。"
-                        value={this.state.comment}
-                        onChange={this.handleCommentInput.bind(this)} />
-            </div>
+            {/* 评论控件 */}
+            <Rate rates={this.state.rates}
+                  onChange={this.rateChange.bind(this)}
+                  commentPlaceholder="请输入您对本次调度的建议或意见，最多200个字。"
+                  initTextComment={this.state.comment}/>
           </div>
           <button className="mainBtn" onClick={this.submitRate.bind(this)}>发表评价</button>
         </div>
