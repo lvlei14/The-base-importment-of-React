@@ -28,7 +28,9 @@ export default class needsdetail extends Component {
     refusetAnInvitation: PropTypes.func,
     showDiaglog: PropTypes.func,
     routeParams: PropTypes.object,
-
+    refuseSuccess: PropTypes.bool,
+    acceptSuccess: PropTypes.bool,
+    details: PropTypes.object,
   };
 
   constructor(props) {
@@ -76,34 +78,40 @@ export default class needsdetail extends Component {
 
   clickaccept() {
     this.clickHideModal();
-    this.props.refusetAnInvitation(this.props.details._id && this.props.details._id, '取消', this.refs.refuseText.value, this.props.routeParams && this.props.routeParams.status);
+    this.props.refusetAnInvitation(this.props.details._id && this.props.details._id,
+      '取消',
+      this.refs.refuseText.value,
+      this.props.routeParams && this.props.routeParams.status
+    );
   }
 
   acceptAndRefuseBtn(type, status) {
+    let newDiv;
     if (type === '1') {
-      return <div className={styles.btnDiv}>
-        <button className={styles.accepd} onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '接受', 'reason', status)}>接受邀约</button>
-        <button className={styles.refuse} onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '拒绝', 'reason', status)}>拒绝邀约</button>
-      </div> ;
-
-    }else if (type === '2' && status === '已取消') {
-
-      return <div className={styles.clearDiv}>
-      </div> ;
-    }else if (type === '2' && status === '已拒绝') {
-      return <div className={styles.clearDiv}>
-      </div> ;
-    }else if (type === '2' && status === '已完成') {
-      return <div className={styles.clearDiv}>
-      </div> ;
-    }else {
-      return <div className={styles.btnDiv}><button className={styles.cancel} onClick={() => this.refusetAnInvitation()}>取消需求</button>
-      </div> ;
+      newDiv = (
+        <div className={styles.btnDiv}>
+          <button className={styles.accepd}
+                  onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '接受', 'reason', status)}>
+            接受邀约
+          </button>
+          <button className={styles.refuse} onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '拒绝', 'reason', status)}>
+            拒绝邀约
+          </button>
+      </div>
+      );
+    } else if (type === '2' && status === '已取消') {
+      newDiv = <div className={styles.clearDiv}></div>;
+    } else if (type === '2' && status === '已拒绝') {
+      newDiv = <div className={styles.clearDiv}></div>;
+    } else if (type === '2' && status === '已完成') {
+      newDiv = <div className={styles.clearDiv}></div>;
+    } else {
+      newDiv = <div className={styles.btnDiv}><button className={styles.cancel} onClick={() => this.refusetAnInvitation()}>取消需求</button></div>;
     }
+    return newDiv;
   }
 
   render() {
-    const star = require('../../images/starNeedsDetail.png');
     const needsBg = require('../../images/needsBg.png');
     const details = this.props.details;
 
