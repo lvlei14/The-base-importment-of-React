@@ -42,7 +42,6 @@ export default function needExpertListReducer(state = initState, action = {}) {
     case LOAD_EXPERT_DETAIL_FAIL:
       return {
         ...state,
-        acceptSuccess: false,
         loading: false,
         tip: action.tip
       };
@@ -50,7 +49,7 @@ export default function needExpertListReducer(state = initState, action = {}) {
     case ACCEPT_AN_INVITATION:
       return {
         ...state,
-
+        acceptSuccess: false,
         loading: true
       };
 
@@ -67,6 +66,7 @@ export default function needExpertListReducer(state = initState, action = {}) {
     case ACCEPT_AN_INVITATION_FAIL:
       return {
         ...state,
+        acceptSuccess: false,
         loading: false,
         tip: action.tip
       };
@@ -74,6 +74,7 @@ export default function needExpertListReducer(state = initState, action = {}) {
     case REFUSE_AN_INVITATION:
       return {
         ...state,
+        refuseSuccess: false,
         loading: true
       };
 
@@ -128,7 +129,6 @@ export function acceptAnInvitation(id, operation, reason, status) {
 }
 
 export function refusetAnInvitation(id, operation, reason, status) {
-  console.log(status + '清热去玩儿');
   return {
     types: [REFUSE_AN_INVITATION, REFUSE_AN_INVITATION_SUCCESS, REFUSE_AN_INVITATION_FAIL],
     promise: (client) => client.put('/invitation/' + id, {

@@ -50,7 +50,7 @@ div, span, p, ul, li, dl, a, input, img, b, button {
           float: left;
         }
         img {
-          margin: 4px 0 0 4px;
+          margin: 4px 0 0 10px;
           float: left;
           width: 59px;
           height: 16px;
@@ -86,21 +86,21 @@ div, span, p, ul, li, dl, a, input, img, b, button {
         }
 
         .dial {
-          margin: 2px 0 0 10px;
+          margin: 3px 0 0 10px;
           background-color: rgba(65, 194, 153, 1);
           color: white;
           font-size: 10px;
           height: 18px;
-          width: 60px;
+          width: 54px;
           text-align: center;
           border-radius: 2px;
-          line-height: 18px;
+          line-height: 16px;
           float: left;
         }
       }
     }
     .rightMore {
-      margin: 53px 15px 53px 0;
+      margin: 63px 15px 0 0;
       float: right;
       width: 7px;
       height: 15px;

@@ -47,14 +47,13 @@ export default class MyNeeds extends Component {
     var needsTypeImage = require('../../images/needsType-1.png');
 
     if (status === '处理中') {
-      console.log('1');
       needsTypeImage = require('../../images/needsType-1.png');
-    }else if (status === '已拒绝') {
-      console.log('2');
+    }else if (status === '已完成') {
       needsTypeImage = require('../../images/needsType-2.png');
     }else if (status == '已取消') {
-      console.log('3');
       needsTypeImage = require('../../images/needsType-3.png');
+    }else if (status === '已拒绝') {
+      needsTypeImage = require('../../images/needsType-4.png');
     }
     return needsTypeImage;
   }
@@ -94,7 +93,7 @@ export default class MyNeeds extends Component {
                         <p className={styles.jobTitle}>需求时间:&nbsp;&nbsp;{todoing.start_time}</p>
                         <div className={styles.phoneNum}>
                           <p className={styles.Num}>联系电话:&nbsp;&nbsp;{todoing.mobile}</p>
-                          <div className={styles.dial}>拨打电话</div>
+                          <a className={styles.dial} href={`tel:${todoing.mobile}`} onClick={(event) => {event.stopPropagation()}}>拨打电话</a>
                         </div>
                       </div>
                       <img className={styles.rightMore} src={moreArrow}/>
@@ -104,6 +103,7 @@ export default class MyNeeds extends Component {
               })
             }
           </TabPanel>
+
 
           <TabPanel>
             {
@@ -121,7 +121,7 @@ export default class MyNeeds extends Component {
                         <p className={styles.jobTitle}>需求时间:&nbsp;&nbsp;{complete.start_time}</p>
                         <div className={styles.phoneNum}>
                           <p className={styles.Num}>联系电话:&nbsp;&nbsp;{complete.mobile}</p>
-                          <div className={styles.dial}>拨打电话</div>
+                          <a className={styles.dial} href={`tel:${complete.mobile}`} onClick={(event) => {event.stopPropagation()}}>拨打电话</a>
                         </div>
                       </div>
                       <img className={styles.rightMore} src={moreArrow}/>

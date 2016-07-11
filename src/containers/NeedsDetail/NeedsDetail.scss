@@ -56,12 +56,15 @@ div, span, p, ul, li, dl, a, input, img, b, button {
           height: 24px;
           margin: 0;
           float: none;
+          margin-top: 10px;
+          margin-right: 13px;
         }
 
         p {
-          width: 34px;
+          width: 24px;
           height: 14px;
           margin: 0;
+          margin-right: 13px;
           float: none;
           color: rgba(65, 194, 153, 1);
           font-size: 10px;
@@ -88,12 +91,12 @@ div, span, p, ul, li, dl, a, input, img, b, button {
 
     .btnDiv {
       margin: 38px 25px 0 25px;
-      height: 80px;
+      height: 75px;
 
       .accepd {
         margin: 0;
         float: left;
-        width: 140px;
+        width: 47%;
         height: 43px;
         background-color: rgba(65,194,153,1);
         color: white;
@@ -104,7 +107,7 @@ div, span, p, ul, li, dl, a, input, img, b, button {
       .refuse {
         margin: 0;
         float: right;
-        width: 140px;
+        width: 47%;
         height: 43px;
         color: rgba(65,194,153,1);
         border: 1px solid rgba(65,194,153,1);
@@ -122,6 +125,11 @@ div, span, p, ul, li, dl, a, input, img, b, button {
         border-radius: 43px;
         background-color: white;
       }
+    }
+
+    .clearDiv {
+      margin: 38px 25px 0 25px;
+      height: 1px;
     }
   }
 

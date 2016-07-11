@@ -47,7 +47,7 @@ export default class needsdetail extends Component {
       this.props.pushState('/my-needs/');
       return;
     }
-
+    console.log(nextProps.acceptSuccess);
     if (!this.props.acceptSuccess && nextProps.acceptSuccess) {
       this.props.pushState('/my-needs/');
       return;
@@ -55,7 +55,6 @@ export default class needsdetail extends Component {
   }
 
   acceptAnInvitation(id, result, reason, status) {
-    console.log(status + '打印');
     this.props.acceptAnInvitation(id, result, reason, status);
   }
 
@@ -76,7 +75,6 @@ export default class needsdetail extends Component {
   }
 
   clickaccept() {
-    console.log(this.props.routeParams.status + '偶尔发武汉');
     this.clickHideModal();
     this.props.refusetAnInvitation(this.props.details._id && this.props.details._id, '取消', this.refs.refuseText.value, this.props.routeParams && this.props.routeParams.status);
   }
@@ -84,13 +82,19 @@ export default class needsdetail extends Component {
   acceptAndRefuseBtn(type, status) {
     if (type === '1') {
       return <div className={styles.btnDiv}>
-        <button className={styles.accepd} onClick={() => this.acceptAnInvitation(details && details._id, '接受', 'reason', this.props.routeParams && this.props.routeParams.status)}>接受邀约</button>
-        <button className={styles.refuse} onClick={() => this.acceptAnInvitation(details && details._id, '拒绝', 'reason', this.props.routeParams && this.props.routeParams.status)}>拒绝邀约</button>
+        <button className={styles.accepd} onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '接受', 'reason', status)}>接受邀约</button>
+        <button className={styles.refuse} onClick={() => this.acceptAnInvitation(this.props.routeParams && this.props.routeParams.id, '拒绝', 'reason', status)}>拒绝邀约</button>
       </div> ;
 
     }else if (type === '2' && status === '已取消') {
 
-      return <div className={styles.btnDiv}>
+      return <div className={styles.clearDiv}>
+      </div> ;
+    }else if (type === '2' && status === '已拒绝') {
+      return <div className={styles.clearDiv}>
+      </div> ;
+    }else if (type === '2' && status === '已完成') {
+      return <div className={styles.clearDiv}>
       </div> ;
     }else {
       return <div className={styles.btnDiv}><button className={styles.cancel} onClick={() => this.refusetAnInvitation()}>取消需求</button>
@@ -113,8 +117,6 @@ export default class needsdetail extends Component {
                 <img src={needsBg}/>
                 <p>{details.apartment && details.apartment.name}</p>
                 <div className={styles.star}>
-                  <img src={star}/>
-                  <p>收藏</p>
                 </div>
 
               </div>
@@ -143,7 +145,7 @@ export default class needsdetail extends Component {
               clickHideModal = {this.clickHideModal.bind(this)}
               clickConfirm = {this.clickaccept.bind(this)}
               clickCancel = {this.clickdeny.bind(this)} >
-              <textarea ref="refuseText"></textarea>
+              <textarea ref="refuseText" placeholder="请输入取消原因!"></textarea>
             </Modal>
           </div>
 
