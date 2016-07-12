@@ -28,6 +28,8 @@ import {
     RateDoctor,
     NeedApartment,
     NeedApartAdd,
+    MyNeeds,
+    NeedsDetail
   } from 'containers';
 
 export default (store) => {
@@ -89,6 +91,10 @@ export default (store) => {
         <Route path="rate/:id" component={RateDoctor} onEnter={requireLogin} />
         <Route path="appart-my-need" component={NeedApartment} />
         <Route path="add-appart-need" component={NeedApartAdd} />
+        <Route path="my-needs" component={MyNeeds} />
+        <Route path="needs-detail/:id/:type/:status" component={NeedsDetail} />
+
+
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>
