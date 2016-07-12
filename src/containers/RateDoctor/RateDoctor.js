@@ -93,14 +93,14 @@ class RateDoctor extends React.Component {
 
   render() {
     const {recipient, start_time, medicalCategory} = this.props.invitation;
-    console.log(this.props.invitation);
-    console.log(recipient);
+    // console.log(recipient);
+    const acceptedDoctor = recipient && recipient[0];
     return (
       <div>
         <HeadNaviBar>评价</HeadNaviBar>
         <div className={styles.container}>
           {/* 医生卡片式介绍 */}
-          <DoctorCardWithIcon doctor={recipient} />
+          <DoctorCardWithIcon doctor={acceptedDoctor} />
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>
