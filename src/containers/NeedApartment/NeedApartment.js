@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { HeadNaviBar, Modal } from '../../components';
+import { HeadNaviBar, Modal, Loading } from '../../components';
 import { showDiaglog } from '../../redux/modules/diaglog';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
@@ -26,6 +26,7 @@ export default class NeedApartment extends Component {
     changeNeedAppartStatusSuccess: PropTypes.bool,
     showDiaglog: PropTypes.func,
     successMsg: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   constructor(props) {
@@ -52,7 +53,7 @@ export default class NeedApartment extends Component {
   changeTab(index) {
     this.setState({tabIndex: index});
     localStorage.removeItem('addNeedApartTab');
-    localStorage.setItem('needAppartTab', index); // changeTab 不接受setState方法。所以，不能把下面的按钮写在一个组件上
+    localStorage.setItem('needAppartTab', index);
   }
 
   goAddAppartNeed() {
@@ -127,29 +128,34 @@ export default class NeedApartment extends Component {
   }
 
   needLists(lists) {
-    const needLists = lists && lists.map((list) => {
-      return (
-        <div key={list._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
-          <div className="list" onClick={() => this.goNeedAppartDetail(list)}>
-            <section className="left">
-              <header className={styles.listHeader}>
-              {
-                list.doctors && list.doctors.map((doctor) => {
-                  return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
-                })
-              }
-              </header>
-              <p>医疗类别：{list.medicalCategory}</p>
-              <p>需求时间：{list.start_time}</p>
-            </section>
-            <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+    let needLists;
+    if (lists && lists.length === 0) {
+      needLists = (<div className="noResult">暂无内容</div>);
+    } else {
+      needLists = lists && lists.map((list) => {
+        return (
+          <div key={list._id} className={'topCardBg clearfix ' + styles.needApartListCon}>
+            <div className="list" onClick={() => this.goNeedAppartDetail(list)}>
+              <section className="left">
+                <header className={styles.listHeader}>
+                {
+                  list.doctors && list.doctors.map((doctor) => {
+                    return (<span key={doctor._id}>{doctor && doctor.name}<i>、</i></span>);
+                  })
+                }
+                </header>
+                <p>医疗类别：{list.medicalCategory}</p>
+                <p>需求时间：{list.start_time}</p>
+              </section>
+              <article className="listNextIcon right"><i className="fa fa-angle-right"></i></article>
+            </div>
+            <footer>
+              {this.showListItemBtn(list)}
+            </footer>
           </div>
-          <footer>
-            {this.showListItemBtn(list)}
-          </footer>
-        </div>
-      );
-    });
+        );
+      });
+    }
     return needLists;
   }
 
@@ -160,10 +166,11 @@ export default class NeedApartment extends Component {
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>
+        <Loading showLoading={this.props.loading} />
         <Tabs className="tabs" onSelect={this.changeTab.bind(this)} selectedIndex={needAppartTabIndex}>
           <TabList style={{marginBottom: 0}} className="tabList tabList3" activeTabClassName="tabListOn">
-            <Tab>待接受({receptionWait && receptionWait.length}条)</Tab>
-            <Tab>已接受({reception && reception.length}条)</Tab>
+            <Tab>待接受({receptionWait && receptionWait.length || 0}条)</Tab>
+            <Tab>已接受({reception && reception.length || 0}条)</Tab>
             <Tab>已完成</Tab>
           </TabList>
 
