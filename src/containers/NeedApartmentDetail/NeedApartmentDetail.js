@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { DoctorDetailCard, DividerLine, InvitationDetail, HeadNaviBar, Rate } from '../../components';
-// import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { loadAppartNeedById } from '../../redux/modules/invitation';
 
@@ -12,7 +11,6 @@ const styles = require('./NeedApartmentDetail.scss');
   state => ({...state.invitation}), {
     pushState: push,
     loadAppartNeedById,
-    // showDiaglog
   }
 )
 export default class NeedApartmentDetail extends Component {
@@ -80,13 +78,15 @@ export default class NeedApartmentDetail extends Component {
           <div style={{display: !invitation.comment ? 'block' : 'none'}} className={styles.needAppartDetailCardTwo}>
             <InvitationDetail need={invitation} />
           </div>
-          {
-            doctors && doctors.map((doctorItem) => {
-              return (
-                <div key={doctorItem._id} className={styles.needDetailMargin}><DoctorDetailCard doctor={doctorItem} /></div>
-              );
-            })
-          }
+          <div className={styles.needAppartDetailCardTwo}>
+            {
+              doctors && doctors.map((doctorItem) => {
+                return (
+                  <div key={doctorItem._id} className={styles.needDetailMargin}><DoctorDetailCard doctor={doctorItem} /></div>
+                );
+              })
+            }
+          </div>
           {
             invitation.comment ?
               <div className={styles.needAppartDetailCardTwo}>

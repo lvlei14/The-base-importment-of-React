@@ -7,6 +7,7 @@ import {getCaptcha,
         setMobile
  } from '../../redux/modules/forgetPassword';
 import { showDiaglog } from '../../redux/modules/diaglog';
+let timer = 0;
 @connect(
   state => ({
     successMsg: state.forgetPassword && state.forgetPassword.successMsg,
@@ -34,12 +35,15 @@ export default class ForgetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      height: 500
+      mobile: '',
+      captcha: '',
+      sendVerifySuccess: false,
     };
   }
   componentWillReceiveProps(nextProps) {
     if (!this.props.createCaptchaSuccess && nextProps.createCaptchaSuccess) {
       this.props.showDiaglog('验证码已发送...');
+      this.setState({sendVerifySuccess: true});
       return;
     }
 
@@ -85,17 +89,31 @@ export default class ForgetPassword extends Component {
       captcha: event.target.value
     });
   }
+
+  sendVerify() {
+    clearTimeout(timer);
+    timer = setTimeout(timer++, 1000);
+  }
+
+  componentWillUnMount() {
+    clearTimeout(timer);
+  }
+
   render() {
     const styles = require('./ForgetPassword.scss');
+    const {sendVerifySuccess} = this.state;
     return (
       <div>
         <HeadNaviBar>找回密码</HeadNaviBar>
         <div className={styles.forgetPass}>
           <p className="tip">请输入您绑定的手机号</p>
-          <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.mobile } placeholder="请输入您的手机号"/>
-          <input type="text" onChange = { this.inputCaptcha.bind(this) } value = { this.state.captcha } placeholder="请输入您的验证码"/>
-          <button type="button" onClick = { this.getCaptcha.bind(this) }>获取验证码</button>
-          <button type="button" onClick = { this.next2ResetPassword.bind(this) }>下一步</button>
+          <input type="tel" onChange = { this.inputMobile.bind(this) } value = { this.state.mobile } placeholder="请输入您的手机号"/>
+          <div className={styles.getCaptDiv}>
+            <input className="left" type="text" onChange={this.inputCaptcha.bind(this)} value={this.state.captcha} placeholder="请输入您的验证码"/>
+            <button className="right" type="button" onClick = { this.getCaptcha.bind(this) }>获取验证码</button>
+            <button style={{display: sendVerifySuccess ? 'block' : 'none'}}>{timer}s</button>
+          </div>
+          <button className="mainBtn" type="button" onClick = { this.next2ResetPassword.bind(this) }>下一步</button>
         </div>
       </div>
     );

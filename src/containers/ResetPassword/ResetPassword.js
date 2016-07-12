@@ -4,6 +4,8 @@ import { push } from 'react-router-redux';
 import {resetPassword,
  } from '../../redux/modules/forgetPassword';
 import { showDiaglog } from '../../redux/modules/diaglog';
+import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
+
 @connect(
   state => ({
     successMsg: state.forgetPassword && state.forgetPassword.successMsg,
@@ -66,11 +68,16 @@ export default class ResetPassword extends Component {
     });
   }
   render() {
+    const styles = require('./ResetPassword.scss');
     return (
       <div>
-        <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.password } placeholder="请输入新密码"/>
-        <input type="text" onChange = { this.inputCaptcha.bind(this) } value = { this.state.checkPassword } placeholder="确认密码"/>
-        <button type="button" onClick = { this.resetPassword.bind(this) }>完成</button>
+        <HeadNaviBar>找回密码</HeadNaviBar>
+        <div className={styles.forgetPass}>
+          <p className="tip">请输入设置新密码</p>
+          <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.password } placeholder="请输入新密码"/>
+          <input type="text" style={{marginTop: '10px'}} onChange = { this.inputCaptcha.bind(this) } value = { this.state.checkPassword } placeholder="确认密码"/>
+          <button className="mainBtn" type="button" onClick = { this.resetPassword.bind(this) }>完成</button>
+        </div>
       </div>
     );
   }
