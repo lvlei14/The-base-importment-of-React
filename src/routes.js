@@ -28,7 +28,7 @@ import {
     RateDoctor,
     NeedApartment,
     NeedApartAdd,
-    NeedApartmentDetail
+    NeedApartmentDetail,
     MyNeeds,
     NeedsDetail
   } from 'containers';
