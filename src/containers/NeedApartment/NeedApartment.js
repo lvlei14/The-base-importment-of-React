@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { HeadNaviBar, Modal } from '../../components';
+import { HeadNaviBar, Modal, Loading } from '../../components';
 import { showDiaglog } from '../../redux/modules/diaglog';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { loadNeedAppartLists, changeNeedAppartStatus } from '../../redux/modules/invitation';
@@ -26,6 +26,7 @@ export default class NeedApartment extends Component {
     changeNeedAppartStatusSuccess: PropTypes.bool,
     showDiaglog: PropTypes.func,
     successMsg: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   constructor(props) {
@@ -165,6 +166,7 @@ export default class NeedApartment extends Component {
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>
+        <Loading showLoading={this.props.loading} />
         <Tabs className="tabs" onSelect={this.changeTab.bind(this)} selectedIndex={needAppartTabIndex}>
           <TabList style={{marginBottom: 0}} className="tabList tabList3" activeTabClassName="tabListOn">
             <Tab>待接受({receptionWait && receptionWait.length || 0}条)</Tab>
