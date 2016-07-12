@@ -12,7 +12,7 @@ import { loadschedules } from '../../redux/modules/datePlan';
 
 @connect(
   state => ({user: state.auth.user, ...state.schedules}),
-  { sendWxCode, loadschedules }
+  { sendWxCode, loadschedules, pushState: push, }
 )
 export default class Home extends Component {
   static propTypes = {
@@ -21,6 +21,7 @@ export default class Home extends Component {
     location: PropTypes.object,
     loadschedules: PropTypes.func,
     schedules: PropTypes.object,
+    pushState: PropTypes.func,
   };
 
   constructor(props) {
@@ -52,12 +53,23 @@ export default class Home extends Component {
     return currentdate;
   }
 
+  goNeedPage() {
+    const {user} = this.props;
+    if (user.roles && user.roles.indexOf('apartment') > 0) {
+      this.props.pushState('/appart-my-need');
+    } else {
+      this.props.pushState('/my-needs');
+    }
+  }
+
   render() {
     const zhibanPng = require('../../images/homeZhiban.png');
     const shoushuPng = require('../../images/homeShoushu.png');
+    const xuqiuPng = require('../../images/homeXuqiu.png');
     const nowDate = this.getNowFormatDate();
     const schedules = this.props.schedules && this.props.schedules.list || [];
     const scheduleItems = schedules && schedules.filter((item) => item.date === nowDate);
+    console.log(this.props.user);
     return (
       <div>
         <HeadNaviBar showBackArrow={false}>首页</HeadNaviBar>
@@ -71,9 +83,15 @@ export default class Home extends Component {
                 <p>值班</p>
               </Link>
             </li>
-            <li className="left">
+            <li className="left" style={{marginLeft: '.66rem'}}>
+              <article style={{background: '#F2B95B'}} onClick={this.goNeedPage.bind(this)}>
+                <img src = {xuqiuPng} alt="需求入口" />
+              </article>
+              <p>需求</p>
+            </li>
+            <li className="right">
               <Link to="/opera">
-                <article className={styles.navLiThr}>
+                <article style={{background: '#7FDFC9'}}>
                   <img src = {shoushuPng} alt="手术入口" />
                 </article>
                 <p>手术</p>
