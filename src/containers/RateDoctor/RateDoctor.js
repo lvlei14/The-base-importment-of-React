@@ -49,8 +49,10 @@ class RateDoctor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const id = this.props.routeParams;
     if (!this.props.addCommentSuccess && nextProps.addCommentSuccess) {
       this.props.showDiaglog(nextProps.successMsg);
+      this.props.push(`appart-need-detail/${id}`);
     }
   }
 
@@ -93,14 +95,14 @@ class RateDoctor extends React.Component {
 
   render() {
     const {recipient, start_time, medicalCategory} = this.props.invitation;
-    console.log(this.props.invitation);
-    console.log(recipient);
+    // console.log(recipient);
+    const acceptedDoctor = recipient && recipient[0];
     return (
       <div>
         <HeadNaviBar>评价</HeadNaviBar>
         <div className={styles.container}>
           {/* 医生卡片式介绍 */}
-          <DoctorCardWithIcon doctor={recipient} />
+          <DoctorCardWithIcon doctor={acceptedDoctor} />
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>
