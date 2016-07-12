@@ -29,6 +29,8 @@ import {
     NeedApartment,
     NeedApartAdd,
     NeedApartmentDetail
+    MyNeeds,
+    NeedsDetail
   } from 'containers';
 
 export default (store) => {
@@ -90,6 +92,8 @@ export default (store) => {
         <Route path="appart-my-need" component={NeedApartment} />
         <Route path="add-appart-need" component={NeedApartAdd} />
         <Route path="appart-need-detail/:id" component={NeedApartmentDetail} />
+        <Route path="my-needs" component={MyNeeds} />
+        <Route path="needs-detail/:id/:type/:status" component={NeedsDetail} />
         { /* Routes requiring login */ }
         <Route onEnter={requireLogin} />
       </Route>
