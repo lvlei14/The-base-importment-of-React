@@ -90,7 +90,7 @@ export default class GroupMsgList extends Component {
             : <div className={'cardBgRadius clearfix ' + styles.groupMsgItem}>暂无内容</div>
           }
         </div>
-        <div style={{display: this.props.user && this.props.user.roles && this.props.user.roles.indexOf('apartment') > 0 ? 'block' : 'none'}}>
+        <div style={{display: this.props.user && this.props.user.roles && this.props.user.roles.indexOf('apartment') !== -1 ? 'block' : 'none'}}>
           <AddPlan
             groupAppartId = {this.props.routeParams.id} />
         </div>

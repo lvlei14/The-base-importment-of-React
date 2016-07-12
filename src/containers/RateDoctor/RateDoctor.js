@@ -49,10 +49,9 @@ class RateDoctor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const id = this.props.routeParams;
+    const {id} = this.props.routeParams;
     if (!this.props.addCommentSuccess && nextProps.addCommentSuccess) {
-      this.props.showDiaglog(nextProps.successMsg);
-      this.props.push(`appart-need-detail/${id}`);
+      this.props.showDiaglog(nextProps.successMsg, '/appart-need-detail/' + id);
     }
   }
 

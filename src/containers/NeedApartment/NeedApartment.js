@@ -40,6 +40,7 @@ export default class NeedApartment extends Component {
 
   componentDidMount() {
     this.props.loadNeedAppartLists();
+    localStorage.removeItem('doctors'); // 防止用户，点击再次邀请后，但又返回列表页，直接点添加
   }
 
   componentWillReceiveProps(nextProps) {
@@ -116,7 +117,7 @@ export default class NeedApartment extends Component {
           <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(list.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
           {
             list && list.comment ?
-              <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
+              <button className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</button>
             : list.operation === '结束' ?
               <button className="mainXsBtn" onClick={() => this.clickGoToComment(list._id)}>去评价</button>
               : ''

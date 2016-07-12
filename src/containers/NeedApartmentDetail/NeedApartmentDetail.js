@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-// import Modal from '../../components/Modal/Modal';
-import { DoctorDetailCard, InvitationDetail, HeadNaviBar} from '../../components';
+import { DoctorDetailCard, DividerLine, InvitationDetail, HeadNaviBar, Rate } from '../../components';
 // import { showDiaglog } from '../../redux/modules/diaglog';
 
 import { loadAppartNeedById } from '../../redux/modules/invitation';
@@ -36,6 +35,19 @@ export default class NeedApartmentDetail extends Component {
     this.props.loadAppartNeedById(id);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const comment = nextProps.invitation && nextProps.invitation.comment;
+    this.state = {
+      dataCom: nextProps.invitation && nextProps.invitation.comment,
+      rates: [
+        {name: '医学水平', field: 'skill', score: comment && comment.skill},
+        {name: '服务态度', field: 'attitude', score: comment && comment.attitude},
+        {name: '时间保障', field: 'timeEffort', score: comment && comment.timeEffort},
+      ],
+      comment: comment && comment.desc
+    };
+  }
+
   clickGoToComment(id) {
     this.props.pushState('/rate/' + id);
   }
@@ -65,18 +77,26 @@ export default class NeedApartmentDetail extends Component {
               </dl>
             : ''
           }
-          <div className={styles.needDetailMargin}>
+          <div style={{display: !invitation.comment ? 'block' : 'none'}} className={styles.needAppartDetailCardTwo}>
             <InvitationDetail need={invitation} />
           </div>
           {
             doctors && doctors.map((doctorItem) => {
               return (
-                <div className={styles.needDetailMargin}><DoctorDetailCard key={doctorItem._id} doctor={doctorItem} /></div>
+                <div key={doctorItem._id} className={styles.needDetailMargin}><DoctorDetailCard doctor={doctorItem} /></div>
               );
             })
           }
           {
-            invitation.operation === '结束' ? <button className="mainBtn" onClick={() => this.clickGoToComment(id)}>去评价</button> : ''
+            invitation.comment ?
+              <div className={styles.needAppartDetailCardTwo}>
+                <InvitationDetail need={invitation} />
+                <DividerLine text={'评价'} />
+                <Rate rates={this.state.rates}
+                  editable = {false}
+                  initTextComment={this.state.comment}/>
+              </div>
+            : invitation.operation === '结束' ? <button className="mainBtn" onClick={() => this.clickGoToComment(id)}>去评价</button> : ''
           }
         </div>
       </div>

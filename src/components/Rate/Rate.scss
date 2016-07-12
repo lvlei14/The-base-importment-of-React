@@ -1,7 +1,6 @@
 @import "../../theme/variables";
 
 .rateContainer {
-  margin: 0.13rem 0;
   div {
     margin-bottom: 13px;
 
@@ -9,6 +8,8 @@
       border: 0.01rem solid $mainColor;
       padding: 0.01rem 0.05rem;
       margin-right: 0.13rem;
+      display: inline-block;
+      color: $mainColor;
     }
 
     span {
