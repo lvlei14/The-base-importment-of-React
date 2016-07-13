@@ -45,9 +45,10 @@ export default class NeedApartment extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.changeNeedAppartStatusSuccess && nextProps.changeNeedAppartStatusSuccess) {
+      localStorage.removeItem('addNeedApartTab');
+      localStorage.setItem('needAppartTab', 2);
       this.props.showDiaglog(nextProps.successMsg, '/appart-my-need');
       this.props.loadNeedAppartLists();
-      localStorage.setItem('needAppartTab', 2);
     }
   }
 
@@ -100,7 +101,7 @@ export default class NeedApartment extends Component {
   }
 
   showListItemBtn(list) {
-    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
+    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab') || '0';
     let listBtn;
     if (tabIndexString === '0') {
       listBtn = (<button onClick={() => this.clickShowModal(list, 0)} className="cancelBtn">取消</button>);
@@ -163,7 +164,7 @@ export default class NeedApartment extends Component {
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
     const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
-    const needAppartTabIndex = parseInt(tabIndexString, 10);
+    const needAppartTabIndex = parseInt(tabIndexString, 10) || 0;
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>

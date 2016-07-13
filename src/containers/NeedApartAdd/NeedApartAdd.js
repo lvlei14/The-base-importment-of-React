@@ -56,7 +56,6 @@ export default class NeedApartAdd extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.addAppartNeedSuccess);
     if (!this.props.addAppartNeedSuccess && nextProps.addAppartNeedSuccess) {
       if (!this.props.successMsg && nextProps.successMsg) {
         localStorage.removeItem('doctors');

@@ -56,19 +56,20 @@ export default class NeedApartmentDetail extends Component {
     const invitation = this.props.invitation || {};
     invitation.status = status;
     let doctors;
-    if (status === '待接受' || invitation.operation === '取消' && invitation.recipient && invitation.recipient.length === 0) {
+    if (status === '待接受' || invitation.operation === '取消') {
       doctors = invitation.doctors;
-    } else if (status === '已拒绝') {
+    } else if (status === '已完成' && invitation.operation === '创建完成' && invitation.rejection && invitation.rejection.length !== 0) {
       doctors = invitation.rejection;
     } else {
       doctors = invitation.recipient;
     }
+    console.log(doctors);
     return (
       <div>
         <HeadNaviBar>需求详情</HeadNaviBar>
         <div className={styles.needAppartDetail}>
           {
-            invitation.operation === '取消' && invitation.recipient && invitation.recipient.length === 0 ?
+            invitation.operation === '取消' && invitation.recipient && invitation.recipient.length !== 0 ?
               <dl className={styles.needAppartDetailCard}>
                 <dt className={styles.conflict}><i>!</i>该需求已被专家取消！</dt>
                 <dd>取消原因：{invitation && invitation.reason}</dd>
@@ -78,11 +79,11 @@ export default class NeedApartmentDetail extends Component {
           <div style={{display: !invitation.comment ? 'block' : 'none'}} className={styles.needAppartDetailCardTwo}>
             <InvitationDetail need={invitation} />
           </div>
-          <div className={styles.needAppartDetailCardTwo}>
+          <div>
             {
               doctors && doctors.map((doctorItem) => {
                 return (
-                  <div key={doctorItem._id} className={styles.needDetailMargin}><DoctorDetailCard doctor={doctorItem} /></div>
+                  <div key={doctorItem._id} className={styles.needAppartDetailCardTwo}><DoctorDetailCard doctor={doctorItem} /></div>
                 );
               })
             }

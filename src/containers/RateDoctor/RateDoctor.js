@@ -101,7 +101,7 @@ class RateDoctor extends React.Component {
         <HeadNaviBar>评价</HeadNaviBar>
         <div className={styles.container}>
           {/* 医生卡片式介绍 */}
-          <DoctorCardWithIcon doctor={acceptedDoctor} />
+          <div className={styles.needAppartDetailCardTwo}><DoctorCardWithIcon doctor={acceptedDoctor} /></div>
           <div className={styles.invitationDescContainer}>
             <div>
               <label>需求时间</label>

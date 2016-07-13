@@ -67,6 +67,11 @@ export default class ResetPassword extends Component {
       checkPassword: event.target.value
     });
   }
+
+  goLoginPage() {
+    this.props.push('/login-or-register');
+  }
+
   render() {
     const styles = require('./ResetPassword.scss');
     return (
@@ -77,6 +82,7 @@ export default class ResetPassword extends Component {
           <input type="text" onChange = { this.inputMobile.bind(this) } value = { this.state.password } placeholder="请输入新密码"/>
           <input type="text" style={{marginTop: '10px'}} onChange = { this.inputCaptcha.bind(this) } value = { this.state.checkPassword } placeholder="确认密码"/>
           <button className="mainBtn" type="button" onClick = { this.resetPassword.bind(this) }>完成</button>
+          <footer onClick={this.goLoginPage.bind(this)}>已有账号？直接登录</footer>
         </div>
       </div>
     );
