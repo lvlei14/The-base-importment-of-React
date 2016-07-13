@@ -25,6 +25,8 @@ export default class NeedApartmentDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      rates: [],
+      comment: ''
     };
   }
 
@@ -35,15 +37,14 @@ export default class NeedApartmentDetail extends Component {
 
   componentWillReceiveProps(nextProps) {
     const comment = nextProps.invitation && nextProps.invitation.comment;
-    this.state = {
-      dataCom: nextProps.invitation && nextProps.invitation.comment,
+    this.setState({
       rates: [
         {name: '医学水平', field: 'skill', score: comment && comment.skill},
         {name: '服务态度', field: 'attitude', score: comment && comment.attitude},
         {name: '时间保障', field: 'timeEffort', score: comment && comment.timeEffort},
       ],
       comment: comment && comment.desc
-    };
+    });
   }
 
   clickGoToComment(id) {
@@ -63,7 +64,7 @@ export default class NeedApartmentDetail extends Component {
     } else {
       doctors = invitation.recipient;
     }
-    console.log(doctors);
+    console.log(this.state.rates);
     return (
       <div>
         <HeadNaviBar>需求详情</HeadNaviBar>

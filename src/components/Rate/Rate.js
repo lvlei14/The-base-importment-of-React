@@ -75,7 +75,7 @@ class Rate extends React.Component {
     return (
       <div className={styles.rateContainer}>
         {
-          this.state.rates.map((rate, index) => {
+          this.state.rates && this.state.rates.map((rate, index) => {
             return (
               <div key={index}>
                 <p>{rate.name}</p>

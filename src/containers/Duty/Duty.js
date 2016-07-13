@@ -326,7 +326,7 @@ class Calendar extends Component {
   selfDayItem(dutyDayItem) {
     return (
       <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.goChangeDuty(dutyDayItem._id)}>
-        <article className={styles.dateAppart}>{dutyDayItem.apartment.name}</article>
+        <article className={styles.dateAppart}>{dutyDayItem.apartment && dutyDayItem.apartment.name}</article>
         <i className={styles.dateSelf}></i>
       </div>
     );
@@ -409,7 +409,7 @@ class Calendar extends Component {
             clickConfirm = {this.sendChangeDutyRequest.bind(this)}
             clickCancel = {this.clickHideModal.bind(this)}>
             您 <i className={styles.dutyJzFColor}>{this.state.selectDay}</i> 确定要与
-                 <i className={styles.dutyJzFColor}>{this.state.selDoctor.name}{this.state.selRealChaDate}</i>
+                 <i className={styles.dutyJzFColor}>{this.state.selDoctor && this.state.selDoctor.name}{this.state.selRealChaDate}</i>
                  进行换班吗？
           </Modal>
         </div>
