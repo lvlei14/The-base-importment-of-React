@@ -55,7 +55,7 @@ export default class Home extends Component {
 
   goNeedPage() {
     const {user} = this.props;
-    if (user.roles && user.roles.indexOf('apartment') > 0) {
+    if (user.roles && user.roles.indexOf('apartment') !== -1) {
       this.props.pushState('/appart-my-need');
     } else {
       this.props.pushState('/my-needs');

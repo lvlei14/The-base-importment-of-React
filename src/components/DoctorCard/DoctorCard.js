@@ -7,16 +7,12 @@ export function DoctorCardWithIcon(props) {
   const doctor = props.doctor || {};
   return (
     <div className={styles.doctorIntroCardContainer}>
-      <div className={styles.doctorName}>
-        {doctor.name || '匿名'}
-      </div>
-      <div className={styles.doctorTitle}>
-        {doctor.level && doctor.level.name}
-      </div>
-      <div className={styles.doctorBelong}>
-        {doctor.hospital && doctor.hospital.name}&nbsp;{doctor.apartment && doctor.apartment.name}
-      </div>
       <img src={doctor.avatar} />
+      <section>
+        <p className={styles.doctorName}>{doctor.name || '匿名'}</p>
+        <p className={styles.doctorTitle}>{doctor.level && doctor.level.name}</p>
+        <p className={styles.doctorBelong}>{doctor.hospital && doctor.hospital.name}&nbsp;{doctor.apartment && doctor.apartment.name}</p>
+      </section>
     </div>
   );
 }

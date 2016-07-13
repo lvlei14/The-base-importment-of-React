@@ -40,13 +40,15 @@ export default class NeedApartment extends Component {
 
   componentDidMount() {
     this.props.loadNeedAppartLists();
+    localStorage.removeItem('doctors'); // 防止用户，点击再次邀请后，但又返回列表页，直接点添加
   }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.changeNeedAppartStatusSuccess && nextProps.changeNeedAppartStatusSuccess) {
+      localStorage.removeItem('addNeedApartTab');
+      localStorage.setItem('needAppartTab', 2);
       this.props.showDiaglog(nextProps.successMsg, '/appart-my-need');
       this.props.loadNeedAppartLists();
-      localStorage.setItem('needAppartTab', 2);
     }
   }
 
@@ -99,7 +101,7 @@ export default class NeedApartment extends Component {
   }
 
   showListItemBtn(list) {
-    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
+    const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab') || '0';
     let listBtn;
     if (tabIndexString === '0') {
       listBtn = (<button onClick={() => this.clickShowModal(list, 0)} className="cancelBtn">取消</button>);
@@ -116,7 +118,7 @@ export default class NeedApartment extends Component {
           <button className="cancelBtn" onClick={() => this.clickGoToAddNeed(list.doctors)} style={{marginRight: '10px'}}>再次邀请</button>
           {
             list && list.comment ?
-              <div className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</div>
+              <button className="mainXsBtn" style={{color: '#fff', background: '#b4b4b4'}}>已评价</button>
             : list.operation === '结束' ?
               <button className="mainXsBtn" onClick={() => this.clickGoToComment(list._id)}>去评价</button>
               : ''
@@ -162,7 +164,7 @@ export default class NeedApartment extends Component {
   render() {
     const {receptionWait, reception, completed} = this.props.needAppartLists || {};
     const tabIndexString = localStorage.getItem('addNeedApartTab') || localStorage.getItem('needAppartTab');
-    const needAppartTabIndex = parseInt(tabIndexString, 10);
+    const needAppartTabIndex = parseInt(tabIndexString, 10) || 0;
     return (
       <div className={styles.needAppart}>
         <HeadNaviBar>我的需求</HeadNaviBar>

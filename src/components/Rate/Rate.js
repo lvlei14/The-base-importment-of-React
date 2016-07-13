@@ -9,7 +9,7 @@ class Rate extends React.Component {
       field: PropTypes.string,
       score: PropTypes.number
     }).isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     editable: PropTypes.bool,
     initTextComment: PropTypes.string,
     commentPlaceholder: PropTypes.string,
@@ -77,7 +77,7 @@ class Rate extends React.Component {
         {
           this.state.rates.map((rate, index) => {
             return (
-              <div>
+              <div key={index}>
                 <p>{rate.name}</p>
                 {
                   editable ?

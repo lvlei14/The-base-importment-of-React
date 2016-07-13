@@ -11,6 +11,11 @@ const RESETPASSWORD = 'RESETPASSWORD';
 const RESETPASSWORD_SUCCESS = 'RESETPASSWORD_SUCCESS';
 const RESETPASSWORD_FAIL = 'RESETPASSWORD_FAIL';
 
+/**
+ * 倒计时
+ */
+const TIME_COUNTDOWN = 'TIME_COUNTDOWN';
+
 const SETMOBILE = 'SETMOBILE';
 
 const initialState = {
@@ -20,10 +25,11 @@ const initialState = {
   createCaptchaSuccess: false,
   next2ResetPasswordSuccess: false,
   resetPasswordSuccess: false,
-  mobile: ''
+  mobile: '',
+  countdownTime: 0
 };
 
-export default function reducer(state = initialState, action = {}) {
+export default function forgetPassword(state = initialState, action = {}) {
   state.successMsg = '';
   state.errorMsg = '';
   switch (action.type) {
@@ -31,21 +37,33 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: true,
-        createCaptchaSuccess: false
+        createCaptchaSuccess: false,
+        countdownTime: 0
       };
     case GET_CAPTCHA_SUCCESS:
       return {
         ...state,
         loading: false,
         createCaptchaSuccess: true,
-        successMsg: action.result.success_msg
+        successMsg: action.result.success_msg,
+        countdownTime: 0,
       };
     case GET_CAPTCHA_FAIL:
       return {
         ...state,
         loading: false,
         createCaptchaSuccess: false,
-        errMsg: action.error && action.error.error_msg
+        errMsg: action.error && action.error.error_msg,
+        countdownTime: 0,
+      };
+
+
+    // 计时设置
+    case TIME_COUNTDOWN:
+      return {
+        ...state,
+        resetPasswordStatus: false,
+        countdownTime: action.value
       };
 
     case NEXT2RESETPASSWORD:
@@ -144,3 +162,10 @@ export function setMobile(mobile) {
   return {type: SETMOBILE, mobile: mobile};
 }
 
+
+export function timeCountdown(time) {
+  return {
+    type: TIME_COUNTDOWN,
+    value: time
+  };
+}
