@@ -40,12 +40,13 @@ export default class DatePlan extends Component {
 
   constructor(props) {
     super(props);
+    const today = new Date();
     this.state = {
-      selNoFormatDay: new Date(),
-      tabType: '',
-      selectedDayItems: [],
+      selectedDay: today,
+      tabType: '',  // '1', month tab; '2', list tab;
+      schedulesOfSelectedDay: [],
       schedules: this.props.schedules,
-      selectedYear: (new Date()).getFullYear(),
+      selectedYear: today.getFullYear(),
       selectedMonth: (new Date()).getMonth() + 1,
       isClickFilter: false,
     };
@@ -53,13 +54,12 @@ export default class DatePlan extends Component {
 
   componentDidMount() {
     const date = this.state.selectedYear + '-' + this.state.selectedMonth;
-    console.log('----页面加载');
     const requires = {
       date: date
     };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
-    this.clickHandleDay(new Date());
+    this.selectDayOnCalendar(new Date()); // TODO 没有作用！
   }
 
   clickMonthTab() {
@@ -76,15 +76,13 @@ export default class DatePlan extends Component {
     localStorage.setItem('datePlanTabList', 'true');
   }
 
-  clickHandleDay(day) {
-    console.log('------点击每天事件');
+  selectDayOnCalendar(day) {
     const datetow = moment(day).format('YYYY-M-D');
     const schedules = this.props.schedules && this.props.schedules.list || [];
-    console.log(schedules);
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
     this.setState({
-      selNoFormatDay: day,
-      selectedDayItems: selectedDaySchedule
+      selectedDay: day,
+      schedulesOfSelectedDay: selectedDaySchedule
     });
   }
 
@@ -125,16 +123,19 @@ export default class DatePlan extends Component {
 
   navbar({ previousMonth, onPreviousClick, onNextClick}) {
     let prevMonth = previousMonth.getMonth();
+    console.log('-=-=-=-=');
     if (prevMonth === 11) {
       prevMonth = -1;
     }
     const curMonth = prevMonth + 2;
+    // onClick={() => this.previousClickHandler(curMonth)}
+    // onClick={() => this.nextClickHandle(curMonth)}
     return (
       <div className="DayPicker-NavBar">
-        <span style={{ float: 'left', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onPreviousClick()}>
+        <span style={{ float: 'left', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => {onPreviousClick(); this.previousClickHandler(curMonth);}}>
           <span className="DayPicker-NavButton DayPicker-NavButton--prev" onClick={() => this.previousClickHandler(curMonth)}></span>
         </span>
-        <span style={{ float: 'right', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onNextClick()}>
+        <span style={{ float: 'right', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => {onNextClick(); this.nextClickHandle(curMonth);}}>
           <span className="DayPicker-NavButton DayPicker-NavButton--next" onClick={() => this.nextClickHandle(curMonth)}></span>
         </span>
       </div>
@@ -142,6 +143,7 @@ export default class DatePlan extends Component {
   }
 
   previousClickHandler(curMonth) {
+    console.log('previousClickHandler');
     const {selectedYear} = this.state;
     if (curMonth === 1) {
       this.setState({
@@ -154,8 +156,8 @@ export default class DatePlan extends Component {
     const day = moment(value, 'L').toDate();
     this.setState({
       selectedMonth: selectedMonth,
-      selectedDayItems: [],
-      selNoFormatDay: day,
+      schedulesOfSelectedDay: [],
+      selectedDay: day,
     });
     const requires = {
       date: selYearMon
@@ -164,6 +166,7 @@ export default class DatePlan extends Component {
   }
 
   nextClickHandle(curMonth) {
+    console.log('nextClickHandle');
     const {selectedYear} = this.state;
     const selectedMonth = curMonth + 1;
     const selYearMon = selectedYear + '-' + selectedMonth;
@@ -176,8 +179,8 @@ export default class DatePlan extends Component {
     }
     this.setState({
       selectedMonth: selectedMonth,
-      selectedDayItems: [],
-      selNoFormatDay: day,
+      schedulesOfSelectedDay: [],
+      selectedDay: day,
     });
     const requires = {
       date: selYearMon
@@ -188,14 +191,14 @@ export default class DatePlan extends Component {
   hideFilterReq() {
     this.setState({
       isClickFilter: true,
-      selectedDayItems: []
+      schedulesOfSelectedDay: []
     });
   }
 
   resetFilterReq() {
     this.setState({
       isClickFilter: false,
-      selectedDayItems: []
+      schedulesOfSelectedDay: []
     });
   }
 
@@ -217,7 +220,7 @@ export default class DatePlan extends Component {
     const showTab = localStorage.getItem('datePlanTabList');
     let scheduleItems;
     if (!showTab) {
-      scheduleItems = this.state.selectedDayItems;
+      scheduleItems = this.state.schedulesOfSelectedDay;
     }
     if (showTab) {
       scheduleItems = schedules && schedules.list || [];
@@ -245,8 +248,8 @@ export default class DatePlan extends Component {
                 <div>
                   <DayPicker
                     ref="daypicker"
-                    initialMonth={this.state.selNoFormatDay}
-                    onDayClick={(event, day) => this.clickHandleDay(day)}
+                    initialMonth={this.state.selectedDay}
+                    onDayClick={(event, day) => this.selectDayOnCalendar(day)}
                     renderDay={this.renderDay.bind(this)}
                     navbarComponent={this.navbar.bind(this)}
                     localeUtils={LocaleUtils}
@@ -317,6 +320,7 @@ class ScdItems extends Component {
         {
           scheduleItems.length ?
             scheduleItems.map((scheduleItem)=> {
+              console.log(scheduleItem);
               return (
                 <CardBg key={scheduleItem.date}>
                   <p className={styles.curDaytitle}>{scheduleItem.date}</p>
