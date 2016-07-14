@@ -73,9 +73,11 @@ export default class DatePlan extends Component {
   }
 
   selectDayOnCalendar(day) {
-    const datetow = moment(day).format('YYYY-M-D');
+    const datetow = moment(day).format('YYYY-MM-DD');
+    console.log(datetow);
     const schedules = this.props.schedules && this.props.schedules.list || [];
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
+    console.log(selectedDaySchedule);
     this.setState({
       selectedDay: day,
       schedulesOfSelectedDay: selectedDaySchedule
@@ -161,6 +163,7 @@ export default class DatePlan extends Component {
     } else {
       scheduleItems = this.state.schedulesOfSelectedDay;
     }
+    console.log(scheduleItems);
 
     return (
       <div className="datePlanPage">

@@ -10,6 +10,7 @@ import { addGroupNotice } from '../../redux/modules/groupInfo';
 
 let startTimeNum;
 const styles = require('./AddDatePlan.scss');
+
 @connect(
   state => ({...state.datePlanInfo, ...state.groupInfo}), {
     loadTemplateItem,
@@ -48,7 +49,7 @@ export default class AddDatePlan extends Component {
   componentDidMount() {
     const templateId = this.props.routeParams.id;
     this.props.loadTemplateItem(templateId);
-    startTimeNum = new Date().getTime();
+    startTimeNum = new Date();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,10 +77,11 @@ export default class AddDatePlan extends Component {
   }
 
   getNowFormatDate(day) {
-    const newDateNew = new Date(parseInt(day, 10));
+    let newDateNew = new Date(day);
     const currentdate = moment(newDateNew).format('YYYY-MM-DD HH:mm:ss');
     return currentdate;
   }
+
   clickAddBtn() {
     const template = this.props.template;
     const templateCon = template && template[0] && template[0].content;
@@ -127,7 +129,7 @@ export default class AddDatePlan extends Component {
       this.props.showDiaglog('开始时间与结束时间不能相同');
       return;
     }
-    if (this.state.startTime > this.state.endTime) {
+    if (new Date(this.state.startTime) > new Date(this.state.endTime)) {
       this.props.showDiaglog('开始时间不能大于结束时间');
       return;
     }
@@ -139,7 +141,7 @@ export default class AddDatePlan extends Component {
     }
   }
 
-  handleChange = (newDate) => {
+  handleChangeStartTime = (newDate) => {
     this.setState({
       startTime: newDate
     });
@@ -147,10 +149,11 @@ export default class AddDatePlan extends Component {
 
   handleChangeEndTime = (newDate) => {
     this.setState({
-      endTime: newDate
+      endTime: parseInt(newDate)
     });
   }
 
+  // 判断 input 或 select 或 textarea 类型
   showFormType(formItem) {
     if (formItem.type === 'input') {
       return (
@@ -220,7 +223,7 @@ export default class AddDatePlan extends Component {
                       dateTime={!startTime ? this.getNowFormatDate(startTimeNum) : this.getNowFormatDate(startTime)}
                       format={'YYYY-MM-DD HH:mm:ss'}
                       inputFormat={inputFormat}
-                      onChange={this.handleChange} />
+                      onChange={this.handleChangeStartTime} />
                   </section>
                 </div>
               </li>
