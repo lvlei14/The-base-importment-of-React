@@ -46,14 +46,13 @@ export default class DatePlan extends Component {
       tabType: '',  // '1', month tab; '2', list tab;
       schedulesOfSelectedDay: [],
       schedules: this.props.schedules,
-      selectedYear: today.getFullYear(),
-      selectedMonth: (new Date()).getMonth() + 1,
       isClickFilter: false,
     };
   }
 
   componentDidMount() {
-    const date = this.state.selectedYear + '-' + this.state.selectedMonth;
+    const selectedDay = this.state.selectedDay;
+    const date = moment(selectedDay).format('YYYY-M');
     const requires = {
       date: date
     };
@@ -62,18 +61,16 @@ export default class DatePlan extends Component {
     this.selectDayOnCalendar(new Date()); // TODO 没有作用！
   }
 
-  clickMonthTab() {
+  // 响应日历月份切换动作
+  onMonthChange(_date) {
+    const date = new Date(_date);
+    const dateQuery = moment(date).format('YYYY-M');
+    const firstDateOfMonth = moment(date).date(1);
     this.setState({
-      tabType: '1'
+      schedulesOfSelectedDay: [],
+      selectedDay: firstDateOfMonth.toDate()
     });
-    localStorage.removeItem('datePlanTabList');
-  }
-
-  clickListTab() {
-    this.setState({
-      tabType: '2'
-    });
-    localStorage.setItem('datePlanTabList', 'true');
+    this.props.loadschedules(JSON.stringify({date: dateQuery}));
   }
 
   selectDayOnCalendar(day) {
@@ -87,8 +84,9 @@ export default class DatePlan extends Component {
   }
 
   showSingleDayItem(scheduleDay) {
+    const selectMonth = this.state.selectedDay.getMonth() + 1;
     const scheduleDayMon = new Date(scheduleDay && scheduleDay[0].start_time).getMonth() + 1;
-    if (scheduleDayMon === this.state.selectedMonth) {
+    if (scheduleDayMon === selectMonth) {
       const outsideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === false) || [];
       const sideNum = scheduleDay && scheduleDay.filter((item) => item.is_inner.value === true) || [];
       const conflictNum = scheduleDay && scheduleDay.filter((item) => item.conflict) || [];
@@ -121,71 +119,18 @@ export default class DatePlan extends Component {
     }
   }
 
-  navbar({ previousMonth, onPreviousClick, onNextClick}) {
-    let prevMonth = previousMonth.getMonth();
-    console.log('-=-=-=-=');
-    if (prevMonth === 11) {
-      prevMonth = -1;
-    }
-    const curMonth = prevMonth + 2;
-    // onClick={() => this.previousClickHandler(curMonth)}
-    // onClick={() => this.nextClickHandle(curMonth)}
-    return (
-      <div className="DayPicker-NavBar">
-        <span style={{ float: 'left', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => {onPreviousClick(); this.previousClickHandler(curMonth);}}>
-          <span className="DayPicker-NavButton DayPicker-NavButton--prev" onClick={() => this.previousClickHandler(curMonth)}></span>
-        </span>
-        <span style={{ float: 'right', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => {onNextClick(); this.nextClickHandle(curMonth);}}>
-          <span className="DayPicker-NavButton DayPicker-NavButton--next" onClick={() => this.nextClickHandle(curMonth)}></span>
-        </span>
-      </div>
-    );
+  clickCanlendarTab() {
+    this.setState({
+      tabType: '1'
+    });
+    localStorage.removeItem('displaySchedulesWithListStyle');
   }
 
-  previousClickHandler(curMonth) {
-    console.log('previousClickHandler');
-    const {selectedYear} = this.state;
-    if (curMonth === 1) {
-      this.setState({
-        selectedYear: selectedYear - 1,
-      });
-    }
-    const selectedMonth = curMonth - 1;
-    const selYearMon = selectedYear + '-' + selectedMonth;
-    const value = selYearMon + '-1';
-    const day = moment(value, 'L').toDate();
+  clickListTab() {
     this.setState({
-      selectedMonth: selectedMonth,
-      schedulesOfSelectedDay: [],
-      selectedDay: day,
+      tabType: '2'
     });
-    const requires = {
-      date: selYearMon
-    };
-    this.props.loadschedules(JSON.stringify(requires));
-  }
-
-  nextClickHandle(curMonth) {
-    console.log('nextClickHandle');
-    const {selectedYear} = this.state;
-    const selectedMonth = curMonth + 1;
-    const selYearMon = selectedYear + '-' + selectedMonth;
-    const value = selYearMon + '-1';
-    const day = moment(value, 'L').toDate();
-    if (selectedMonth === 1) {
-      this.setState({
-        selectedYear: selectedYear + 1,
-      });
-    }
-    this.setState({
-      selectedMonth: selectedMonth,
-      schedulesOfSelectedDay: [],
-      selectedDay: day,
-    });
-    const requires = {
-      date: selYearMon
-    };
-    this.props.loadschedules(JSON.stringify(requires));
+    localStorage.setItem('displaySchedulesWithListStyle', 'true');
   }
 
   hideFilterReq() {
@@ -217,13 +162,13 @@ export default class DatePlan extends Component {
 
   render() {
     const {schedules} = this.props;
-    const showTab = localStorage.getItem('datePlanTabList');
+    const displaySchedulesWithListStyle = localStorage.getItem('displaySchedulesWithListStyle');
     let scheduleItems;
-    if (!showTab) {
-      scheduleItems = this.state.schedulesOfSelectedDay;
-    }
-    if (showTab) {
+    // 根据
+    if (displaySchedulesWithListStyle) {
       scheduleItems = schedules && schedules.list || [];
+    } else {
+      scheduleItems = this.state.schedulesOfSelectedDay;
     }
 
     return (
@@ -233,8 +178,8 @@ export default class DatePlan extends Component {
         <div className={styles.dateTop + ' datePlan'}>
           <div className={styles.dateTitle + ' topCardBg'}>
             <TabOutside>
-              <li className={!showTab ? styles.curTab + ' left' : 'left'} onClick={this.clickMonthTab.bind(this)}>月</li>
-              <li className={showTab ? styles.curTab + ' left' : 'left'} onClick={this.clickListTab.bind(this)}>列表</li>
+              <li className={!displaySchedulesWithListStyle ? styles.curTab + ' left' : 'left'} onClick={this.clickCanlendarTab.bind(this)}>月</li>
+              <li className={displaySchedulesWithListStyle ? styles.curTab + ' left' : 'left'} onClick={this.clickListTab.bind(this)}>列表</li>
             </TabOutside>
             <div>
               <FilterScheduleItem
@@ -244,14 +189,14 @@ export default class DatePlan extends Component {
           </div>
           <div className={styles.datePlanPicker}>
             {
-              !showTab ?
+              !displaySchedulesWithListStyle ?
                 <div>
                   <DayPicker
                     ref="daypicker"
                     initialMonth={this.state.selectedDay}
                     onDayClick={(event, day) => this.selectDayOnCalendar(day)}
                     renderDay={this.renderDay.bind(this)}
-                    navbarComponent={this.navbar.bind(this)}
+                    onMonthChange={this.onMonthChange.bind(this)}
                     localeUtils={LocaleUtils}
                     locale="zh-cn" />
                 </div>
@@ -320,10 +265,9 @@ class ScdItems extends Component {
         {
           scheduleItems.length ?
             scheduleItems.map((scheduleItem)=> {
-              console.log(scheduleItem);
               return (
                 <CardBg key={scheduleItem.date}>
-                  <p className={styles.curDaytitle}>{scheduleItem.date}</p>
+                  <p className={styles.curDaytitle}>{moment(scheduleItem.date).format('YYYY-MM-DD')}</p>
                   <ul className={styles.curDayContact}>
                     {
                       scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
@@ -392,7 +336,7 @@ class FilterScheduleItem extends Component {
       filterRequires:
       {
         startDate: this.getNowFormatDate(),
-        endDate: null,
+        endDate: this.getNowFormatDate(),
         typeId: ''
       },
     };
@@ -402,13 +346,7 @@ class FilterScheduleItem extends Component {
   }
 
   getNowFormatDate() {
-    const date = new Date();
-    const seperator1 = '-';
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    const currentdate = year + seperator1 + month + seperator1 + strDate;
-    return currentdate;
+    return moment().format('YYYY-M-D');
   }
 
   showFilterReq() {
