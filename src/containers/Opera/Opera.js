@@ -3,7 +3,8 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DayPicker from 'react-day-picker';
-
+require('moment/locale/zh-cn');
+import LocaleUtils from 'react-day-picker/moment';
 
 import { loadSurgeryByDateAndRoom } from '../../redux/modules/surgery';
 const styles = require('./Opera.scss');
@@ -88,13 +89,15 @@ export default class Opera extends Component {
           <header className={'clearfix topCardBg ' + styles.operaHeader}>
             <div className="left clearfix" onClick={this.clickShowDayPicker.bind(this)}>
               <span className="left">{this.state.selectDay}</span>
-              <p className="left sanjiao-bt"></p>
+              <p className={'left sanjiao-bt ' + styles.operaSanjiao}></p>
             </div>
-            <div style={{display: this.state.showDayPicker ? 'block' : 'none'}} className={styles.operaPicker}>
+            <div className={this.state.showDayPicker ? styles.operaPickerShow + ' ' + styles.operaPicker : styles.operaPicker}>
               <section className="bodyBgWhiteZindex">
                 <DayPicker
                   enableOutsideDays
-                  onDayClick={(event, day) => this.clickSelectDay(day)} />
+                  onDayClick={(event, day) => this.clickSelectDay(day)}
+                  localeUtils={LocaleUtils}
+                  locale="zh-cn" />
               </section>
               <p></p>
             </div>
@@ -136,7 +139,7 @@ export default class Opera extends Component {
                   </ul>
                 </section>
               );
-            }) : '当天暂无手术数据'
+            }) : <div className="noResult">当天暂无手术数据</div>
           }
         </div>
       </div>

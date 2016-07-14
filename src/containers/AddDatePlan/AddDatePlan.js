@@ -146,6 +146,7 @@ export default class AddDatePlan extends Component {
   }
 
   handleChangeEndTime = (newDate) => {
+    console.log(newDate);
     this.setState({
       endTime: newDate
     });

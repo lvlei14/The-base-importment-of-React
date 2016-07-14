@@ -3,11 +3,12 @@
 	.kuaiNav{
 		border-top: 1px solid $borderColor;
 		margin: $tbmargin 0;
-		padding: .3rem .3rem .2rem;
+		padding: .3rem 0 .2rem;
 		text-align: center;
 		li{
+      width: 33.3%;
 			article{
-				display: block;
+				display: inline-block;
 				width: .6rem;
 				height: .6rem;
 				text-align: center;
@@ -24,6 +25,9 @@
 			}
 		}
 	}
+  .kuaiNav:active{
+    opacity: .5;
+  }
 	.datePlan{
 		padding: 0 $lrmargin;
 		header{

@@ -78,6 +78,7 @@ export default class NeedApartAdd extends Component {
   }
 
   handleChangeEndTime = (newDate) => {
+    console.log(newDate);
     const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       endTime: newDateNew
@@ -209,7 +210,7 @@ export default class NeedApartAdd extends Component {
                     defaultText="请选择结束时间"
                     inputFormat={inputFormat}
                     onChange={this.handleChangeEndTime} />
-                </section>
+                </section>    
               </div>
             </li>
             <li>

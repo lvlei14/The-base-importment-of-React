@@ -220,7 +220,7 @@ export function loadAppartNeedById(id) {
 export function loadDoctors() {
   return {
     types: [LOAD_DOCTOR, LOAD_DOCTOR_SUCCESS, LOAD_DOCTOR_FAIL],
-    promise: (client) => client.get('/user/doctor')
+    promise: (client) => client.get('/user/otherDoctor')
   };
 }
 

@@ -78,7 +78,7 @@ export default class GroupMsgList extends Component {
                           <article className="right">{this.formatDate(groupMsgList.created)}发布</article>
                         </header>
                         <p>{this.formatDate(groupMsgList.updated)}</p>
-                        <p>{this.formatTime(groupMsgList.contentId.start_time)}-{this.formatTime(groupMsgList.contentId.end_time)}&nbsp;&nbsp;{groupMsgList.type}</p>
+                        <p>{this.formatTime(groupMsgList.contentId && groupMsgList.contentId.start_time)}-{this.formatTime(groupMsgList.contentId && groupMsgList.contentId.end_time)}&nbsp;&nbsp;{groupMsgList.type}</p>
                       </div>
                     </div>
                     <footer>

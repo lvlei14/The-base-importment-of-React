@@ -142,6 +142,7 @@ export default class DatePlan extends Component {
   }
 
   previousClickHandler(curMonth) {
+    console.log('--------');
     const {selectedYear} = this.state;
     if (curMonth === 1) {
       this.setState({

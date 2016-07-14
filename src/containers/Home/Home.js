@@ -83,7 +83,7 @@ export default class Home extends Component {
                 <p>值班</p>
               </Link>
             </li>
-            <li className="left" style={{marginLeft: '.66rem'}}>
+            <li className="left">
               <article style={{background: '#F2B95B'}} onClick={this.goNeedPage.bind(this)}>
                 <img src = {xuqiuPng} alt="需求入口" />
               </article>
