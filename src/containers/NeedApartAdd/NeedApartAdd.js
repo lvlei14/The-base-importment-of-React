@@ -210,7 +210,7 @@ export default class NeedApartAdd extends Component {
                     defaultText="请选择结束时间"
                     inputFormat={inputFormat}
                     onChange={this.handleChangeEndTime} />
-                </section>    
+                </section>
               </div>
             </li>
             <li>
