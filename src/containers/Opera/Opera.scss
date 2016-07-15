@@ -5,7 +5,7 @@
     height: .45rem;
     line-height: .45rem;
     font-size: $jzjzfontSize;
-    padding: 0 $lrmargin;
+    padding-right: $lrmargin;
     div{
       .operaSanjiao{
         border-top: .06rem solid #797979;
@@ -14,10 +14,20 @@
         border-left: .04rem solid transparent;
         border-right: .04rem solid transparent;
       }
+      .operaSanjiaoOn{
+        border-bottom: .06rem solid #797979;
+        margin-top: .2rem;
+        margin-left: .06rem;
+        border-left: .04rem solid transparent;
+        border-right: .04rem solid transparent;
+      }
+    }
+    div:active{
+      background: #f2f2f2;
     }
     div.operaPicker{
       position: fixed;
-      top: .9rem;
+      top: .96rem;
       right: 0;
       bottom: 0;
       left: 0;
@@ -39,8 +49,8 @@
       animation: btns_show .1s linear;
     }
     @keyframes btns_show{
-      0%{ opacity:0; transform:scale(.5, 0);}
-      100%{ opacity:1; transform:scale(1, 1);}
+      0%{ opacity:0;}
+      100%{ opacity:1;}
     }
     article{
       font-size: $jzfontSize;
@@ -59,8 +69,8 @@
       margin-left: $lrmargin;
     }
   }
-  section{
-    border-top: 1px solid $borderColor;
+  .opearCon{
+    margin-top: .1rem;
     header{
       font-size: $jzjzfontSize;
       color: $mainColor;

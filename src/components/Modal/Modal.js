@@ -4,7 +4,11 @@ const styles = require('./Modal.scss');
 
 export default class Modal extends Component {
   static propTypes = {
-    children: PropTypes.array,
+    children: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object,
+      PropTypes.string,
+    ]),
     title: PropTypes.string,
     clickHideModal: PropTypes.func,
     clickConfirm: PropTypes.func,

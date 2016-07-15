@@ -77,21 +77,21 @@ export default class Home extends Component {
           <ul className={'clearfix topCardBg ' + styles.kuaiNav}>
             <li className="left">
               <Link to="/duty/self">
-                <article className={styles.navLiFir}>
+                <article className={styles.navLiFir} className={styles.oneNav}>
                   <img src = {zhibanPng} alt="值班入口" />
                 </article>
                 <p>值班</p>
               </Link>
             </li>
             <li className="left">
-              <article style={{background: '#F2B95B'}} onClick={this.goNeedPage.bind(this)}>
+              <article style={{background: '#F2B95B'}} className={styles.twoNav} onClick={this.goNeedPage.bind(this)}>
                 <img src = {xuqiuPng} alt="需求入口" />
               </article>
               <p>需求</p>
             </li>
             <li className="right">
               <Link to="/opera">
-                <article style={{background: '#7FDFC9'}}>
+                <article style={{background: '#7FDFC9'}} className={styles.threeNav}>
                   <img src = {shoushuPng} alt="手术入口" />
                 </article>
                 <p>手术</p>

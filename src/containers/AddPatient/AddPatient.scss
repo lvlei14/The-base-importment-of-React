@@ -1,22 +1,23 @@
 @import '../../theme/variables.scss';
 .addPatient{
-  section{
+  .addPatientCon{
+    padding: .08rem .14rem .08rem .06rem;
     margin-top: $tbmargin;
     .addPatientLi{
       position: relative;
-      height: .3rem;
-      line-height: .3rem;
-      margin:.1rem .2rem;
+      height: .36rem;
+      line-height: .36rem;
+      margin: .14rem 0;
       .leftPlaceholder{
         font-style: normal;
-        width: .6rem;
+        width: .7rem;
         text-align: right;
         position: absolute;
         top:0;
         left:0;
       }
       div{
-        margin-left:.8rem;
+        margin-left:.9rem;
         div{
           position:relative;
         }
@@ -36,26 +37,17 @@
         .SexLi{
           display: inline-block;
           dt,dd{
-            height: .3rem;
-            line-height: .3rem;
+            height: .36rem;
+            line-height: .36rem;
             padding: 0 .2rem;
-          }
-          input[type="radio"]{
-            width: auto;
-            margin-right: .06rem;
+            position: relative;
+            p{
+              margin-top: .1rem;
+              margin-right: .06rem;
+            }
           }
         }
       }
-    }
-    .addPatientLiFirst{
-      margin-top: .16rem;
-    }
-    .addPatientLiEnd{
-      margin-bottom: .16rem;
-    }
-    .addSurgeryMark{
-      height: auto;
-      margin-bottom: 0;
     }
   }
   footer{

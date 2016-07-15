@@ -45,8 +45,6 @@
         .selectNoCur{
           border: 1px solid $borderColor;
           border-radius: 2px;
-          height: .38rem;
-          line-height: .38rem;
         }
         div{
           display: inline-block;
@@ -108,7 +106,6 @@ textarea{
       border-radius: 2px !important;
       border: 1px solid $borderColor !important;
       box-shadow: 0 0 0 #fff !important;
-      padding: 0 .06rem !important;
       height: .36rem;
       line-height: .36rem;
       color: $text-color;

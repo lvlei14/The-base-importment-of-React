@@ -1,10 +1,8 @@
 @import '../../theme/variables.scss';
 
 .addPatient{
-  font-size: $jzjzfontSize;
-  color: #fff;
-  position: fixed;
-  top: .1rem;
+  position: absolute;
+  top: 0rem;
   right: $lrmargin;
 }
 
@@ -66,15 +64,19 @@
   }
   .notPlanCon{
     div{
-      height: .4rem;
-      line-height: .4rem;
+      height: .46rem;
+      line-height: .46rem;
       color: $jzfontColor;
-      padding: 0 $lrmargin;
+      padding: 0 .07rem;
+      display: table;
+      width: 100%;
       p{
         transform: rotate(180deg);
         color: $xsfontColor;
-        margin-top: .08rem;
         font-size: .2rem;
+        display: table-cell;
+        vertical-align: middle;
+        float: none;
       }
     }
   }

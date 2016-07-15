@@ -6,7 +6,11 @@ const styles = require('./HeadNaviBar.scss');
 
 export default class HeadNaviBar extends Component {
   static propTypes = {
-    children: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object,
+      PropTypes.string,
+    ]),
     showBackArrow: PropTypes.bool
   }
 

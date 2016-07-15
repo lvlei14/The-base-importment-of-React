@@ -91,8 +91,8 @@ export default class AddPatient extends Component {
       <div className={styles.addPatient}>
         <HeadNaviBar>添加患者</HeadNaviBar>
         <section>
-          <CardBg>
-            <div className={styles.addPatientLi + ' ' + styles.addPatientLiFirst}>
+          <CardBg className={styles.addPatientCon}>
+            <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>患者姓名</label>
               <div>
                 <input type="text" {...name} />
@@ -103,11 +103,17 @@ export default class AddPatient extends Component {
               <div className={styles.textALi}>
                 <dl className={'clearfix ' + styles.SexLi}>
                   <dt className="left clearfix">
-                    <input type="radio" {...gender} value="male" checked={gender.value === 'male'} className="left" />
+                    <p className="radio left">
+                      <input type="radio" {...gender} value="male" id="male" checked={gender.value === 'male'} />
+                      <label htmlFor="male"></label>
+                    </p>
                     <span className="left">男</span>
                   </dt>
                   <dd className="left clearfix">
-                    <input type="radio" {...gender} value="female" checked={gender.value === 'female'} className="left" />
+                    <p className="radio left">
+                      <input type="radio" {...gender} value="female" id="female" checked={gender.value === 'female'} />
+                      <label htmlFor="female"></label>
+                    </p>
                     <span className="left">女</span>
                   </dd>
                 </dl>
@@ -125,13 +131,13 @@ export default class AddPatient extends Component {
                 <input type="text" {...age} />
               </div>
             </div>
-            <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
+            <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>床号</label>
               <div>
                 <input type="text" {...bedNumber} />
               </div>
             </div>
-            <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
+            <div className={styles.addPatientLi}>
               <label className={ styles.leftPlaceholder}>备注</label>
               <div>
                 <input type="text" {...mark} />

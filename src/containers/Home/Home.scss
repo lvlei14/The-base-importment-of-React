@@ -24,10 +24,16 @@
 				color: $text-color;
 			}
 		}
+    li.oneNav:active article{
+      background: radial-gradient(#A1D766, #8CBA59);
+    }
+    li.twoNav:active article{
+      background: radial-gradient(#F2B95B, #CD9C4C);
+    }
+    li.threeNav:active article{
+      background: radial-gradient(#7FDFC9, #57BAA3);
+    }
 	}
-  .kuaiNav:active{
-    opacity: .5;
-  }
 	.datePlan{
 		padding: 0 $lrmargin;
 		header{

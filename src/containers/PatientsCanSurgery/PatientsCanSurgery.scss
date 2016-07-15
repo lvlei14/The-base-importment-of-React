@@ -3,54 +3,16 @@
   .notPlanCon{
     padding-top: $tbmargin;
     div{
-      height: .4rem;
-      line-height: .4rem;
+      height: .46rem;
+      line-height: .46rem;
       color: $jzfontColor;
       padding: 0 $lrmargin;
+      margin-top: $tbmargin;
       input[type="radio"]{
-        width: auto;
-        margin-top: .03rem;
       }
     }
   }
   .addSurgeryFooter{
     margin: 0 .2rem;
-  }
-  .addPatientLi{
-    position: relative;
-    height: .3rem;
-    line-height: .3rem;
-    margin:.1rem .06rem 0 0;
-    .leftPlaceholder{
-      font-style: normal;
-      width: .6rem;
-      text-align: right;
-      position: absolute;
-      top:0;
-      left:0;
-    }
-    div{
-      margin-left:.8rem;
-      div{
-        position:relative;
-      }
-      input,div{
-        width: 100%;
-      }
-    }
-    .jietaiInfor{
-      margin-left: .8rem;
-      article{
-        width: 46%;
-        position: relative;
-      }
-    }
-  }
-  .addPatientLiFirst{
-    margin-top: 0rem;
-  }
-  .addSurgeryMark{
-    height: auto;
-    margin-bottom: 0;
   }
 }
