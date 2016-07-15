@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import moment from 'moment';
 import Modal from '../../components/Modal/Modal';
 import DayPicker, {DateUtils} from 'react-day-picker';
 require('moment/locale/zh-cn');
@@ -130,6 +131,11 @@ class Calendar extends Component {
     }
   }
 
+  onMonthChange(_date) {
+    this.loadMonthDutysBypage(moment(_date).format('M'), moment(_date).format('YYYY'));
+  }
+
+  // 判断当前页面哪个页面，调不同的接口
   loadMonthDutysBypage(month, year) {
     const {pageType} = this.props;
     let level;
@@ -163,46 +169,6 @@ class Calendar extends Component {
         selectDay: datetow,
       });
     }
-  }
-
-  navbar({ previousMonth, onPreviousClick, onNextClick}) {
-    let prevMonth = previousMonth.getMonth();
-    if (prevMonth === 11) {
-      prevMonth = -1;
-    }
-    const curMonth = prevMonth + 2;
-    return (
-      <div className="DayPicker-NavBar">
-        <span style={{ float: 'left', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onPreviousClick()}>
-          <span className="DayPicker-NavButton DayPicker-NavButton--prev" onClick={() => this.previousClickHandler(curMonth)}></span>
-        </span>
-        <span style={{ float: 'right', cursor: 'pointer', height: '.5rem', width: '.5rem'}} onClick={() => onNextClick()}>
-          <span className="DayPicker-NavButton DayPicker-NavButton--next" onClick={() => this.nextClickHandle(curMonth)}></span>
-        </span>
-      </div>
-    );
-  }
-
-  previousClickHandler(curMonth) {
-    const {selectedYear} = this.state;
-    if (curMonth === 1) {
-      this.setState({
-        selectedYear: selectedYear - 1,
-      });
-    }
-    const selectedMonth = curMonth - 1;
-    this.loadMonthDutysBypage(selectedMonth, selectedYear);
-  }
-
-  nextClickHandle(curMonth) {
-    const {selectedYear} = this.state;
-    if (curMonth === 12) {
-      this.setState({
-        selectedYear: selectedYear + 1,
-      });
-    }
-    const selectedMonth = curMonth + 1;
-    this.loadMonthDutysBypage(selectedMonth, selectedYear);
   }
 
   // send request
@@ -387,10 +353,9 @@ class Calendar extends Component {
         <div className={styles.dutyPicker}>
           <DayPicker
             selectedDays={day => DateUtils.isSameDay(this.state.selNoFormatDay, day)}
-            disabledDays={DateUtils.isPastDay}
             onDayClick={(event, day) => this.clickSelectDay(day)}
             renderDay={this.renderDay.bind(this)}
-            navbarComponent={this.navbar.bind(this)}
+            onMonthChange={this.onMonthChange.bind(this)}
             localeUtils={LocaleUtils}
             locale="zh-cn" />
         </div>
