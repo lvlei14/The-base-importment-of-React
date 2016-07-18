@@ -3,11 +3,12 @@
 	.kuaiNav{
 		border-top: 1px solid $borderColor;
 		margin: $tbmargin 0;
-		padding: .3rem .3rem .2rem;
+		padding: .3rem 0 .2rem;
 		text-align: center;
 		li{
+      width: 33.3%;
 			article{
-				display: block;
+				display: inline-block;
 				width: .6rem;
 				height: .6rem;
 				text-align: center;
@@ -23,6 +24,15 @@
 				color: $text-color;
 			}
 		}
+    li.oneNav:active article{
+      background: radial-gradient(#A1D766, #8CBA59);
+    }
+    li.twoNav:active article{
+      background: radial-gradient(#F2B95B, #CD9C4C);
+    }
+    li.threeNav:active article{
+      background: radial-gradient(#7FDFC9, #57BAA3);
+    }
 	}
 	.datePlan{
 		padding: 0 $lrmargin;

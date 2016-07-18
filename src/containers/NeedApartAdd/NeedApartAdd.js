@@ -78,6 +78,7 @@ export default class NeedApartAdd extends Component {
   }
 
   handleChangeEndTime = (newDate) => {
+    console.log(newDate);
     const newDateNew = new Date(parseInt(newDate, 10));
     this.setState({
       endTime: newDateNew

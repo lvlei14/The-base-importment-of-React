@@ -3,7 +3,8 @@ import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DayPicker from 'react-day-picker';
-
+require('moment/locale/zh-cn');
+import LocaleUtils from 'react-day-picker/moment';
 
 import { loadSurgeryByDateAndRoom } from '../../redux/modules/surgery';
 const styles = require('./Opera.scss');
@@ -86,15 +87,17 @@ export default class Opera extends Component {
         <HeadNaviBar>心外科手术安排</HeadNaviBar>
         <div className={styles.opera}>
           <header className={'clearfix topCardBg ' + styles.operaHeader}>
-            <div className="left clearfix" onClick={this.clickShowDayPicker.bind(this)}>
+            <div className="left clearfix" style={{padding: '0 .14rem'}} onClick={this.clickShowDayPicker.bind(this)}>
               <span className="left">{this.state.selectDay}</span>
-              <p className="left sanjiao-bt"></p>
+              <p className={this.state.showDayPicker ? 'left ' + styles.operaSanjiaoOn : 'left ' + styles.operaSanjiao}></p>
             </div>
-            <div style={{display: this.state.showDayPicker ? 'block' : 'none'}} className={styles.operaPicker}>
+            <div className={this.state.showDayPicker ? styles.operaPickerShow + ' ' + styles.operaPicker : styles.operaPicker}>
               <section className="bodyBgWhiteZindex">
                 <DayPicker
                   enableOutsideDays
-                  onDayClick={(event, day) => this.clickSelectDay(day)} />
+                  onDayClick={(event, day) => this.clickSelectDay(day)}
+                  localeUtils={LocaleUtils}
+                  locale="zh-cn" />
               </section>
               <p></p>
             </div>
@@ -109,7 +112,7 @@ export default class Opera extends Component {
           {
             surgeries && surgeries.length ? surgeries.map((opear) => {
               return (
-                <section className="topCardBg" key={opear.operatingRoom._id}>
+                <section className={'topCardBg ' + styles.opearCon} key={opear.operatingRoom._id}>
                   <header className="clearfix">
                     <span className="left">{opear.operatingRoom && opear.operatingRoom.name}</span>
                     <p className={this.state[opear.operatingRoom._id] ? 'right sanjiao-right' : 'right sanjiao-bt ' + styles.curP }
@@ -119,7 +122,6 @@ export default class Opera extends Component {
                   <ul style={{display: this.state[opear.operatingRoom._id] ? 'none' : 'block'}}>
                     {
                       opear && opear.surgeries && opear.surgeries.map((surgery) => {
-                        console.log(surgery);
                         return (
                           <li className="clearfix" key={surgery._id} onClick={() => this.goSurgeryDetail(surgery._id)}>
                             <i className="left">{surgery.seq}.</i>
@@ -128,7 +130,7 @@ export default class Opera extends Component {
                                 surgery.patient && surgery.patient.gender === 'female' ? '女' : '男'
                               }）{surgery.patient && surgery.patient.age} {surgery.patient && surgery.patient.name}
                             </p>
-                            <article className="right">{surgery.doctor.name}</article>
+                            <article className="right">{surgery.doctor && surgery.doctor.name}</article>
                           </li>
                         );
                       })
@@ -136,7 +138,7 @@ export default class Opera extends Component {
                   </ul>
                 </section>
               );
-            }) : '当天暂无手术数据'
+            }) : <div className="noResult">当天暂无手术数据</div>
           }
         </div>
       </div>

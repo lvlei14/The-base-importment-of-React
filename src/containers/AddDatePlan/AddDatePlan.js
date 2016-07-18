@@ -77,7 +77,7 @@ export default class AddDatePlan extends Component {
   }
 
   getNowFormatDate(day) {
-    let newDateNew = new Date(day);
+    const newDateNew = new Date(day);
     const currentdate = moment(newDateNew).format('YYYY-MM-DD HH:mm:ss');
     return currentdate;
   }
@@ -148,8 +148,9 @@ export default class AddDatePlan extends Component {
   }
 
   handleChangeEndTime = (newDate) => {
+    console.log(newDate);
     this.setState({
-      endTime: parseInt(newDate)
+      endTime: parseInt(newDate, 10)
     });
   }
 

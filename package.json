@@ -51,7 +51,7 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
         "PORT": 3000,
-        "APIHOST": "172.18.96.189",
+        "APIHOST": "172.18.96.206",
         "APIPORT": 7293
       }
     },

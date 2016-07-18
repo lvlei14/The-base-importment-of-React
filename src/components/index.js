@@ -18,5 +18,7 @@ export Diaglog from './Diaglog/Diaglog';
 export Modal from './Modal/Modal';
 export Loading from './Loading/Loading';
 export SearchBar from './SearchBar/SearchBar';
+export TabOutside from './TabOutside/TabOutside';
+export CardBg from './CardBg/Card';
 export Rate from './Rate/Rate';
 export {DoctorCardWithDetail, DoctorCardWithIcon, DoctorDetailCard, DividerLine, InvitationDetail} from './DoctorCard/DoctorCard';

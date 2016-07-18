@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
-import CardBg from '../../components/CardBg/Card';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Modal } from '../../components';
+import { HeadNaviBar, Modal } from '../../components';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-import {getPatientsNotSurgery} from '../../redux/modules/patient';
+import {getPatientsNotSurgery, clearInitPatient} from '../../redux/modules/patient';
 import {getSurgeries, setSurgeryStatus} from '../../redux/modules/surgery';
 
 const styles = require('./OperaPatInfor.scss');
@@ -16,7 +15,8 @@ const styles = require('./OperaPatInfor.scss');
       pushState: push,
       getPatientsNotSurgery,
       getSurgeries,
-      setSurgeryStatus
+      setSurgeryStatus,
+      clearInitPatient
     }
 )
 export default class OperaPatInfor extends Component {
@@ -27,37 +27,32 @@ export default class OperaPatInfor extends Component {
     surgeries: PropTypes.array,
     getSurgeries: PropTypes.func,
     setSurgeryStatus: PropTypes.func,
+    clearInitPatient: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       showModal: false,
-      tabType: 'alreadyPlan',
+      tabType: 0, // tab index value 0 or 1
     };
   }
 
   componentDidMount() {
     this.props.getPatientsNotSurgery();
     this.props.getSurgeries();
+    this.props.clearInitPatient();
   }
 
   goAddPatient() {
     this.props.pushState('/add-patient');
   }
 
-  selectUnArrSurgery() {
+  changeTab(index) {
     this.setState({
-      tabType: '1'
+      tabType: index
     });
-    localStorage.setItem('userUnArrangementSurgeryTag', 'true');
-  }
-
-  selectArrSurgery() {
-    this.setState({
-      tabType: '2'
-    });
-    localStorage.removeItem('userUnArrangementSurgeryTag');
+    localStorage.setItem('surgeryTabIndex', index);
   }
 
   render() {
@@ -72,28 +67,26 @@ export default class OperaPatInfor extends Component {
         usersUnArrangementSurgery.push(patient);
       }
     });
-    const showTab = localStorage.getItem('userUnArrangementSurgeryTag');
+    const surgeryTabIndex = parseInt(localStorage.getItem('surgeryTabIndex'), 10) || 0;
     return (
       <div>
-        <HeadNaviBar>病患信息</HeadNaviBar>
-        <div className={'bodyBgWhiteZindex ' + styles.addPatient} onClick={this.goAddPatient.bind(this)}>
-          添加患者
-        </div>
-        <section className={styles.patInforSection}>
-          <ul className={'clearfix topCardBg ' + styles.patInforTab}>
-            <li className="left" onClick={this.selectUnArrSurgery.bind(this)}>
-              <span className={showTab ? styles.liCur : ''}>未安排手术</span>
-            </li>
-            <li className="left" onClick={this.selectArrSurgery.bind(this)}>
-              <span className={!showTab ? styles.liCur : ''}>已安排手术</span>
-            </li>
-          </ul>
-          {!showTab ?
-            <UserArrangementedSurgery patients={surgeries}/>
-            :
+        <HeadNaviBar>病患信息
+          <div className={'bodyBgWhiteZindex ' + styles.addPatient} onClick={this.goAddPatient.bind(this)}>
+            添加患者
+          </div>
+        </HeadNaviBar>
+        <Tabs className={styles.patInforSection + ' tabs'} onSelect={this.changeTab.bind(this)} selectedIndex={surgeryTabIndex}>
+          <TabList className="tabList tabList2" activeTabClassName="tabListOn">
+            <Tab>未安排手术</Tab>
+            <Tab>已安排手术</Tab>
+          </TabList>
+          <TabPanel>
             <UserUnArrangementSurgery patients={usersUnArrangementSurgery}/>
-          }
-        </section>
+          </TabPanel>
+          <TabPanel>
+            <UserArrangementedSurgery patients={surgeries}/>
+          </TabPanel>
+        </Tabs>
       </div>
     );
   }
@@ -105,32 +98,31 @@ export default class OperaPatInfor extends Component {
   */
 @connect(
   state => ({...state}), {
-    setSurgeryStatus
+    setSurgeryStatus,
+    pushState: push,
   }
 )
 class UserArrangementedSurgery extends Component {
   static propTypes = {
-    planedOpePatiens: PropTypes.array,
+    pushState: PropTypes.func,
+    planedOpePatiens: PropTypes.object,
     patients: PropTypes.array,
-    setSurgeryStatus: PropTypes.func
+    setSurgeryStatus: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       showModal: false,
-      tabType: 'alreadyPlan',
       selectedPatienName: '',
       selectedSurgeryId: '',
     };
   }
 
   componentDidMount() {
-
   }
 
   clickShowModal(surgeryId, name) {
-    console.log(surgeryId);
     this.setState({
       showModal: true,
       selectedPatienName: name,
@@ -145,14 +137,17 @@ class UserArrangementedSurgery extends Component {
     this.props.setSurgeryStatus(this.state.selectedSurgeryId, 'done');
   }
 
-  clickCancle() {
+  clickCancel() {
     this.setState({
       showModal: false
     });
   }
 
+  goSurgeryDetail(id) {
+    this.props.pushState(`surgery/${id}`);
+  }
+
   render() {
-    // const planedOpePatiens = this.props.planedOpePatiens;
     const {patients} = this.props;
     return (
       <div>
@@ -161,7 +156,7 @@ class UserArrangementedSurgery extends Component {
             patients && patients.length ?
               patients.map((planedOpePatien) => {
                 return (
-                  <CardBg key={planedOpePatien.id}>
+                  <div key={planedOpePatien._id} className="topCardBg" style={{marginBottom: '10px'}}>
                     <dl className={'clearfix ' + styles.patItemTitle}>
                       <dt className="left">{planedOpePatien.patient && planedOpePatien.patient.name} （
                         {planedOpePatien.patient && planedOpePatien.patient.gender === 'female' ? '女' : '男'}，{planedOpePatien.patient && planedOpePatien.patient.age}&nbsp;
@@ -176,7 +171,7 @@ class UserArrangementedSurgery extends Component {
                           </span>
                         </dd>
                         :
-                        <dd className="right clearfix">
+                        <dd className="right clearfix" style={{background: '#bababa'}}>
                           <span className="left">
                             已结束
                           </span>
@@ -185,7 +180,7 @@ class UserArrangementedSurgery extends Component {
 
                     </dl>
                       {planedOpePatien ?
-                        <ul>
+                        <ul onClick={() => this.goSurgeryDetail(planedOpePatien._id)}>
                           <li>手术名称：{planedOpePatien.name}</li>
                           <li>术&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：{planedOpePatien.doctor && planedOpePatien.doctor.name}</li>
                           <li>接台信息：{planedOpePatien.date}&nbsp;&nbsp;
@@ -196,7 +191,7 @@ class UserArrangementedSurgery extends Component {
                         </ul>
                         : ''
                       }
-                  </CardBg>
+                  </div>
                 );
               })
             : <p className="noResult">暂无结果</p>
@@ -205,8 +200,9 @@ class UserArrangementedSurgery extends Component {
         {
           this.state.showModal ?
             <Modal title = {'操作确认'}
+                  clickHideModal={this.clickCancel.bind(this)}
                    clickConfirm={this.clickConfirm.bind(this)}
-                   clickCancel={this.clickCancle.bind(this)}>
+                   clickCancel={this.clickCancel.bind(this)}>
                是否确认患者
                <span className={styles.patientName}>
                  {this.state.selectedPatienName}
@@ -237,7 +233,6 @@ class UserUnArrangementSurgery extends Component {
   }
 
   goPatientPage(id) {
-    console.log('click');
     this.props.push('/patient/' + id);
   }
 
@@ -249,14 +244,14 @@ class UserUnArrangementSurgery extends Component {
           patients && patients.length ?
             patients.map((patient) => {
               return (
-                <CardBg key={patient._id}>
+                <div key={patient._id} className="topCardBg" style={{marginBottom: '10px'}}>
                   <div onClick={() => this.goPatientPage(patient._id)}>
                     <span className="left">
                       {patient.name} （{patient.gender === 'female' ? '女' : '男'}，{patient.age}）
                     </span>
                     <p className="right fa fa-angle-left"></p>
                   </div>
-                </CardBg>
+                </div>
               );
             })
           : <p className="noResult">暂无结果</p>

@@ -27,7 +27,7 @@ const styles = require('../AddDatePlan/AddDatePlan.scss');
     getSurgeryTypes,
     createSurgery,
     loadDoctors,
-    push
+    push,
   }
 )
 @reduxForm({
@@ -59,7 +59,7 @@ export default class AddSurgery extends Component {
     addSurgerySuccess: PropTypes.bool,
     newCreateSurgeryId: PropTypes.string,
     modifySurgerySuccess: PropTypes.bool,
-    modifySurgeryById: PropTypes.func
+    modifySurgeryById: PropTypes.func,
   };
 
   constructor(props) {
@@ -70,7 +70,6 @@ export default class AddSurgery extends Component {
   }
 
   componentDidMount() {
-    // TODO 完善接口信息
     const {id, uid} = this.props.location.query;
     if (uid) {
       this.props.getPatientById(uid);
@@ -109,7 +108,6 @@ export default class AddSurgery extends Component {
   }
 
   render() {
-    // TODO values中还需要传一个apartmentId
     const {fields: {doctor, date, seq, name, surgeryType, operatingRoom, mark}} = this.props;
     const {patient, rooms, surgeryTypes, doctors} = this.props;
     const selectedAbleSeqs = [1, 2, 3, 4, 5, 6, 7];
@@ -122,13 +120,13 @@ export default class AddSurgery extends Component {
               <li>
                 <label className={ styles.leftPlaceholder}>患者姓名:</label>
                 <div className={styles.scheduleType}>
-                  <input ref="startTimeRef" type="text" disabled placeholder={patient.name}/>
+                  <input type="text" disabled value={patient.name}/>
                 </div>
               </li>
               <li>
                 <label className={ styles.leftPlaceholder}>手术名称:</label>
                 <div className={styles.scheduleType}>
-                  <input ref="startTimeRef" type="text" {...name}/>
+                  <input type="text" {...name}/>
                 </div>
               </li>
               <li>

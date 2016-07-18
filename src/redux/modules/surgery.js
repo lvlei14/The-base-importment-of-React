@@ -46,6 +46,11 @@ export default function surgeryReducer(state = initState, action = {}) {
   state.successMsg = '';
   state.errorMsg = '';
   switch (action.type) {
+    case CLEAR_SURGERYS_FAIL:
+      return {
+        ...state,
+        surgery: {}
+      };
     case ADD_SURGERY:
       return {
         ...state,

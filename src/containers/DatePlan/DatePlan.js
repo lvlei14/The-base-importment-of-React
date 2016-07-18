@@ -3,19 +3,11 @@ import DayPicker from 'react-day-picker';
 import moment from 'moment';
 require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
-
-import { Modal } from '../../components';
-import { Loading } from '../../components';
-import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
-import CardBg from '../../components/CardBg/Card';
-import TabOutside from '../../components/TabOutside/TabOutside';
+import { Modal, Loading, HeadNaviBar, CardBg, TabOutside } from '../../components';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { showDiaglog } from '../../redux/modules/diaglog';
-
-import { loadschedules } from '../../redux/modules/datePlan';
-import { loadtypes } from '../../redux/modules/datePlan';
-import { loadTemplates } from '../../redux/modules/datePlan';
+import { loadschedules, loadtypes, loadTemplates } from '../../redux/modules/datePlan';
 
 const styles = require('./DatePlan.scss');
 const chafang = require('../../images/chafang.png');
@@ -45,7 +37,6 @@ export default class DatePlan extends Component {
       selectedDay: today,
       tabType: '',  // '1', month tab; '2', list tab;
       schedulesOfSelectedDay: [],
-      schedules: this.props.schedules
     };
   }
 
@@ -57,14 +48,12 @@ export default class DatePlan extends Component {
     };
     this.props.loadschedules(JSON.stringify(requires));
     this.props.loadtypes();
-    this.selectDayOnCalendar(new Date()); // TODO 没有作用！
   }
 
   // 响应日历月份切换动作
   onMonthChange(_date) {
-    const date = new Date(_date);
-    const dateQuery = moment(date).format('YYYY-M');
-    const firstDateOfMonth = moment(date).date(1);
+    const dateQuery = moment(_date).format('YYYY-M');
+    const firstDateOfMonth = moment(_date).date(1);
     this.setState({
       schedulesOfSelectedDay: [],
       selectedDay: firstDateOfMonth.toDate()
@@ -74,10 +63,8 @@ export default class DatePlan extends Component {
 
   selectDayOnCalendar(day) {
     const datetow = moment(day).format('YYYY-MM-DD');
-    console.log(datetow);
     const schedules = this.props.schedules && this.props.schedules.list || [];
     const selectedDaySchedule = schedules && schedules.filter((item) => item.date === datetow);
-    console.log(selectedDaySchedule);
     this.setState({
       selectedDay: day,
       schedulesOfSelectedDay: selectedDaySchedule
@@ -155,15 +142,8 @@ export default class DatePlan extends Component {
 
   render() {
     const {schedules} = this.props;
+    const {schedulesOfSelectedDay, selectedDay} = this.state;
     const displaySchedulesWithListStyle = localStorage.getItem('displaySchedulesWithListStyle');
-    let scheduleItems;
-    // 根据
-    if (displaySchedulesWithListStyle) {
-      scheduleItems = schedules && schedules.list || [];
-    } else {
-      scheduleItems = this.state.schedulesOfSelectedDay;
-    }
-    console.log(scheduleItems);
 
     return (
       <div className="datePlanPage">
@@ -179,11 +159,12 @@ export default class DatePlan extends Component {
               <FilterScheduleItem clearSchedulesOfSelectedDay={this.clearSchedulesOfSelectedDay.bind(this)}/>
             </div>
           </div>
-          <div className={styles.datePlanPicker}>
+          <div>
             {
               !displaySchedulesWithListStyle ?
                 <div>
                   <DayPicker
+                    className={styles.datePlanPicker}
                     ref="daypicker"
                     initialMonth={this.state.selectedDay}
                     onDayClick={(event, day) => this.selectDayOnCalendar(day)}
@@ -191,12 +172,10 @@ export default class DatePlan extends Component {
                     onMonthChange={this.onMonthChange.bind(this)}
                     localeUtils={LocaleUtils}
                     locale="zh-cn" />
+                  <ScheduleItem scheduleItem={schedulesOfSelectedDay && schedulesOfSelectedDay[0]} selectedDayOnCalendar={selectedDay} />
                 </div>
-              : ''
+              : <ScheduleItems scheduleItems = {schedules && schedules.list || []} />
             }
-          </div>
-          <div className={styles.scheduleItem}>
-            <ScdItems scheduleItems = {scheduleItems} />
           </div>
         </div>
         <AddPlan />
@@ -208,24 +187,79 @@ export default class DatePlan extends Component {
 /**
   * component: every day schedule item
   */
+class ScheduleItems extends Component {
+  static propTypes = {
+    scheduleItems: PropTypes.array,
+    pushState: PropTypes.func,
+  }
+
+  render() {
+    const scheduleItems = this.props.scheduleItems || [];
+    return (
+      <div>
+        {
+          scheduleItems && scheduleItems.map((scheduleItem)=> {
+            return (
+              <ScheduleItem key={scheduleItem.date} scheduleItem = {scheduleItem} />
+            );
+          })
+        }
+      </div>
+    );
+  }
+}
+
+/**
+  * component: schedule every day card
+  */
+class ScheduleItem extends Component {
+  static propTypes = {
+    scheduleItem: PropTypes.object,
+    selectedDayOnCalendar: PropTypes.date,
+  };
+
+  render() {
+    const scheduleItem = this.props.scheduleItem || {};
+    const displaySchedulesWithListStyle = localStorage.getItem('displaySchedulesWithListStyle');
+    return (
+      <CardBg className={styles.scheduleItem}>
+        <div>
+          <p className={styles.curDaytitle}>{moment(displaySchedulesWithListStyle ? scheduleItem.date : this.props.selectedDayOnCalendar).format('YYYY-MM-DD')}</p>
+          <ul className={styles.curDayContact}>
+            {
+              scheduleItem.schedules && scheduleItem.schedules.length ?
+                scheduleItem.schedules.map((singleScheduleOfDayCard) => {
+                  return (
+                    <ScheduleItemSingleList key={singleScheduleOfDayCard._id} singleScheduleOfDayCard={singleScheduleOfDayCard} />
+                  );
+                })
+              : <p>当天没有日程安排</p>
+            }
+          </ul>
+        </div>
+      </CardBg>
+    );
+  }
+}
+
+/**
+  * component: every day card of every list item
+  */
 @connect(
   state => ({...state}),
   {
     pushState: push,
   }
 )
-class ScdItems extends Component {
+class ScheduleItemSingleList extends Component {
   static propTypes = {
-    scheduleItems: PropTypes.array,
+    singleScheduleOfDayCard: PropTypes.object,
     pushState: PropTypes.func,
   }
 
-  componentDidMount() {
-  }
-
-  itemTimeIcon(itemTimePeriod) {
+  itemTimeIcon(singleScheduleOfDayCard) {
     let itemIcon;
-    const itemTimetype = itemTimePeriod.type || {};
+    const itemTimetype = singleScheduleOfDayCard.type || {};
     if (itemTimetype.value === '查房') {
       itemIcon = <i className={'left ' + styles.checkPlan}>查</i>;
     }else if (itemTimetype.value === '会议') {
@@ -250,55 +284,29 @@ class ScdItems extends Component {
   }
 
   render() {
-    const scheduleItems = this.props.scheduleItems || [];
-    let schItemIkey = 0;
+    const {singleScheduleOfDayCard} = this.props;
     return (
-      <div>
-        {
-          scheduleItems.length ?
-            scheduleItems.map((scheduleItem)=> {
-              return (
-                <CardBg key={scheduleItem.date}>
-                  <p className={styles.curDaytitle}>{moment(scheduleItem.date).format('YYYY-MM-DD')}</p>
-                  <ul className={styles.curDayContact}>
-                    {
-                      scheduleItem.schedules && scheduleItem.schedules.map((itemTimePeriod) => {
-                        schItemIkey = schItemIkey + 1;
-                        return (
-                          <li key={schItemIkey} onClick={() => this.goDatePlanDetail(itemTimePeriod._id, itemTimePeriod.type.value)}>
-                            <div>
-                              <span className={styles.timeStart + ' left'}>{this.handleTime(itemTimePeriod.start_time)} - {this.handleTime(itemTimePeriod.end_time)}</span>
-                              {this.itemTimeIcon(itemTimePeriod)}
-                              <span className={styles.timeRange + ' left'}>
-                                {
-                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
-                                ?
-                                  itemTimePeriod.content && itemTimePeriod.content[0] && itemTimePeriod.content[0].input_1 && itemTimePeriod.content[0].input_1.value
-                                : itemTimePeriod.type && itemTimePeriod.type.value
-                                }
-                              </span>
-                              <span style={{display: itemTimePeriod.is_inner.value ? 'none' : 'block'}}
-                                className={styles.outside + ' left'}>院外</span>
-                              <span style={{display: itemTimePeriod.conflict ? 'block' : 'none'}}
-                               className={styles.conflict + ' left'}><i>!</i>有冲突</span>
-                            </div>
-                          </li>
-                        );
-                      })
-                    }
-                  </ul>
-                </CardBg>
-              );
-            })
-          : <CardBg>
-              <p className="noResult">没有日程安排</p>
-            </CardBg>
-        }
-      </div>
+      <li onClick={() => this.goDatePlanDetail(singleScheduleOfDayCard._id, singleScheduleOfDayCard.type && singleScheduleOfDayCard.type.value)}>
+        <div>
+          <span className={styles.timeStart + ' left'}>{this.handleTime(singleScheduleOfDayCard.start_time)} - {this.handleTime(singleScheduleOfDayCard.end_time)}</span>
+          {this.itemTimeIcon(singleScheduleOfDayCard)}
+          <span className={styles.timeRange + ' left'}>
+            {
+              singleScheduleOfDayCard.content && singleScheduleOfDayCard.content[0] && singleScheduleOfDayCard.content[0].input_1 && singleScheduleOfDayCard.content[0].input_1.value
+            ?
+              singleScheduleOfDayCard.content && singleScheduleOfDayCard.content[0] && singleScheduleOfDayCard.content[0].input_1 && singleScheduleOfDayCard.content[0].input_1.value
+            : singleScheduleOfDayCard.type && singleScheduleOfDayCard.type.value
+            }
+          </span>
+          <span style={{display: singleScheduleOfDayCard.is_inner.value ? 'none' : 'block'}}
+            className={styles.outside + ' left'}>院外</span>
+          <span style={{display: singleScheduleOfDayCard.conflict ? 'block' : 'none'}}
+           className={styles.conflict + ' left'}><i>!</i>有冲突</span>
+        </div>
+      </li>
     );
   }
 }
-
 
 /**
   * component: filter scheduleee

@@ -53,13 +53,13 @@ export default class SurgeryInfor extends Component {
           <div className={styles.addPatientLi}>
             <label className={ styles.leftPlaceholder}>接台信息</label>
             <div>
-              {surgery.date}{"|"}{surgery.operatingRoom && surgery.operatingRoom.name}{"|"}{surgery.seq}
+              {surgery.date}&nbsp;｜&nbsp;{surgery.operatingRoom && surgery.operatingRoom.name}&nbsp;｜&nbsp;{surgery.seq}
             </div>
           </div>
           <div className={styles.addPatientLi}>
             <label className={ styles.leftPlaceholder}>患者信息</label>
             <div>
-              {surgery.patient && surgery.patient.name}{"-"}{surgery.patient && surgery.patient.gender === 'female' ? '女' : '男'}{"-"}{surgery.patient && surgery.patient.age}岁
+              {surgery.patient && surgery.patient.name}&nbsp;－&nbsp;{surgery.patient && surgery.patient.gender === 'female' ? '女' : '男'}&nbsp;－&nbsp;{surgery.patient && surgery.patient.age}岁
             </div>
           </div>
           <div className={styles.addPatientLi + ' ' + styles.addPatientLiEnd}>
