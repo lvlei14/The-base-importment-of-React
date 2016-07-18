@@ -2,37 +2,11 @@ const LOAD_DUTY = 'LOAD_DUTY';
 const LOAD_DUTY_SUCCESS = 'LOAD_DUTY_SUCCESS';
 const LOAD_DUTY_FAIL = 'LOAD_DUTY_FAIL';
 
+const SECOND_CHANGE_DUTY_APPLY = 'SECOND_CHANGE_DUTY_APPLY';
+const SECOND_CHANGE_DUTY_APPLY_SUCCESS = 'SECOND_CHANGE_DUTY_APPLY_SUCCESS';
+const SECOND_CHANGE_DUTY_APPLY_FAIL = 'SECOND_CHANGE_DUTY_APPLY_FAIL';
 
-const SECOND_CHANGE_DUTY_REQUEST = 'SECOND_CHANGE_DUTY_REQUEST';
-const SECOND_CHANGE_DUTY_REQUEST_SUCCESS = 'SECOND_CHANGE_DUTY_REQUEST_SUCCESS';
-const SECOND_CHANGE_DUTY_REQUEST_FAIL = 'SECOND_CHANGE_DUTY_REQUEST_FAIL';
-// const dutys = {
-//   3: [
-//     {
-//       _id: '30984',
-//       appartment: {
-//         id: '394',
-//         name: '儿科',
-//       },
-//       doctor: {
-//         _id: '33',
-//         name: '吕银蕾',
-//       },
-//       mark: '6.3'
-//     },
-//     {
-//       _id: '30985',
-//       appartment: {
-//         id: '395',
-//         name: '儿科',
-//       },
-//       doctor: {
-//         _id: '34',
-//         name: '吕银蕾',
-//       },
-//       mark: '6.3'
-//     }]
-// };
+const SELECT_MY_WANT_CHANGE_DUTY = 'SELECT_MY_WANT_CHANGE_DUTY';
 
 const initState = {
   loading: false,
@@ -40,6 +14,10 @@ const initState = {
   dutys: {},
   sendIsSuccessMeg: '',
   errorMeg: '',
+  mySeletedDuty: {
+    date: '',
+    id: ''
+  },
 };
 
 
@@ -70,13 +48,13 @@ export function dutyReducer(state = initState, action = {}) {
       };
 
 
-    case SECOND_CHANGE_DUTY_REQUEST:
+    case SECOND_CHANGE_DUTY_APPLY:
       return {
         ...state,
         loading: true
       };
 
-    case SECOND_CHANGE_DUTY_REQUEST_SUCCESS:
+    case SECOND_CHANGE_DUTY_APPLY_SUCCESS:
       console.log('换班申请action');
       console.log(action);
       return {
@@ -86,12 +64,20 @@ export function dutyReducer(state = initState, action = {}) {
         tip: action.tip
       };
 
-    case SECOND_CHANGE_DUTY_REQUEST_FAIL:
+    case SECOND_CHANGE_DUTY_APPLY_FAIL:
       return {
         ...state,
         loading: false,
         errorMeg: action.result,
         tip: action.tip
+      };
+
+    case SELECT_MY_WANT_CHANGE_DUTY:
+      console.log(action.id);
+      console.log(action.date);
+      return {
+        ...state,
+        mySeletedDuty: {...state.mySeletedDuty, date: action.date, id: action.id},
       };
 
     default:
@@ -116,13 +102,14 @@ export function loaddutys(uid, month, year, level, scope) {
 }
 
 /**
- * action: send change duty request send uid/eid/attendance
+ * action: send change duty APPLY send uid/eid/attendance
  * @param
  * @returns {{types: *[], promise: promise}}
  */
-export function sendChangeDutyRequest(uid, mySelChaDutyId, selChaDutyId, selChaDoctorId) {
+export function sendChangeDutyApply(uid, mySelChaDutyId, selChaDutyId, selChaDoctorId) {
+  console.log(uid + ',' + mySelChaDutyId + ',' + selChaDutyId + ',' + selChaDoctorId);
   return {
-    types: [SECOND_CHANGE_DUTY_REQUEST, SECOND_CHANGE_DUTY_REQUEST_SUCCESS, SECOND_CHANGE_DUTY_REQUEST_FAIL],
+    types: [SECOND_CHANGE_DUTY_APPLY, SECOND_CHANGE_DUTY_APPLY_SUCCESS, SECOND_CHANGE_DUTY_APPLY_FAIL],
     promise: (client) => client.post('/user/' + uid + '/exAttendance', {
       data: {
         fromAttendance: mySelChaDutyId,
@@ -130,5 +117,16 @@ export function sendChangeDutyRequest(uid, mySelChaDutyId, selChaDutyId, selChaD
         toDoctor: selChaDoctorId,
       }
     })
+  };
+}
+
+/**
+  * action: select i want change duty date/dutyid
+  */
+export function selectMyWantChangeDuty(date, id) {
+  return {
+    type: SELECT_MY_WANT_CHANGE_DUTY,
+    date: date,
+    id: id,
   };
 }

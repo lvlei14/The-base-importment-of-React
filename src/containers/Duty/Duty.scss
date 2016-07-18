@@ -61,10 +61,18 @@
 .dutyItem{
   position: relative;
   min-height: .72rem;
+  .dateDayConFa{
+    min-height: .46rem;
+    box-sizing: content-box;
+    padding-top: .26rem;
+  }
   .dutyItemDay{
     padding-top: .08rem;
-    padding-bottom:.16rem;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
     z-index: 10;
   }
   .dateDay{
@@ -98,7 +106,7 @@
       left: .03rem;
     }
     span{
-      margin-left: .16rem;
+      margin-left: .14rem;
     }
     i.levelFir{
       background-position: 0 -.76rem;

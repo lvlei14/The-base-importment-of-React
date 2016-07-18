@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import HeadNaviBar from '../../components/HeadNaviBar/HeadNaviBar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import moment from 'moment';
-import Modal from '../../components/Modal/Modal';
+import { HeadNaviBar, Modal } from '../../components';
 import DayPicker, {DateUtils} from 'react-day-picker';
 require('moment/locale/zh-cn');
 import LocaleUtils from 'react-day-picker/moment';
-import { loaddutys } from '../../redux/modules/duty';
-import { sendChangeDutyRequest } from '../../redux/modules/duty';
+import { loaddutys, sendChangeDutyApply, selectMyWantChangeDuty } from '../../redux/modules/duty';
 import { showDiaglog } from '../../redux/modules/diaglog';
 
 const styles = require('./Duty.scss');
@@ -21,41 +19,34 @@ const styles = require('./Duty.scss');
 export default class Duty extends Component {
   static propTypes = {
     pushState: PropTypes.func,
-    user: PropTypes.object,
     routeParams: PropTypes.object,
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-  }
 
   goChangeDutyRecord() {
     this.props.pushState('/change-duty-record');
   }
 
-  showHeadBarCon() {
+  showDutyPage() {
     const {pageType} = this.props.routeParams;
-    let headBarCon;
+    const dutyPage = {};
     if (pageType === 'self') {
-      headBarCon = '我的值班';
+      dutyPage.headBarCon = '我的值班';
+      dutyPage.pageComponent = <SelfDutyPage />;
     } else if (pageType === 'appartment') {
-      headBarCon = '全部科室值班';
-    } else if (pageType === 'appart-level') {
-      headBarCon = '换班申请';
+      dutyPage.headBarCon = '全部科室值班';
+      dutyPage.pageComponent = <ApartDutyPage />;
+    } else if (pageType === 'change-duty-apply') {
+      dutyPage.headBarCon = '换班申请';
+      dutyPage.pageComponent = <ChangeDutyApplyPage />;
     }
-    return headBarCon;
+    return dutyPage;
   }
 
   render() {
-    const {pageType} = this.props.routeParams;
+    const dutyPage = this.showDutyPage();
     return (
       <div className={'duty ' + styles.duty}>
-        <HeadNaviBar>{this.showHeadBarCon()}</HeadNaviBar>
+        <HeadNaviBar>{dutyPage.headBarCon}</HeadNaviBar>
         <div className={'select clearfix bodyBgWhiteZindex ' + styles.selectMonth}>
           <article className={'clearfix left ' + styles.changeDutyRecord} onClick={this.goChangeDutyRecord.bind(this)}>
             <i className="left"></i>
@@ -65,8 +56,7 @@ export default class Duty extends Component {
         <section>
           <p className="bodyBgWhite"></p>
           <div className={'bodyBgWhiteZindex ' + styles.dutyTop}>
-            <Calendar
-              pageType = {pageType} />
+            {dutyPage.pageComponent}
           </div>
         </section>
       </div>
@@ -75,136 +65,141 @@ export default class Duty extends Component {
 }
 
 /**
-  *component: duty three page content
+  *component: 我的值班页面
+  */
+@connect(
+  state => ({...state.dutys}), {
+    pushState: push,
+    loaddutys,
+    selectMyWantChangeDuty,
+  }
+)
+class SelfDutyPage extends Component {
+  static propTypes = {
+    loaddutys: PropTypes.func,
+    selectMyWantChangeDuty: PropTypes.func,
+    dutys: PropTypes.object,
+    user: PropTypes.object,
+    pushState: PropTypes.func,
+  }
+  constructor(props) {
+    super(props);
+    this.state = {selectedDay: new Date()};
+  }
+
+  componentDidMount() {
+    this.props.loaddutys('uid', moment().format('M'), moment().format('YYYY'), '', 'self');
+  }
+
+  onMonthChange(_date) {
+    this.props.loaddutys('uid', moment(_date).format('M'), moment(_date).format('YYYY'), '', 'self');
+  }
+
+  clickSelectDay(day) {
+    this.setState({selectedDay: day});
+  }
+
+  goChangeDutyPage(dutyId) {
+    const {selectedDay} = this.state;
+    this.props.pushState('/duty/change-duty-apply');
+    this.props.selectMyWantChangeDuty(selectedDay, dutyId);
+  }
+
+  goAppartPage() {
+    this.props.pushState('/duty/appartment');
+  }
+
+  showSingleDayItem(singleDayDutys) {
+    return (
+      singleDayDutys && singleDayDutys.map((dutyDayItem) => {
+        return (
+          <div className={styles.dateDayConFa} key={dutyDayItem._id} onClick={() => this.goChangeDutyPage(dutyDayItem._id)}>
+            <article className={styles.dateAppart} style={{paddingTop: '.16rem'}}>{dutyDayItem.apartment && dutyDayItem.apartment.name}</article>
+            <i className={styles.dateSelf}></i>
+          </div>
+        );
+      })
+    );
+  }
+
+  renderDay(day) {
+    const date = moment(day).format('D');
+    const {dutys} = this.props;
+    return (
+      <div className={styles.dutyItem}>
+        <span className={styles.dutyItemDay}>{date}</span>
+        <div>
+          {dutys && this.showSingleDayItem(dutys[date])}
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <DayPicker className={styles.dutyPicker}
+          selectedDays={day => DateUtils.isSameDay(this.state.selectedDay, day)}
+          onDayClick={(event, day) => this.clickSelectDay(day)}
+          renderDay={this.renderDay.bind(this)}
+          onMonthChange={this.onMonthChange.bind(this)}
+          localeUtils={LocaleUtils}
+          locale="zh-cn" />
+        <footer className={styles.dutyFooterBtn}>
+          <button className="mainBtn" onClick={this.goAppartPage.bind(this)}>查看科室值班表</button>
+          <p className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
+        </footer>
+      </div>
+    );
+  }
+}
+
+/**
+  * component: 全部科室值班页面
   */
 @connect(
   state => ({...state.dutys, user: state.auth.user}), {
     pushState: push,
     loaddutys,
-    sendChangeDutyRequest,
-    showDiaglog,
+    selectMyWantChangeDuty,
   }
 )
-class Calendar extends Component {
+class ApartDutyPage extends Component {
   static propTypes = {
     loaddutys: PropTypes.func,
-    user: PropTypes.object,
+    selectMyWantChangeDuty: PropTypes.func,
     dutys: PropTypes.object,
-    sendChangeDutyRequest: PropTypes.func,
-    pageType: PropTypes.string,
+    user: PropTypes.object,
     pushState: PropTypes.func,
-    showDiaglog: PropTypes.func,
-    sendIsSuccessMeg: PropTypes.string,
-    errorMeg: PropTypes.string,
-  };
+  }
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectDay: '',
-      selNoFormatDay: '',
-      selChaPageDay: '',
-      selRealChaDate: '',
-      selectedYear: (new Date()).getFullYear(),
-      selectedMonth: (new Date()).getMonth() + 1,
-      selChaDutyId: '',
-      mySelChaDutyId: '',
-      showModal: false,
-      selDoctor: {
-        _id: '',
-        name: '',
-      }
-    };
+    this.state = {selectedDay: new Date()};
   }
 
   componentDidMount() {
-    console.log('用户信息');
-    console.log(this.props.user);
-    this.loadMonthDutysBypage(this.state.selectedMonth, this.state.selectedYear);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.sendIsSuccessMeg && nextProps.sendIsSuccessMeg) {
-      this.props.showDiaglog(nextProps.sendIsSuccessMeg, '/change-duty-record');
-    } else if (!this.props.errorMeg && nextProps.errorMeg) {
-      this.props.showDiaglog(nextProps.errorMeg, '/duty/appart-level');
-    }
+    this.props.loaddutys('uid', moment().format('M'), moment().format('YYYY'), '', 'appartment');
   }
 
   onMonthChange(_date) {
-    this.loadMonthDutysBypage(moment(_date).format('M'), moment(_date).format('YYYY'));
-  }
-
-  // 判断当前页面哪个页面，调不同的接口
-  loadMonthDutysBypage(month, year) {
-    const {pageType} = this.props;
-    let level;
-    let type;
-    if (pageType === 'self') {
-      level = '';
-      type = 'self';
-    } else if (pageType === 'appartment') {
-      level = '';
-      type = 'appartment';
-    } else if (pageType === 'appart-level') {
-      level = '01';
-      type = 'appartment';
-    }
-    this.props.loaddutys('00203', month, year, level, type);
+    this.props.loaddutys('uid', moment(_date).format('M'), moment(_date).format('YYYY'), '', 'self');
   }
 
   clickSelectDay(day) {
-    this.setState({
-      selNoFormatDay: day,
-    });
-    const {pageType} = this.props;
-    const date = new Date(day);
-    const datetow = date.toISOString().substring(0, 10);
-    if (pageType === 'appart-level') {
-      this.setState({
-        selChaPageDay: datetow,
-      });
-    } else {
-      this.setState({
-        selectDay: datetow,
-      });
-    }
+    this.setState({selectedDay: day});
   }
 
-  // send request
-  sendChangeDutyRequest() {
-    this.setState({
-      showModal: false
-    });
-    const uid = this.props.user && this.props.user._id;
-    const {mySelChaDutyId, selChaDutyId, selDoctor} = this.state;
-    this.props.sendChangeDutyRequest(uid, mySelChaDutyId, selChaDutyId, selDoctor._id);
+  goChangeDutyPage(dutyId) {
+    this.props.pushState('/duty/change-duty-apply');
+    this.props.selectMyWantChangeDuty(this.state.selectedDay, dutyId);
   }
 
-  clickShowModal() {
-    const uid = this.props.user && this.props.user._id;
-    const {selChaDutyId, selDoctor, selRealChaDate, selChaPageDay} = this.state;
-    if (selDoctor._id === uid) {
-      this.props.showDiaglog('不可与已有自己值班的日期进行交换');
-      return;
-    }
-    if (!selChaDutyId || selChaPageDay !== selRealChaDate) {  // 后面条件：防止用户当前选择的是没有数据的日期，因为点击没有数据的日期selChaDutyId不会更新
-      this.props.showDiaglog('请选择想要交换的日期！');
-      return;
-    }
-    this.setState({
-      showModal: true,
-    });
+  goAppartPage() {
+    this.props.pushState('/duty/appartment');
   }
 
-  changeSelChDutyId(changeId, selDoctor, selRealChaDate) {
-    this.setState({
-      selChaDutyId: changeId,
-      selDoctor: selDoctor,
-      selRealChaDate: selRealChaDate,
-    });
-  }
-
+  // 根据级别显示不同的图标
   loadLevel(level) {
     let levelDiv;
     if (level === 1) {
@@ -219,124 +214,59 @@ class Calendar extends Component {
     return levelDiv;
   }
 
-  appLevelDayItem(dutyDayItem) {
+  // 展示每天每天数据
+  showSingleDaySingDuty(singleDayDutys) {
     const uid = this.props.user && this.props.user._id;
     return (
-      <div>
-      {
-        dutyDayItem.doctor._id !== uid ?
-          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.changeSelChDutyId(dutyDayItem._id, dutyDayItem.doctor, dutyDayItem.date)}>
-            <article className={'clearfix ' + styles.dateAppart}>
-              {
-                this.loadLevel(dutyDayItem.doctorLevel.number)
-              }
-              <span className="left">{dutyDayItem.doctor && dutyDayItem.doctor.name}</span>
-            </article>
+      singleDayDutys && singleDayDutys.map((dutyDayItem) => {
+        return (
+          <div>
+          {
+            dutyDayItem.doctor._id !== uid ?
+              <div className={styles.dateDayFa} key={dutyDayItem._id}>
+                <article className={'clearfix ' + styles.dateAppart}>
+                  {
+                    this.loadLevel(dutyDayItem.doctorLevel.number)
+                  }
+                  <span className="left">{dutyDayItem.doctor && dutyDayItem.doctor.name}</span>
+                </article>
+              </div>
+            :
+              <div className={styles.dateDayFa} key={dutyDayItem._id}>
+                <article>
+                  <i className={styles.dateSelf}></i>
+                  <p></p>
+                </article>
+              </div>
+          }
           </div>
-        :
-          <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={(event) => event.stopPropagation()}>
-            <article>
-              <i className={styles.dateSelf}></i>
-              <p className = {styles.selfDayBg}></p>
-            </article>
-          </div>
-      }
-      </div>
-    );
-  }
-
-  appartDayItem(dutyDayItem) {
-    const uid = this.props.user && this.props.user._id;
-    return (
-      <div onClick={() => this.goChangeDuty(dutyDayItem._id)}>
-      {
-        dutyDayItem.doctor._id !== uid ?
-          <div className={styles.dateDayFa} key={dutyDayItem._id}>
-            <article className={'clearfix ' + styles.dateAppart}>
-              {
-                this.loadLevel(dutyDayItem.doctorLevel.number)
-              }
-              <span className="left">{dutyDayItem.doctor && dutyDayItem.doctor.name}</span>
-            </article>
-          </div>
-        :
-          <div className={styles.dateDayFa} key={dutyDayItem._id}>
-            <article>
-              <i className={styles.dateSelf}></i>
-              <p className = {styles.selfDayBg}></p>
-            </article>
-          </div>
-      }
-      </div>
-    );
-  }
-
-  goChangeDuty(myDutyId) {
-    console.log('将要跳转换班申请');
-    this.setState({
-      mySelChaDutyId: myDutyId
-    });
-    this.props.pushState('/duty/appart-level');
-    const level = '01';
-    const type = 'appartment';
-    this.props.loaddutys('00203', this.state.selectedMonth, this.state.selectedYear, level, type);
-  }
-
-  goAppartPage() {
-    this.props.pushState('/duty/appartment');
-    const level = '';
-    const type = 'appartment';
-    this.props.loaddutys('00203', this.state.selectedMonth, this.state.selectedYear, level, type);
-  }
-
-  selfDayItem(dutyDayItem) {
-    return (
-      <div className={styles.dateDayFa} key={dutyDayItem._id} onClick={() => this.goChangeDuty(dutyDayItem._id)}>
-        <article className={styles.dateAppart}>{dutyDayItem.apartment && dutyDayItem.apartment.name}</article>
-        <i className={styles.dateSelf}></i>
-      </div>
-    );
-  }
-
-  noInforDutyDay() {
-    return (
-      <div onClick={(event) => {event.stopPropagation(); console.log('clicked');}}>00</div>
-    );
-  }
-
-  showSingleDayItem(dutyDay) {
-    const pageType = this.props.pageType;
-    // const uid = this.props.user && this.props.user._id;
-    // const appartmentMyDutyNum = [];
-    // if (pageType === 'appartment') {
-    //   appartmentMyDutyNum = dutyDay && dutyDay.filter((item) => item.doctor._id === uid);
-    // }
-    let DayItem;
-    return (
-      dutyDay && dutyDay.map((dutyDayItem) => {
-        if (pageType === 'self') {
-          DayItem = this.selfDayItem(dutyDayItem);
-        } else if (pageType === 'appartment') {
-          DayItem = this.appartDayItem(dutyDayItem);
-        } else {
-          DayItem = this.appLevelDayItem(dutyDayItem);
-        }
-        return DayItem;
+        );
       })
     );
   }
-  clickHideModal() {
-    this.setState({
-      showModal: false
-    });
+
+  // 展示每天的数据
+  showSingleDayItem(singleDayDutys) {
+    const uid = this.props.user && this.props.user._id;
+    // 筛选当天数据中，我的值班
+    const myDutyDays = singleDayDutys && singleDayDutys.filter((item) => item.doctor && item.doctor._id === uid);
+    if (myDutyDays && myDutyDays.length > 0) {
+      // 如果当天有我的值班，点击跳到换班申请页面，并把我的值班id传过去
+      return (<div className={styles.dateDayConFa} style={{minHeight: '.68rem', paddingTop: '.32rem'}} onClick={() => this.goChangeDutyPage(myDutyDays._id)}>
+        {this.showSingleDaySingDuty(singleDayDutys)}
+      </div>);
+    } else if (myDutyDays && myDutyDays.length === 0) {
+      return (<div className={styles.dateDayConFa} style={{minHeight: '.68rem', paddingTop: '.32rem'}}>
+        {this.showSingleDaySingDuty(singleDayDutys)}
+      </div>);
+    }
   }
 
   renderDay(day) {
-    const date = day.getDate().toString();
-    const dutys = this.props.dutys;
-    const pageType = this.props.pageType;
+    const date = moment(day).format('D');
+    const {dutys} = this.props;
     return (
-      <div className={pageType === 'appartment' ? styles.appItem + ' ' + styles.dutyItem : styles.dutyItem}>
+      <div className={styles.dutyItem + ' ' + styles.appItem}>
         <span className={styles.dutyItemDay}>{date}</span>
         <div>
           {dutys && this.showSingleDayItem(dutys[date])}
@@ -346,35 +276,190 @@ class Calendar extends Component {
   }
 
   render() {
-    console.log('我选择的日期');
-    console.log(this.state.selectDay);
     return (
       <div>
-        <div className={styles.dutyPicker}>
-          <DayPicker
-            selectedDays={day => DateUtils.isSameDay(this.state.selNoFormatDay, day)}
-            onDayClick={(event, day) => this.clickSelectDay(day)}
-            renderDay={this.renderDay.bind(this)}
-            onMonthChange={this.onMonthChange.bind(this)}
-            localeUtils={LocaleUtils}
-            locale="zh-cn" />
+        <DayPicker className={styles.dutyPicker}
+          selectedDays={day => DateUtils.isSameDay(this.state.selectedDay, day)}
+          onDayClick={(event, day) => this.clickSelectDay(day)}
+          renderDay={this.renderDay.bind(this)}
+          onMonthChange={this.onMonthChange.bind(this)}
+          localeUtils={LocaleUtils}
+          locale="zh-cn" />
+        <footer className={styles.dutyFooterBtn}>
+          <p className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
+        </footer>
+      </div>
+    );
+  }
+}
+
+/**
+  *
+  */
+@connect(
+  state => ({...state.dutys, user: state.auth.user}), {
+    pushState: push,
+    loaddutys,
+    sendChangeDutyApply,
+    showDiaglog,
+  }
+)
+class ChangeDutyApplyPage extends Component {
+  static propTypes = {
+    loaddutys: PropTypes.func,
+    sendChangeDutyApply: PropTypes.func,
+    dutys: PropTypes.object,
+    user: PropTypes.object,
+    pushState: PropTypes.func,
+    mySeletedDuty: PropTypes.object,
+    sendIsSuccessMeg: PropTypes.string,
+    showDiaglog: PropTypes.func,
+    errorMeg: PropTypes.string,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedDay: new Date(),
+      showModal: false,
+      selectedChangeDuty: {
+        doctor: {},
+        dutyId: '',
+      },
+    };
+  }
+
+  componentDidMount() {
+    this.props.loaddutys('uid', moment().format('M'), moment().format('YYYY'), '01', 'appartment');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.sendIsSuccessMeg && nextProps.sendIsSuccessMeg) {
+      this.props.showDiaglog(nextProps.sendIsSuccessMeg, '/change-duty-record');
+    } else if (!this.props.errorMeg && nextProps.errorMeg) {
+      this.props.showDiaglog(nextProps.errorMeg, '/duty/change-duty-apply');
+    }
+  }
+
+  // 切换月份
+  onMonthChange(_date) {
+    this.props.loaddutys('uid', moment(_date).format('M'), moment(_date).format('YYYY'), '', 'self');
+  }
+
+  // 日历点击某天
+  clickSelectDay(day) {
+    this.setState({selectedDay: day});
+  }
+
+  // 发送换班申请请求
+  sendChangeDutyApply() {
+    this.setState({
+      showModal: false
+    });
+    const {mySeletedDuty} = this.props;
+    const {selectedChangeDuty} = this.state;
+    this.props.sendChangeDutyApply('uid', mySeletedDuty.id, selectedChangeDuty.dutyId, selectedChangeDuty.doctor._id);
+  }
+
+  clickShowModal() {
+    const {selectedChangeDuty} = this.state;
+    if (!selectedChangeDuty.dutyId) {
+      this.props.showDiaglog('请选择想要交换的日期！');
+      return;
+    }
+    this.setState({showModal: true});
+  }
+
+  clickHideModal() {this.setState({showModal: false});}
+
+  // 选择交换日期
+  selectChangeDuty(dutyId, dutyDoctor) {
+    this.setState({
+      selectedChangeDuty: {...this.state.selectedChangeDuty, dutyId: dutyId, doctor: dutyDoctor}
+    });
+  }
+
+  // 根据级别显示不同的图标
+  loadLevel(level) {
+    let levelDiv;
+    if (level === 1) {
+      levelDiv = (<i className={styles.levelFir}></i>);
+    } else if (level === 2) {
+      levelDiv = (<i className={styles.levelSec}></i>);
+    }else if (level === 3) {
+      levelDiv = (<i className={styles.levelThr}></i>);
+    }else if (level === 4) {
+      levelDiv = (<i className={styles.levelFour}></i>);
+    }
+    return levelDiv;
+  }
+
+  showSingleDayItem(singleDayDutys) {
+    const uid = this.props.user && this.props.user._id;
+    return (
+      singleDayDutys && singleDayDutys.map((dutyDayItem) => {
+        return (
+          <div key={dutyDayItem._id}>
+          {
+            dutyDayItem.doctor._id !== uid ?
+              <div className={styles.dateDayFa} onClick={() => this.selectChangeDuty(dutyDayItem._id, dutyDayItem.doctor)}>
+                <article className={'clearfix ' + styles.dateAppart}>
+                  {
+                    this.loadLevel(dutyDayItem.doctorLevel.number)
+                  }
+                  <span className="left">{dutyDayItem.doctor && dutyDayItem.doctor.name}</span>
+                </article>
+              </div>
+            :
+              <div className={styles.dateDayFa} onClick={(event) => event.stopPropagation()}>
+                <article>
+                  <i className={styles.dateSelf}></i>
+                  <p className = {styles.selfDayBg}></p>
+                </article>
+              </div>
+          }
+          </div>
+        );
+      })
+    );
+  }
+
+  renderDay(day) {
+    const date = moment(day).format('D');
+    const {dutys} = this.props;
+    return (
+      <div className={styles.dutyItem}>
+        <span className={styles.dutyItemDay}>{date}</span>
+        <div className={styles.dateDayConFa}>
+          {dutys && this.showSingleDayItem(dutys[date])}
         </div>
-        <footer className={styles.dutyFooterBtn} style={{display: this.props.pageType === 'appart-level' ? 'block' : 'none'}}>
+      </div>
+    );
+  }
+  render() {
+    const {mySeletedDuty} = this.props;
+    const {selectedDay, selectedChangeDuty} = this.state;
+    return (
+      <div>
+        <DayPicker className={styles.dutyPicker}
+          selectedDays={day => DateUtils.isSameDay(this.state.selectedDay, day)}
+          onDayClick={(event, day) => this.clickSelectDay(day)}
+          renderDay={this.renderDay.bind(this)}
+          onMonthChange={this.onMonthChange.bind(this)}
+          localeUtils={LocaleUtils}
+          locale="zh-cn" />
+        <footer className={styles.dutyFooterBtn}>
           <button className="mainBtn" onClick={this.clickShowModal.bind(this)}>交换</button>
           <p className="tip">功能提示：点击想要交换的值班日期，可以申请换班哦~</p>
-        </footer>
-        <footer className={styles.dutyFooterBtn}>
-          <button style={{display: this.props.pageType === 'self' ? 'block' : 'none'}} className="mainBtn" onClick={this.goAppartPage.bind(this)}>查看科室值班表</button>
-          <p style={{display: this.props.pageType !== 'appart-level' ? 'block' : 'none'}} className="tip">功能提示：点击自己的值班日期，可以申请换班哦~</p>
         </footer>
         <div style={{display: this.state.showModal ? 'block' : 'none'}}>
           <Modal
             title = {'换班申请'}
             clickHideModal = {this.clickHideModal.bind(this)}
-            clickConfirm = {this.sendChangeDutyRequest.bind(this)}
+            clickConfirm = {this.sendChangeDutyApply.bind(this)}
             clickCancel = {this.clickHideModal.bind(this)}>
-            您 <i className={styles.dutyJzFColor}>{this.state.selectDay}</i> 确定要与
-                 <i className={styles.dutyJzFColor}>{this.state.selDoctor && this.state.selDoctor.name}{this.state.selRealChaDate}</i>
+            您 <i className={styles.dutyJzFColor}>{mySeletedDuty && moment(mySeletedDuty.date).format('YYYY-MM-DD')}</i> 确定要与
+                 <i className={styles.dutyJzFColor}>{selectedChangeDuty.doctor && selectedChangeDuty.doctor.name}{moment(selectedDay).format('YYYY-MM-DD')}</i>
                  进行换班吗？
           </Modal>
         </div>
@@ -382,4 +467,3 @@ class Calendar extends Component {
     );
   }
 }
-

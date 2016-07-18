@@ -140,15 +140,15 @@ export default class ChangeDutyRecord extends Component {
     const unHandleRecords = cDutyRecords && cDutyRecords.filter((item) => item.status === 'send');
     const HandledRecords = cDutyRecords && cDutyRecords.filter((item) => item.status !== 'send');
     let ikey = 0;
-    for (const unHandlesKey in unHandleRecords) {
-      if (unHandleRecords[unHandlesKey].toAttendance) {
-        if (new Date(unHandleRecords[unHandlesKey].toAttendance.date).getTime() < new Date().getTime()) {
-          unHandleRecords[unHandlesKey].status = 'overdued';
-          HandledRecords.push(unHandleRecords[unHandlesKey]);
-          unHandleRecords.splice(unHandlesKey, 1);
-        }
-      }
-    }
+    // for (const unHandlesKey in unHandleRecords) {
+    //   if (unHandleRecords[unHandlesKey].toAttendance) {
+    //     if (new Date(unHandleRecords[unHandlesKey].toAttendance.date).getTime() < new Date().getTime()) {
+    //       unHandleRecords[unHandlesKey].status = 'overdued';
+    //       HandledRecords.push(unHandleRecords[unHandlesKey]);
+    //       unHandleRecords.splice(unHandlesKey, 1);
+    //     }
+    //   }
+    // }
     return (
       <div>
         <HeadNaviBar>换班日志</HeadNaviBar>
